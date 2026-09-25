@@ -1,0 +1,56 @@
+{
+  "rules": {
+    "nrw-stock-planner": {
+      ".read": "auth != null && auth.token.email_verified == true && auth.token.email.toLowerCase().endsWith('@bellabona.com')",
+      ".write": "auth != null && auth.token.email_verified == true && auth.token.email.toLowerCase().endsWith('@bellabona.com')",
+      "forecast": {
+        "$day": {
+          "$dish": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100000"
+          }
+        }
+      },
+      "stock": {
+        "$week": {
+          "$item": {
+            ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000000"
+          }
+        }
+      },
+      "suppliers": {
+        "$item": {
+          ".validate": "newData.isString() && newData.val().length <= 100"
+        }
+      },
+      "packs": {
+        "$item": {
+          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100000"
+        }
+      },
+      "yields": {
+        "$sub": {
+          ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 1000000"
+        }
+      },
+      "settings": {
+        "buffer": {
+          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1"
+        },
+        "$other": {
+          ".validate": false
+        }
+      },
+      "meta": {
+        "lastChange": {
+          ".validate": "newData.hasChildren(['by', 'at'])"
+        },
+        "$other": {
+          ".validate": false
+        }
+      },
+      "$other": {
+        ".validate": false
+      }
+    }
+  }
+}

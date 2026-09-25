@@ -1,5 +1,7 @@
 # NRW Stock Planner
 
+Live: https://berlinkitchen123-blip.github.io/Inventory/ (repo `berlinkitchen123-blip/Inventory`)
+
 Shows what the NRW kitchen (Remscheid) has to order, week by week. Delivery 1 is Tue 29 Sep 2026, then every Friday
 for the next week. NRW data only.
 
@@ -12,14 +14,17 @@ for the next week. NRW data only.
   how much of the item it needs, then stock on hand, what to order and packs. Grouped by supplier.
 - **Download Excel:** sheet *Order* = Name, Qty (to order), Unit. Sheet *By supplier and dish* = the full breakdown.
 - **Suppliers and pack sizes:** Apicbase defaults until the NRW outlet is set up there. Change the supplier on any item.
+- **Team data:** everything people type is saved online in Firebase (project `stock-f24`) and shared live.
+  Sign in with a @bellabona.com email.
 
 ## Files
 
 | File | What it does |
 |---|---|
-| `index.html` | The tool. Works on its own (even offline) with a built-in copy of the data. |
+| `index.html` | The tool. Loads the two data files below, and the team data from Firebase. |
 | `data/db-snapshot.json` | NRW menus (2 weeks back to 8 weeks ahead) and their recipes. GitHub refreshes it every hour. |
-| `data/kitchen-settings.json` | NRW settings: suppliers, pack sizes, yields, buffer, first delivery, checks. |
+| `data/kitchen-settings.json` | NRW defaults: suppliers, pack sizes, yields, buffer, first delivery, checks, Firebase web settings. |
+| `database.rules.json` | Firebase security rules: only verified @bellabona.com accounts can read or change the team data. |
 | `scripts/export_data.py` | Reads the BB database (read-only) and writes `db-snapshot.json`. |
 | `.github/workflows/refresh-data.yml` | Runs the export every hour. |
 | `docs/` | Code maps. |
@@ -51,7 +56,21 @@ Run workflow*. Until the secrets exist, the workflow skips and the tool keeps th
 3. *Order list*: type the stock you counted. Order what *To order* and *Packs* say, supplier by supplier.
 4. *Download Excel* or *Print order*.
 
-## Sharing with the team
+## Team data (Firebase)
 
-Forecasts, stock, suppliers, pack sizes and yields are saved in that browser only. To share them:
-*Yields > Download settings file*, then upload it to the `data` folder in the repo (replace the old file).
+Forecasts, stock counts, suppliers, pack sizes, yields and the buffer are saved in the Firebase Realtime Database
+of project `stock-f24`, under `nrw-stock-planner/`. Everyone signed in sees the same numbers, live. Nothing is
+written to the BB database or Apicbase. The Firebase web settings in `data/kitchen-settings.json` are not a
+secret; the database rules protect the data.
+
+One-time setup at console.firebase.google.com, project stock-f24:
+
+1. *Build > Authentication > Get started > Sign-in method > Email/Password*: Enable, Save.
+2. *Authentication > Settings > Authorized domains > Add domain*: `berlinkitchen123-blip.github.io`.
+3. *Build > Realtime Database > Rules*: paste `database.rules.json`, Publish.
+   If other tools use this database, add only the `"nrw-stock-planner": { ... }` block inside the existing
+   rules. Make sure no rule at the top gives `.read` or `.write` to everyone (test mode does: it shows `now <`).
+4. Open the planner, type your @bellabona.com email and a password, *Create account*, click the link in the
+   email, *Continue*. Each team member does the same.
+
+Backup: *Realtime Database > Data > ⋮ > Export JSON*.

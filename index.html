@@ -87,6 +87,9 @@ table.order tr.dish:last-child td{padding-bottom:10px}
 .suppick{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:12.5px;color:var(--ink-3)}
 .suppick select{padding:4px 6px;font-size:13px;max-width:200px}
 .qty{font-size:16px;font-weight:800}
+.locked{font-variant-numeric:tabular-nums;color:var(--ink)}
+#stockEditBtn[aria-pressed="true"]{background:var(--saffron);border-color:var(--saffron);color:#1c1504}
+.editing input[data-stock]{border-color:var(--saffron)}
 .num small{font-size:12px;font-weight:600;color:var(--ink-2);margin-left:3px}
 .empty{color:var(--ink-2);padding:24px 0;max-width:70ch}
 .lead{color:var(--ink-2);max-width:80ch}
@@ -100,6 +103,12 @@ tfoot td{font-weight:800}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 code{background:var(--panel-2);padding:1px 5px;border-radius:4px}
 .print-title{display:none}
+.who{text-align:right}.who p{margin:2px 0}
+.authcard{max-width:520px;margin:24px auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.authcard .h2{margin-top:0}
+.authcard label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--ink-2);margin:10px 0}
+.authcard input{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:9px 10px}
+.authcard .actions{margin-top:12px}
 @media (max-width:720px){
   .weekbar{grid-template-columns:44px 1fr 44px}
   .nav{padding:0}
@@ -109,7 +118,7 @@ code{background:var(--panel-2);padding:1px 5px;border-radius:4px}
 @media print{
   :root{color-scheme:light}
   html,body{background:#fff;color:#000}
-  .weekbar,.weeks,.tabs,.settings,.actions,#freshness,#p-forecast,#p-yields,#p-checks{display:none!important}
+  .weekbar,.weeks,.tabs,.settings,.actions,.who,#auth,#p-forecast,#p-yields,#p-checks{display:none!important}
   .print-title{display:block;font-size:18px;margin:0 0 8px}
   .tablewrap{overflow:visible;border-color:#bbb}
   table.order{min-width:0}
@@ -128,9 +137,27 @@ code{background:var(--panel-2);padding:1px 5px;border-radius:4px}
       <h1>NRW Stock Planner</h1>
       <p class="muted small" id="kitchen"></p>
     </div>
-    <p class="muted small" id="freshness"></p>
+    <div class="who">
+      <p class="muted small" id="freshness"></p>
+      <p class="muted small"><span id="status"></span> <span id="userEmail"></span> <button class="btn tiny" id="signOut" hidden>Sign out</button></p>
+    </div>
   </header>
   <p class="error" id="appError" role="alert" hidden></p>
+  <section class="authcard" id="auth" hidden>
+    <h2 class="h2">Sign in</h2>
+    <p class="lead">Forecasts, stock counts, suppliers, pack sizes and yields are saved online for the whole NRW team. Use your <span class="domain">@bellabona.com</span> email.</p>
+    <form id="authForm">
+      <label>Email<input type="email" id="aEmail" autocomplete="username" required></label>
+      <label>Password<input type="password" id="aPass" autocomplete="current-password" required></label>
+      <div class="actions"><button class="btn primary" type="submit">Sign in</button><button class="btn" type="button" id="aSignup">Create account</button><button class="btn" type="button" id="aReset">Forgot password</button></div>
+    </form>
+    <div id="verifyBox" hidden>
+      <p>We sent a link to <strong id="verifyEmail"></strong>. Click it (check the spam folder too), then press Continue.</p>
+      <div class="actions"><button class="btn primary" type="button" id="vContinue">Continue</button><button class="btn" type="button" id="vResend">Send the link again</button></div>
+    </div>
+    <p class="small" id="authMsg" role="status"></p>
+  </section>
+  <div id="app" hidden>
   <section class="weekbar" aria-label="Choose a week">
     <button class="nav" data-step="-7" aria-label="Previous week">‹</button>
     <div class="ticket" id="week"></div>
@@ -158,6 +185,7 @@ code{background:var(--panel-2);padding:1px 5px;border-radius:4px}
         <div class="actions">
           <input type="search" id="search" placeholder="Find item or dish" aria-label="Find item or dish">
           <label class="toggle"><input type="checkbox" id="showDishes" data-fid="showDishes"> Show dishes</label>
+          <button class="btn" id="stockEditBtn" aria-pressed="false">Edit stock</button>
           <button class="btn" id="xlsxBtn">Download Excel</button>
           <button class="btn primary" id="printBtn">Print order</button>
         </div>
@@ -167,9 +195,10 @@ code{background:var(--panel-2);padding:1px 5px;border-radius:4px}
     <section id="p-yields" role="tabpanel" aria-labelledby="t-yields" hidden></section>
     <section id="p-checks" role="tabpanel" aria-labelledby="t-checks" hidden></section>
   </main>
+  </div>
 </div>
-<script type="application/json" id="seedDb">{"generated":"2026-09-24T16:10+00:00","kitchen":"NRW","menus":[{"id":"282f47de-07b9-4911-b49e-6893ed4a56d3","name":"NRW Test Menu","from":"2026-09-07","to":"2026-09-11","dishes":["030cc06f-65d5-482f-b86c-9de245919fc6","bf2cbf30-ebb9-11eb-bf3e-4d3f316ceaeb"]},{"id":"77ea43aa-995a-4cd4-935b-27422b1ca3e9","name":"5.10 to 9.10 Oct 26 NRW","from":"2026-10-05","to":"2026-10-09","dishes":["20914ac4-bdbc-4514-ad9d-3d91d8253c18","236a0b67-6229-4e3e-a11e-6d80baa45e54","2ac07483-8ea4-4f12-9ca7-4470dcab49a4","3c39c686-7924-479c-824c-fa9f846ad31e","3feab834-c8dd-446d-a0c8-9fd431fff2d3","4621de3f-e5fc-4ea4-85df-eeb4a4a96289","57e4e2a4-c823-4119-a492-7b07f3e6e013","6ca59bf4-b292-403b-8f7a-a7bb71fca357","7f3ae5c1-8814-44c5-adeb-724c986f3adc","96dc9d62-be95-4b96-9b31-1dcd5fb98ff3","b330962c-5285-4102-b049-0116e2cfdf6d","bf2cbf30-ebb9-11eb-bf3e-4d3f316ceaeb","e146eb1c-2ef3-4f8c-ba85-967889071b4f","f70405bb-96cb-4bf7-9b18-57f34babfb0a","ffc1f6c2-9bee-4b28-ade9-b763a6e4616a"]},{"id":"36a4ce79-c8b3-4098-8f9c-9f3c67b47364","name":"12.10 to 16.10 Oct 26 NRW","from":"2026-10-12","to":"2026-10-16","dishes":["20914ac4-bdbc-4514-ad9d-3d91d8253c18","236a0b67-6229-4e3e-a11e-6d80baa45e54","2ac07483-8ea4-4f12-9ca7-4470dcab49a4","3c39c686-7924-479c-824c-fa9f846ad31e","3feab834-c8dd-446d-a0c8-9fd431fff2d3","4621de3f-e5fc-4ea4-85df-eeb4a4a96289","57e4e2a4-c823-4119-a492-7b07f3e6e013","6ca59bf4-b292-403b-8f7a-a7bb71fca357","7f3ae5c1-8814-44c5-adeb-724c986f3adc","96dc9d62-be95-4b96-9b31-1dcd5fb98ff3","b330962c-5285-4102-b049-0116e2cfdf6d","bf2cbf30-ebb9-11eb-bf3e-4d3f316ceaeb","e146eb1c-2ef3-4f8c-ba85-967889071b4f","f70405bb-96cb-4bf7-9b18-57f34babfb0a","ffc1f6c2-9bee-4b28-ade9-b763a6e4616a"]},{"id":"e546506d-e950-461b-b583-9c75adb40d90","name":"19.10 to 23.10 Oct 26 NRW","from":"2026-10-19","to":"2026-10-23","dishes":["0740661e-b17f-4b4d-8153-8ff1ca2ba4ce","095eb07d-9bb2-4a75-936c-676da52108ec","0acef14a-f8f7-44d4-87d2-0da6c4dd8f94","0fb29bf9-250f-4dba-b12e-9311ad6bcfcd","22b3467f-0c92-4f41-9fa1-af3bcdee7357","28fc455b-a3f4-406e-b0c3-bdb19ea755b2","29a026b9-5b18-476e-af41-dbf0f09502be","376f9a81-a2e7-457a-9115-b2f5466ab851","4af75912-cd9e-4b08-9621-ff63332e1d5c","522452a0-5555-40fa-854e-6d17b4d4c511","5fa5f0c4-074c-49ca-a79f-80768b1db0dd","5fc698c2-c88b-40a9-870d-4252521076a7","6e58f730-7793-472d-98b2-27d5c8fdc8ae","c221d980-8024-4004-afc2-ce67cc763d9a","e148f6c5-55ee-4cad-81ca-c67b6bcf3bd3"]},{"id":"b74b717f-da47-4c17-843d-b57f8382ad78","name":"26.10 to 30.10 Oct 26 NRW","from":"2026-10-26","to":"2026-10-30","dishes":["08904a55-3857-4648-bc48-f874d38f0deb","121256c2-ea39-4365-b7c8-807523882b5e","41221ae9-4322-4259-8006-0889ba6f26f5","52275d04-2142-4c1b-9a66-f6aa1ca53661","6f25f51f-ac7d-4dd1-bd73-db97125b33bf","7ea33c80-1ce2-4156-a1f3-7a3730779563","805e5239-d496-4bed-8d2a-5f0c77d1ecf2","a5d3c923-fecd-4ad0-94d9-a994d2b292ce","bc1c0da4-ae70-4f75-b3f7-f4e97e96e3fb","bf2cbf30-ebb9-11eb-bf3e-4d3f316ceaeb","d9ef52f1-6fdd-4c53-a0ae-ca8412726d3a","ece8c7ce-f929-4b95-ab05-6d8aa483b54b","ed44ec3c-205f-4756-aa6f-b4fd98f42d46","fd898ae9-ffcb-4c2f-8fe8-367612b5cf4e"]}],"dishes":{"030cc06f-65d5-482f-b86c-9de245919fc6":{"name":"Fruit Salad Mojito","type":"AD","portion":270},"bf2cbf30-ebb9-11eb-bf3e-4d3f316ceaeb":{"name":"Indian Butter Chicken","type":"LC","portion":500},"20914ac4-bdbc-4514-ad9d-3d91d8253c18":{"name":"Garden Green Salad with Chicken","type":"SB","portion":450},"236a0b67-6229-4e3e-a11e-6d80baa45e54":{"name":"Test & Tell: Tuscan-Style Chicken with Vegetables and Mash","type":"LC","portion":590},"2ac07483-8ea4-4f12-9ca7-4470dcab49a4":{"name":"Club Sandwich","type":"SW","portion":420},"3c39c686-7924-479c-824c-fa9f846ad31e":{"name":"Parmigiana","type":"CI","portion":500},"3feab834-c8dd-446d-a0c8-9fd431fff2d3":{"name":"Heat to Eat: Lentil Stew “Feijoada Style”","type":"HE","portion":400},"4621de3f-e5fc-4ea4-85df-eeb4a4a96289":{"name":"Spinach Ricotta Tortellini with cream tomato sauce","type":"CI","portion":500},"57e4e2a4-c823-4119-a492-7b07f3e6e013":{"name":"Chicken in champignon sauce with Spatzle","type":"LC","portion":550},"6ca59bf4-b292-403b-8f7a-a7bb71fca357":{"name":"Heat to Eat: Chicken Teriyaki with vegetables","type":"HE","portion":400},"7f3ae5c1-8814-44c5-adeb-724c986f3adc":{"name":"Test & Tell: High Protein Salmon Salad","type":"SB","portion":476},"96dc9d62-be95-4b96-9b31-1dcd5fb98ff3":{"name":"Test&Tell: High-Protien Thai Peanut Bowl with Chickpea & Tofu","type":"SB","portion":560},"b330962c-5285-4102-b049-0116e2cfdf6d":{"name":"Test & Tell: Mediterranean Barley Bowl","type":"SB","portion":520},"e146eb1c-2ef3-4f8c-ba85-967889071b4f":{"name":"Phanaeng Vegan Chicken Curry (XL)","type":"LC","portion":630},"f70405bb-96cb-4bf7-9b18-57f34babfb0a":{"name":"Turkish Chickpeas & Spinach Tomato Stew with Bulgur","type":"LC","portion":550},"ffc1f6c2-9bee-4b28-ade9-b763a6e4616a":{"name":"Salade Lyonnaise","type":"SB","portion":500},"08904a55-3857-4648-bc48-f874d38f0deb":{"name":"Test & Tell: Tabbouleh","type":"SB","portion":null},"121256c2-ea39-4365-b7c8-807523882b5e":{"name":"Test&Tell: High Protein Mediterranean Chicken Wrap","type":"SW","portion":440},"41221ae9-4322-4259-8006-0889ba6f26f5":{"name":"Semmelknödel with Mushroom sauce","type":"LC","portion":450},"52275d04-2142-4c1b-9a66-f6aa1ca53661":{"name":"Southwest Chicken Corn Chowder","type":"SB","portion":600},"6f25f51f-ac7d-4dd1-bd73-db97125b33bf":{"name":"High protein Tuna Egg Rice Bowl","type":"SB","portion":550},"7ea33c80-1ce2-4156-a1f3-7a3730779563":{"name":"Hungarian goulash with bandnudeln","type":"LC","portion":550},"805e5239-d496-4bed-8d2a-5f0c77d1ecf2":{"name":"Test & Tell: Chickpea, Pumpkin & Kale Coconut Curry","type":"LC","portion":550},"a5d3c923-fecd-4ad0-94d9-a994d2b292ce":{"name":"Roasted Veggie & Grain Bowl","type":"SB","portion":540},"bc1c0da4-ae70-4f75-b3f7-f4e97e96e3fb":{"name":"Vegan Turkish Eggplant with Rice (XL)","type":"LC","portion":650},"d9ef52f1-6fdd-4c53-a0ae-ca8412726d3a":{"name":"Feta Mushroom Boost","type":"CI","portion":570},"ece8c7ce-f929-4b95-ab05-6d8aa483b54b":{"name":"Chicken Pasta Salad bowl","type":"CI","portion":550},"ed44ec3c-205f-4756-aa6f-b4fd98f42d46":{"name":"Thai Gyoza Peanut noodle bowl","type":"SB","portion":550},"fd898ae9-ffcb-4c2f-8fe8-367612b5cf4e":{"name":"Hawaian Chicken Poke","type":"SB","portion":500},"0740661e-b17f-4b4d-8153-8ff1ca2ba4ce":{"name":"Chicken with Mashed Sweet potatoes, Broccoli and Beans","type":"LC","portion":570},"095eb07d-9bb2-4a75-936c-676da52108ec":{"name":"Mediterranean Cruise","type":"CI","portion":550},"0acef14a-f8f7-44d4-87d2-0da6c4dd8f94":{"name":"Avocado Caesar Crunch","type":"SB","portion":550},"0fb29bf9-250f-4dba-b12e-9311ad6bcfcd":{"name":"Test & Tell: High Protein Chicken Chopped Salad","type":"SB","portion":520},"22b3467f-0c92-4f41-9fa1-af3bcdee7357":{"name":"An Orange Salad","type":"SB","portion":500},"28fc455b-a3f4-406e-b0c3-bdb19ea755b2":{"name":"Far West Chili con Carne","type":"LC","portion":540},"29a026b9-5b18-476e-af41-dbf0f09502be":{"name":"Golden Tofu Coconut Curry with Barley","type":"LC","portion":530},"376f9a81-a2e7-457a-9115-b2f5466ab851":{"name":"Schupfnudeln with mushroom sauce","type":"LC","portion":500},"4af75912-cd9e-4b08-9621-ff63332e1d5c":{"name":"Heat to Eat: Vegetarian Cheese Tortellini","type":"HE","portion":400},"522452a0-5555-40fa-854e-6d17b4d4c511":{"name":"Vegan Cobb Salad","type":"SB","portion":450},"5fa5f0c4-074c-49ca-a79f-80768b1db0dd":{"name":"Gyoza Korean Bowl","type":"SB","portion":550},"5fc698c2-c88b-40a9-870d-4252521076a7":{"name":"Lasagna Bolognese with Seasonal Veggies","type":"CI","portion":500},"6e58f730-7793-472d-98b2-27d5c8fdc8ae":{"name":"Heat to Eat: Bami Goreng","type":"HE","portion":400},"c221d980-8024-4004-afc2-ce67cc763d9a":{"name":"Doner Kebab","type":"SW","portion":430},"e148f6c5-55ee-4cad-81ca-c67b6bcf3bd3":{"name":"B&B Butter Chicken with Rice & Naan","type":"LC","portion":535}},"lines":{"030cc06f-65d5-482f-b86c-9de245919fc6":[["Apple","I",50,"g"],["Juice Fruit Salad Mojito","S",70,"g"],["Grapes - Red Seedless","I",50,"g"],["Ananas","I",50,"g"],["Honeydew Melon","I",50,"g"]],"bf2cbf30-ebb9-11eb-bf3e-4d3f316ceaeb":[["Chicken Breast","I",100,"g"],["Parsley","I",2,"g"],["Makhani Sauce","I",200,"g"],["Basmati rice - steamed","S",200,"g"],["Sesame Seeds","I",5,"g"]],"20914ac4-bdbc-4514-ad9d-3d91d8253c18":[["Bella&Bona Salad Mix 1","S",150,"g"],["Carrots - Cubed & Cooked","S",50,"g"],["Cherry Tomatoes","I",50,"g"],["Cucumber - sliced","S",50,"g"],["Olives Black","I",30,"g"],["Orange vinegrette","I",60,"g"],["Chicken Breast","I",80,"g"]],"236a0b67-6229-4e3e-a11e-6d80baa45e54":[["Potato Pure","S",150,"g"],["Cooking Cream","I",50,"g"],["Basil","I",5,"g"],["Chicken Breast","I",100,"g"],["Green Beans","I",80,"g"],["Broccoli","I",50,"g"],["Tomato Sauce","I",150,"g"],["Hard cheese - regular (instead of emmental, parmesan, grana padano)","I",5,"g"]],"2ac07483-8ea4-4f12-9ca7-4470dcab49a4":[["Regular tomatoes","I",40,"g"],["Cheddar Cheese","I",20,"g"],["Bacon raw","I",20,"g"],["Iceberg Lettuce","I",30,"g"],["Chicken Breast","I",100,"g"],["Vegan Mayo","I",60,"g"],["Cucumber - sliced","S",10,"g"],["Sandwich Whole grain bread","I",140,"g"]],"3c39c686-7924-479c-824c-fa9f846ad31e":[["Parmigiana","I",300,"g"],["Basmati rice - steamed","S",200,"g"],["Parsley","I",5,"g"]],"3feab834-c8dd-446d-a0c8-9fd431fff2d3":[["Heat to Eat: Lentil Stew “Feijoada Style”","I",400,"g"]],"4621de3f-e5fc-4ea4-85df-eeb4a4a96289":[["Tomato Sauce","I",100,"g"],["Cooking Cream","I",30,"g"],["Red pesto","I",50,"g"],["Tortellini Spinach boiled","S",300,"g"],["Spinach leaves","I",50,"g"],["Hard cheese - regular (instead of emmental, parmesan, grana padano)","I",10,"g"]],"57e4e2a4-c823-4119-a492-7b07f3e6e013":[["Parsley","I",2,"g"],["Mushroom Sauce","I",150,"g"],["Boiled - Spatzle","S",250,"g"],["Chicken Breast","I",100,"g"],["Champignons - sliced and cooked","S",50,"g"]],"6ca59bf4-b292-403b-8f7a-a7bb71fca357":[["Heat to Eat: Chicken Teriyaki with vegetables","I",400,"g"]],"7f3ae5c1-8814-44c5-adeb-724c986f3adc":[["Roasted Potates - Cut & Cooked","S",150,"g"],["Smoked Salmon","I",80,"g"],["Green Asparagus","I",80,"g"],["Goat Cheese","I",30,"g"],["White Balsamic","I",70,"g"],["Baby Spinach","I",10,"g"],["Black Pepper","I",1,"g"],["Eggs Large","I",55,"g"]],"96dc9d62-be95-4b96-9b31-1dcd5fb98ff3":[["Sesame Seeds","I",1,"g"],["Carrots - Cubed & Cooked","S",80,"g"],["Peanut dressing","I",70,"g"],["Smoked Tofu Firm","I",50,"g"],["Paprika Chickpeas","S",100,"g"],["Quinoa - Steamed","S",150,"g"],["Red cabbage - sliced","S",50,"g"],["Peanuts","I",10,"g"],["Cucumber - sliced","S",50,"g"]],"b330962c-5285-4102-b049-0116e2cfdf6d":[["Pumpkin Seeds","I",10,"g"],["Red Bell Peppers - Cubed & Cooked","S",50,"g"],["Steamed Barley","S",100,"g"],["Baby Spinach","I",10,"g"],["Vegan Gyros","I",80,"g"],["Cherry Tomatoes","I",50,"g"],["Lemon Dressing","I",70,"g"],["Zucchini - Cubed & Cooked","S",50,"g"],["Lentils - Green","I",50,"g"],["Celeriac","I",50,"g"]],"e146eb1c-2ef3-4f8c-ba85-967889071b4f":[["Basmati rice - steamed","S",250,"g"],["Phanaeng Curry","I",200,"g"],["Red Bell Peppers - Cubed & Cooked","S",30,"g"],["Parsley","I",3,"g"],["Zucchini - Cubed & Cooked","S",30,"g"],["Vegan Gyros","I",120,"g"]],"f70405bb-96cb-4bf7-9b18-57f34babfb0a":[["Tomato Sauce","I",200,"g"],["Paprika Chickpeas","S",80,"g"],["Parsley","I",1,"g"],["Spinach leaves","I",30,"g"],["Pita Bread","I",40,"g"],["Chilli Flakes","I",2,"g"],["Tzatziki","I",50,"g"],["Steamed Bulgur","S",150,"g"]],"ffc1f6c2-9bee-4b28-ade9-b763a6e4616a":[["Roasted Potates - Cut & Cooked","S",150,"g"],["White Balsamic","I",70,"g"],["Bella&Bona Salad Mix 1","S",150,"g"],["Erbs Croutons","I",10,"g"],["Bacon raw","I",10,"g"],["Eggs Large","I",110,"g"]],"08904a55-3857-4648-bc48-f874d38f0deb":[["WallNuts","I",10,"g"],["Cherry Tomatoes","I",80,"g"],["Lemon Dressing","I",70,"g"],["Parsley","I",2,"g"],["Fresh Mint","I",5,"g"],["Cucumber - sliced","S",50,"g"],["Apples - cubed","S",80,"g"],["Pomegranite Seeds","I",10,"g"],["Kale","I",50,"g"],["Steamed Bulgur","S",200,"g"]],"121256c2-ea39-4365-b7c8-807523882b5e":[["Iceberg Lettuce","I",50,"g"],["Feta Cheese","I",30,"g"],["Jalapeños","I",10,"g"],["Cucumber - sliced","S",30,"g"],["Olives Black","I",30,"g"],["Chicken Kebab","I",100,"g"],["Yogurt Dressing","I",50,"g"],["Cucumber Pickled","I",10,"g"],["Wraps 30\"","I",80,"g"],["Hummus","I",50,"g"]],"41221ae9-4322-4259-8006-0889ba6f26f5":[["Fried Onions","I",2,"g"],["Semmelknödel","I",180,"g"],["Cooking Cream","I",50,"g"],["Champignons - sliced and cooked","S",100,"g"],["Mushroom Sauce","I",150,"g"]],"52275d04-2142-4c1b-9a66-f6aa1ca53661":[["Chicken Breast","I",50,"g"],["Red Kidney Beans","I",50,"g"],["Roasted Potates - Cut & Cooked","S",50,"g"],["Jalapeños","I",10,"g"],["Corn Cream Soup","I",150,"g"],["Corn","I",50,"g"],["Red Bell Peppers - Cubed & Cooked","S",80,"g"],["Parsley","I",3,"g"],["Sour Cream","I",50,"g"],["Basmati rice - steamed","S",80,"g"],["Cheddar Grated","I",50,"g"]],"6f25f51f-ac7d-4dd1-bd73-db97125b33bf":[["Basmati rice - steamed","S",150,"g"],["Cucumber - sliced","S",50,"g"],["Eggs Large","I",55,"g"],["Tuna","I",80,"g"],["Sesame Seeds","I",5,"g"],["Sriracha Mayonese","I",60,"g"],["Edamame","I",50,"g"],["Avocado Frozen","I",50,"g"],["Carrots - Cubed & Cooked","S",50,"g"]],"7ea33c80-1ce2-4156-a1f3-7a3730779563":[["Red Bell Peppers - Cubed & Cooked","S",50,"g"],["Boiled - Bandnudeln","S",250,"g"],["Beef Goulash","I",200,"g"]],"805e5239-d496-4bed-8d2a-5f0c77d1ecf2":[["Cubed Pumpkin","I",50,"g"],["Parsley","I",1,"g"],["Chickpeas","I",50,"g"],["Yellow Thai Curry","I",200,"g"],["Kale","I",50,"g"],["Basmati rice - steamed","S",200,"g"],["Chilli Flakes","I",1,"g"]],"a5d3c923-fecd-4ad0-94d9-a994d2b292ce":[["Quinoa - Steamed","S",50,"g"],["Sweet Potato- Roasted","S",80,"g"],["Kale","I",50,"g"],["Pumpkin Seeds","I",10,"g"],["Red Bell Peppers - Cubed & Cooked","S",50,"g"],["Wild rice - steamed","S",80,"g"],["Broccoli","I",50,"g"],["Steamed Bulgur","S",50,"g"],["White Balsamic","I",70,"g"],["Avocado fresh","I",50,"g"]],"bc1c0da4-ae70-4f75-b3f7-f4e97e96e3fb":[["Vegan Parmigiana","S",400,"g"],["Basmati rice - steamed","S",250,"g"],["Parsley","I",1,"g"]],"d9ef52f1-6fdd-4c53-a0ae-ca8412726d3a":[["Baby Spinach","I",30,"g"],["Roasted Potates - Cut & Cooked","S",150,"g"],["Champignons","I",100,"g"],["Sweet Potato","I",150,"g"],["Sriracha Mayonese","I",80,"g"],["Parsley","I",5,"g"],["Feta Cheese","I",70,"g"]],"ece8c7ce-f929-4b95-ab05-6d8aa483b54b":[["Olives Black","I",50,"g"],["Mozzarella Mini","I",50,"g"],["White Balsamic","I",60,"g"],["Chicken Breast","I",80,"g"],["Tomato - Sun Dried","I",20,"g"],["Boiled - Penne whole wheat","S",250,"g"],["Red Bell Peppers - Cubed & Cooked","S",50,"g"]],"ed44ec3c-205f-4756-aa6f-b4fd98f42d46":[["Red Bell Peppers - Cubed & Cooked","S",50,"g"],["Red cabbage - sliced","S",50,"g"],["Peanuts","I",10,"g"],["Peanut dressing","I",60,"g"],["Boiled - glass noodles","S",250,"g"],["Carrots - Cubed & Cooked","S",50,"g"],["Soy Sauce","I",20,"ml"],["Vegetable gyoza","I",67.5,"g"]],"fd898ae9-ffcb-4c2f-8fe8-367612b5cf4e":[["Edamame","I",40,"g"],["Mango - always frozen","I",40,"g"],["Cream Cheese","I",30,"g"],["Carrots","I",40,"g"],["Fried Onions","I",5,"g"],["Basmati rice - steamed","S",120,"g"],["Pomegranite Seeds","I",5,"g"],["Radish","I",15,"g"],["Chicken Breast","I",80,"g"],["Honey-Mustard dressing","I",70,"g"],["Cherry Tomatoes","I",30,"g"]],"0740661e-b17f-4b4d-8153-8ff1ca2ba4ce":[["Mushroom Sauce","I",50,"g"],["Chicken Breast","I",150,"g"],["Carrots - Cubed & Cooked","S",50,"g"],["Parsley","I",5,"g"],["Sweet mash potatoe","I",50,"g"],["Broccoli","I",80,"g"],["Green Beans","I",80,"g"]],"095eb07d-9bb2-4a75-936c-676da52108ec":[["Tomato - Sun Dried","I",30,"g"],["Feta Cheese","I",80,"g"],["Arugula","I",10,"g"],["Olive Oil","I",5,"g"],["Olives Black","I",40,"g"],["Steamed fusilli","S",250,"g"],["Red Bell Peppers - Cubed & Cooked","S",50,"g"],["Balsamic Dressing","I",80,"g"]],"0acef14a-f8f7-44d4-87d2-0da6c4dd8f94":[["Cucumber","I",80,"g"],["Bella&Bona Salad Mix 1","S",100,"g"],["Avocado Frozen","I",50,"g"],["Chicken Breast","I",100,"g"],["Corn","I",50,"g"],["Cherry Tomatoes","I",80,"g"],["Erbs Croutons","I",30,"g"],["Caesar Dressing","I",70,"g"],["Cheddar Grated","I",30,"g"]],"0fb29bf9-250f-4dba-b12e-9311ad6bcfcd":[["Bella&Bona Salad Mix 1","S",150,"g"],["Chicken Breast","I",50,"g"],["Chicken Kebab","I",50,"g"],["Feta Cheese","I",30,"g"],["Jalapeños","I",10,"g"],["Cucumber Pickled","I",10,"g"],["Yogurt Dressing","I",70,"g"],["Cherry Tomatoes","I",50,"g"],["Cucumber","I",50,"g"],["Red cabbage - sliced","S",50,"g"]],"22b3467f-0c92-4f41-9fa1-af3bcdee7357":[["Cherry Tomatoes","I",60,"g"],["Cucumber - sliced","S",50,"g"],["Erbs Croutons","I",20,"g"],["Smoked Salmon","I",80,"g"],["Parsley","I",1,"g"],["Bella&Bona Salad Mix 1","S",150,"g"],["Orange vinegrette","I",80,"g"],["Sesame Seeds","I",5,"g"],["Carrots","I",60,"g"]],"28fc455b-a3f4-406e-b0c3-bdb19ea755b2":[["Parsley","I",5,"g"],["Chili Con Carne","I",250,"g"],["Basmati rice - steamed","S",200,"g"],["Zucchini","I",50,"g"],["Pita Bread","I",40,"g"]],"29a026b9-5b18-476e-af41-dbf0f09502be":[["Tofu Firm","I",50,"g"],["Steamed Barley","S",200,"g"],["Yellow Thai Curry","I",200,"g"],["Green Peas","I",30,"g"],["Parsley","I",1,"g"],["Red Bell Peppers - Cubed & Cooked","S",50,"g"]],"376f9a81-a2e7-457a-9115-b2f5466ab851":[["Schupfnudel boiled","S",250,"g"],["Cooking Cream","I",50,"g"],["Mushroom Sauce","I",150,"g"],["Fried Onions","I",10,"g"],["Champignons - sliced and cooked","S",50,"g"]],"4af75912-cd9e-4b08-9621-ff63332e1d5c":[["Heat to Eat: Vegetarian Cheese Tortellini","I",400,"g"]],"522452a0-5555-40fa-854e-6d17b4d4c511":[["Cucumber","I",50,"g"]],"5fa5f0c4-074c-49ca-a79f-80768b1db0dd":[["Carrots - Cubed & Cooked","S",50,"g"],["Broccoli","I",80,"g"],["Sesame Seeds","I",5,"g"],["Soy Sauce","I",10,"g"],["Vegetable gyoza","I",67.5,"g"],["Champignons - sliced and cooked","S",50,"g"],["Peanut dressing","I",50,"g"],["Boiled - glass noodles","S",200,"g"]],"5fc698c2-c88b-40a9-870d-4252521076a7":[["Carrots - Cubed & Cooked","S",50,"g"],["Aubergines - Cubed & Cooked","S",50,"g"],["Broccoli","I",50,"g"],["Parsley","I",3,"g"],["Lasagne alla Bolognese","I",300,"g"],["Red Bell Peppers - Cubed & Cooked","S",50,"g"]],"6e58f730-7793-472d-98b2-27d5c8fdc8ae":[["Heat to Eat: Bami Goreng","I",400,"g"]],"c221d980-8024-4004-afc2-ce67cc763d9a":[["Vegan Mayo","I",40,"g"],["Cucumber Pickled","I",35,"g"],["Red cabbage - sliced","S",80,"g"],["Red onion","I",10,"g"],["Bella&Bona Salad Mix 1","S",80,"g"],["Chicken Kebab","I",100,"g"],["Wraps 30\"","I",80,"g"]],"e148f6c5-55ee-4cad-81ca-c67b6bcf3bd3":[["Tandoori Naan","I",80,"g"],["Basmati rice - steamed","S",150,"g"],["Makhani Sauce","I",200,"g"],["Sesame Seeds","I",5,"g"],["Parsley","I",1,"g"],["Chicken Breast","I",100,"g"]]},"subs":{"Juice Fruit Salad Mojito":{"dbYield":null,"input":70,"lines":[["Brown Sugar",4,"g","I"],["Lime Juice",2,"g","I"],["Water",63,"g","I"],["Mint - fresh",1,"g","I"]]},"Basmati rice - steamed":{"dbYield":1000,"input":1500,"lines":[["Rice - White Basmati",1000,"g","I"],["Water",500,"ml","I"]]},"Bella&Bona Salad Mix 1":{"dbYield":1000,"input":65,"lines":[["Baby Spinach",10,"g","I"],["Radicchio",5,"g","I"],["Iceberg Lettuce",50,"g","I"]]},"Carrots - Cubed & Cooked":{"dbYield":800,"input":1100,"lines":[["Canola Oil (rapsöl)",50,"g","I"],["Dr. Oetker Professional Vegetable Gold Seasoning",50,"g","I"],["Carrots",1000,"g","I"]]},"Cucumber - sliced":{"dbYield":null,"input":100,"lines":[["Cucumber",100,"g","I"]]},"Potato Pure":{"dbYield":null,"input":30550,"lines":[["Water",13000,"ml","I"],["Butter",500,"g","I"],["Salt",50,"g","I"],["Potatoes Puree",4000,"g","I"],["Milk",13000,"ml","I"]]},"Tortellini Spinach boiled":{"dbYield":null,"input":150,"lines":[["Tortellini Spinach",150,"g","I"]]},"Boiled - Spatzle":{"dbYield":null,"input":1000,"lines":[["Spatzle",1000,"g","I"]]},"Champignons - sliced and cooked":{"dbYield":null,"input":102,"lines":[["Olive Oil",4,"g","I"],["Champignons",98,"g","I"]]},"Roasted Potates - Cut & Cooked":{"dbYield":1000,"input":220,"lines":[["Small Potatoes",200,"g","I"],["Canola Oil (rapsöl)",20,"g","I"]]},"Paprika Chickpeas":{"dbYield":1000,"input":106,"lines":[["Olive Oil",3,"g","I"],["Paprika powder",3,"g","I"],["Chickpeas",100,"g","I"]]},"Quinoa - Steamed":{"dbYield":null,"input":1000,"lines":[["Quinoa",1000,"g","I"]]},"Red cabbage - sliced":{"dbYield":1050,"input":80,"lines":[["Red cabbage",76,"g","I"],["Vinegar",4,"g","I"]]},"Red Bell Peppers - Cubed & Cooked":{"dbYield":800,"input":112,"lines":[["Red Bell Pepper",110,"g","I"],["Olive Oil",2,"g","I"]]},"Steamed Barley":{"dbYield":1897,"input":6045,"lines":[["Salt",15,"g","I"],["Pearled Barley",2000,"g","I"],["Water",4000,"g","I"],["Sunflower Oil",30,"g","I"]]},"Zucchini - Cubed & Cooked":{"dbYield":800,"input":98,"lines":[["Zucchini",96,"g","I"],["Olive Oil",2,"g","I"]]},"Steamed Bulgur":{"dbYield":180,"input":3000,"lines":[["Water",2000,"ml","I"],["Bulgur",1000,"g","I"]]},"Apples - cubed":{"dbYield":null,"input":1000,"lines":[["Apple",1000,"g","I"]]},"Boiled - Bandnudeln":{"dbYield":null,"input":1000,"lines":[["Bandnudeln",1000,"g","I"]]},"Sweet Potato- Roasted":{"dbYield":null,"input":1050,"lines":[["Canola Oil (rapsöl)",50,"g","I"],["Sweet Potato",1000,"g","I"]]},"Wild rice - steamed":{"dbYield":9728,"input":3500,"lines":[["Water",2500,"ml","I"],["Wild Rice",1000,"g","I"]]},"Vegan Parmigiana":{"dbYield":null,"input":1845,"lines":[["Olive Oil",125,"g","I"],["Aubergines",1000,"g","I"],["Salt",20,"g","I"],["Tomato Sauce",700,"g","I"]]},"Boiled - Penne whole wheat":{"dbYield":2000,"input":100,"lines":[["Penne Whole Wheat",100,"g","I"]]},"Boiled - glass noodles":{"dbYield":1500,"input":200,"lines":[["Water",100,"ml","I"],["Glass Noodles",100,"g","I"]]},"Steamed fusilli":{"dbYield":2500,"input":1050,"lines":[["Fusilli",1000,"g","I"],["Sunflower Oil",50,"g","I"]]},"Schupfnudel boiled":{"dbYield":null,"input":2000,"lines":[["Schupznudeln",2000,"g","I"]]},"Aubergines - Cubed & Cooked":{"dbYield":800,"input":70,"lines":[["Aubergines",69,"g","I"],["Olive Oil",1,"g","I"]]}},"ingredients":{},"warnings":["Avocado Caesar Crunch: line 'Cheddar Grated' has no ingredient linked, skipped."]}</script>
-<script type="application/json" id="seedSettings">{"kitchen":"NRW Remscheid, Adlerstraße 5","firstDelivery":"2026-09-29","buffer":0.1,"yields":{"Aubergines - Cubed & Cooked":{"yield":56,"why":"DB: 800 g out of 70 g in (impossible). Used 80% of input (cooking loss).","confirmed":false},"Basmati rice - steamed":{"yield":2200,"why":"DB: 1 kg raw rice gives 1 kg cooked. Steamed basmati normally gives 2.2-2.5 kg per kg raw.","confirmed":false},"Bella&Bona Salad Mix 1":{"yield":65,"why":"DB: 1,000 g out of 65 g in (impossible). Raw leaf mix: out = in.","confirmed":false},"Boiled - glass noodles":{"yield":350,"why":"DB: 1,500 g from 100 g dry noodles. 100 g dry glass noodles is about 350 g cooked.","confirmed":false},"Boiled - Penne whole wheat":{"yield":220,"why":"DB: 2,000 g from 100 g dry pasta. 100 g dry pasta is about 220 g cooked.","confirmed":false},"Boiled - Spatzle":{"yield":1000,"why":"No yield in DB. Spätzle only heated: out = in.","confirmed":false},"Champignons - sliced and cooked":{"yield":70,"why":"No yield in DB. Mushrooms lose about 30% when cooked.","confirmed":false},"Cucumber - sliced":{"yield":100,"why":"No yield in DB. Slicing only: out = in.","confirmed":false},"Daikon - diced":{"yield":100,"why":"No yield in DB. Cutting only: out = in.","confirmed":false},"Paprika Chickpeas":{"yield":100,"why":"DB: 1,000 g out of 106 g in (impossible). Roasted chickpeas: about out = in.","confirmed":false},"Polenta":{"yield":4500,"why":"No yield in DB. About all input minus some evaporation.","confirmed":false},"Potato Pure":{"yield":30000,"why":"No yield in DB. Mash is about all input.","confirmed":false},"Quinoa - Steamed":{"yield":2500,"why":"No yield in DB and no water line. 1 kg dry quinoa is about 2.5 kg cooked.","confirmed":false},"Red Bell Peppers - Cubed & Cooked":{"yield":90,"why":"DB: 800 g out of 112 g in (impossible). Used 80% of input.","confirmed":false},"Red cabbage - sliced":{"yield":80,"why":"DB: 1,050 g out of 80 g in (impossible). Slicing only: out = in.","confirmed":false},"Red Rice- Steamed":{"yield":2500,"why":"No yield in DB. 1 kg red rice + 1.5 L water is about 2.5 kg.","confirmed":false},"Regular tomatoes - Sliced":{"yield":100,"why":"No yield in DB. Slicing only: out = in.","confirmed":false},"Roasted Potates - Cut & Cooked":{"yield":180,"why":"DB: 1,000 g out of 220 g in (impossible). Roasting loses about 20%.","confirmed":false},"Steamed Barley":{"yield":5500,"why":"DB: 1,897 g from 2 kg barley + 4 L water (too low). About 5.5 kg cooked.","confirmed":false},"Steamed Bulgur":{"yield":2750,"why":"DB: 180 g from 1 kg bulgur + 2 L water (too low). 1 kg bulgur is about 2.75 kg cooked.","confirmed":false},"Sweet Potato- Roasted":{"yield":850,"why":"No yield in DB. Roasting loses about 20%.","confirmed":false},"Tortellini Spinach boiled":{"yield":150,"why":"No yield in DB. Used out = in (safe side).","confirmed":false},"Wild rice - steamed":{"yield":3300,"why":"DB: 9,728 g from 1 kg wild rice + 2.5 L water (too high). About 3.3 kg cooked.","confirmed":false},"Zucchini - Cubed & Cooked":{"yield":80,"why":"DB: 800 g out of 98 g in (impossible). Used about 80% of input.","confirmed":false},"Zucchini omelette":{"yield":300,"why":"No yield in DB. About all input.","confirmed":false},"Vegan Parmigiana":{"yield":1500,"why":"No yield in DB. Baking loses about 20%.","confirmed":false},"Schupfnudel boiled":{"yield":2000,"why":"No yield in DB. Ready Schupfnudeln are only heated: out = in.","confirmed":false},"Vegan Potatoe Pure":{"yield":30000,"why":"No yield in DB. Mash is about all input.","confirmed":false},"Boiled - Bandnudeln":{"yield":2200,"why":"No yield in DB. Dry ribbon noodles (Metro Aro): 1 kg dry is about 2.2 kg cooked.","confirmed":false},"Halloumi oven roasted":{"yield":95,"why":"No yield in DB. Roasting loses about 10%.","confirmed":false},"Apples - cubed":{"yield":900,"why":"No yield in DB. Coring and peeling lose about 10%.","confirmed":false},"Juice Fruit Salad Mojito":{"yield":70,"why":"No yield in DB. Mixed juice: out = in.","confirmed":false}},"suppliers":{"Allgroo Udon Nudeln Spicy":"Chefs Culinar","Artichokes":"Metro shop","Arugula":"Chefs Culinar","Asparagus":"Chefs Culinar","Aubergines":"Chefs Culinar","Avocado Frozen":"Metro shop","Baby Spinach":"Chefs Culinar","Bacon raw":"Chefs Culinar","Balkan-Sauce":"Chefs Culinar","Balsamic Dressing":"Chefs Culinar","Bandnudeln":"Metro shop","Basil":"Chefs Culinar","Beef Goulash":"Chefs Culinar","Black Beans (frijoles)":"Chefs Culinar","Black Pepper":"Metro shop","Broccoli":"Metro shop","Brussels Sprouts":"Chefs Culinar","Bulgur":"Chefs Culinar","Butter":"Metro shop","Caesar Dressing":"Chefs Culinar","Cannelini Beans":"Metro shop","Canola Oil (rapsöl)":"Metro shop","Carrots":"Chefs Culinar","Caulipower Mix":"Chefs Culinar","Champignons":"Chefs Culinar","Cheddar Cheese":"Chefs Culinar","Cheddar Grated":"Chefs Culinar","Cherry Tomatoes":"Chefs Culinar","Chicken Breast":"Chefs Culinar","Chicken Crunch Burger":"Pier 7","Chickpeas":"Chefs Culinar","Chili Con Carne":"Pier 7","Chilli Flakes":"Metro shop","Coconut Curry Soup":"Chefs Culinar","Coleslaw Salad":"Chefs Culinar","Cooking Cream":"Chefs Culinar","Corn":"Chefs Culinar","Corn Cream Soup":"Chefs Culinar","Cubed Pumpkin":"Chefs Culinar","Cucumber":"Metro shop","Curry Ketchup":"Metro shop","Curry Korma Sauce":"Pier 7","Curry Madras":"Pier 7","Curry Powder":"Metro shop","Daikon":"Chefs Culinar","Dr. Oetker Professional Vegetable Gold Seasoning":"Chefs Culinar","Edamame":"Metro shop","Egg mix":"Chefs Culinar","Eggs Large":"Chefs Culinar","Erbs Croutons":"Metro shop","Fajita tex-mex":"Pier 7","Feta Cheese":"Chefs Culinar","Folded Pizza":"Pier 7","Fresh Mint":"Chefs Culinar","Fried Onions":"Chefs Culinar","Fusilli":"Chefs Culinar","Glass Noodles":"Metro shop","Goat Cheese":"Metro shop","Green Beans":"Chefs Culinar","Green Peas":"Chefs Culinar","Guacamole":"Chefs Culinar","Halloumi - Raw":"Chefs Culinar","Hard cheese - regular (instead of emmental, parmesan, grana padano)":"Chefs Culinar","Iceberg Lettuce":"Chefs Culinar","Indian Curry Dip":"Pier 7","Jalapeños":"Metro shop","Kale":"Metro shop","Körniger Frischkäse":"Chefs Culinar","Lasagne alla Bolognese":"Surgital","Leipziger Allerlei":"Metro shop","Lemon Dressing":"Chefs Culinar","Lemon Fresh":"Metro shop","Lentils - Green":"Metro shop","Makhani Sauce":"Pier 7","Mango chili dressing":"Chefs Culinar","Meatballs":"Chefs Culinar","Milk":"Chefs Culinar","Minestrone":"Menu","Mint - fresh":"Chefs Culinar","Mozzarella Mini":"Chefs Culinar","Mushroom Lasagne":"Surgital","Mushroom Sauce":"Chefs Culinar","Olive Oil":"Metro shop","Olives Black":"Metro shop","Orange vinegrette":"Münchner Suppenküche","Paneer":"Pier 7","Paprika powder":"Metro shop","Parmigiana":"Surgital","Parsley":"Chefs Culinar","Peanut dressing":"Pier 7","Peanuts":"Chefs Culinar","Pearled Barley":"Metro shop","Penne Whole Wheat":"Metro shop","Pesto Sauce":"Metro shop","Phanaeng Curry":"Chefs Culinar","Pita Bread":"Chefs Culinar","Plant based chicken chunks":"Chefs Culinar","Polenta":"Metro shop","Pomegranite Seeds":"Metro shop","Potatoes Puree":"Chefs Culinar","Pumpkin Seeds":"Metro shop","Quick Cooking Noodles":"Hamberger","Quinoa":"Chefs Culinar","Radicchio":"Chefs Culinar","Red Beets":"Chefs Culinar","Red Bell Pepper":"Chefs Culinar","Red Kidney Beans":"Metro shop","Red onion":"Chefs Culinar","Red pesto":"Metro shop","Regular tomatoes":"Chefs Culinar","Rice - White Basmati":"Chefs Culinar","Rote bete curry":"Münchner Suppenküche","Rustic Panini":"Metro shop","Salt":"Metro shop","Sandwich Whole grain bread":"Chefs Culinar","Schupznudeln":"Metro shop","Semmelknödel":"Chefs Culinar","Sesame Seeds":"Chefs Culinar","Sesame seeds black":"Metro shop","Small Potatoes":"Chefs Culinar","Smoked Salmon":"Chefs Culinar","Smoked Tofu Firm":"Chefs Culinar","Sour Cream":"Chefs Culinar","Soy Sauce":"Hamberger","Soy sprouts":"Metro shop","Spatzle":"Chefs Culinar","Spinach leaves":"Metro shop","Sriracha Mayonese":"Metro shop","Sunflower Oil":"Chefs Culinar","Sweet Potato":"Chefs Culinar","Tandoori Naan":"Chefs Culinar","Tikka Masala Curry":"Pier 7","Tomato - Sun Dried":"Metro shop","Tomato Sauce":"Metro shop","Tortellini Spinach":"Chefs Culinar","Tuna":"Chefs Culinar","Tzatziki":"Chefs Culinar","Vegan Gyros":"Metro shop","Vegan Mayo":"Metro shop","Vegan Potatoe Pure":"Hamberger","Vegan bockwurst":"Chefs Culinar","Vegan meatballs":"Chefs Culinar","Vegetable gyoza":"Metro shop","Vinegar":"Metro shop","WallNuts":"Chefs Culinar","White Balsamic":"Chefs Culinar","White Beans":"Metro shop","Wild Rice":"Chefs Culinar","Yellow Thai Curry":"Chefs Culinar","Yogurt Dressing":"Metro shop","Zucchini":"Chefs Culinar"},"supplierOptions":{"Allgroo Udon Nudeln Spicy":["Chefs Culinar"],"Artichokes":["Metro shop","Hamberger"],"Arugula":["Chefs Culinar","Metro shop","Hamberger"],"Asparagus":["Chefs Culinar","Metro shop","Pier 7","Hamberger"],"Aubergines":["Chefs Culinar"],"Avocado Frozen":["Metro shop","Hamberger"],"Baby Spinach":["Chefs Culinar","Metro shop"],"Bacon raw":["Chefs Culinar","Hamberger"],"Balkan-Sauce":["Chefs Culinar"],"Balsamic Dressing":["Chefs Culinar","Metro shop","Hamberger"],"Bandnudeln":["Metro shop","Hamberger"],"Basil":["Chefs Culinar","Metro shop","Hamberger"],"Beef Goulash":["Chefs Culinar","Trend Meal"],"Black Beans (frijoles)":["Chefs Culinar","Metro shop","Pier 7","Hamberger"],"Black Pepper":["Metro shop","Hamberger"],"Broccoli":["Metro shop","Pier 7","Hamberger"],"Brussels Sprouts":["Chefs Culinar","Metro shop","Hamberger"],"Bulgur":["Chefs Culinar","Metro shop","Hamberger"],"Butter":["Metro shop","Hamberger"],"Caesar Dressing":["Chefs Culinar","Metro shop","Pier 7","Hamberger","Münchner Suppenküche"],"Cannelini Beans":["Metro shop","Hamberger"],"Canola Oil (rapsöl)":["Metro shop"],"Carrots":["Chefs Culinar","Metro shop"],"Caulipower Mix":["Chefs Culinar"],"Champignons":["Chefs Culinar","Metro shop","Hamberger"],"Cheddar Cheese":["Chefs Culinar","Metro shop","Hamberger"],"Cheddar Grated":["Chefs Culinar","Metro shop","Pier 7","Hamberger"],"Cherry Tomatoes":["Chefs Culinar","Metro shop","Hamberger"],"Chicken Breast":["Chefs Culinar","Metro shop","Zandbergen"],"Chicken Crunch Burger":["Pier 7"],"Chickpeas":["Chefs Culinar","Metro shop","Pier 7","Hamberger","Kreyenhop+Kluge"],"Chili Con Carne":["Pier 7","Münchner Suppenküche"],"Chilli Flakes":["Metro shop","Hamberger"],"Coconut Curry Soup":["Chefs Culinar"],"Coleslaw Salad":["Chefs Culinar","Metro shop","Pier 7","Hamberger"],"Cooking Cream":["Chefs Culinar","Metro shop","Hamberger"],"Corn":["Chefs Culinar","Metro shop","Pier 7","Hamberger"],"Corn Cream Soup":["Chefs Culinar"],"Cubed Pumpkin":["Chefs Culinar","Metro shop"],"Cucumber":["Metro shop"],"Curry Ketchup":["Metro shop","Pier 7","Hamberger"],"Curry Korma Sauce":["Pier 7"],"Curry Madras":["Pier 7"],"Curry Powder":["Metro shop"],"Daikon":["Chefs Culinar","Metro shop","Hamberger"],"Dr. Oetker Professional Vegetable Gold Seasoning":["Chefs Culinar"],"Edamame":["Metro shop","Hamberger","Kreyenhop+Kluge"],"Egg mix":["Chefs Culinar","Metro shop","Pier 7","Hamberger"],"Eggs Large":["Chefs Culinar","Metro shop","Pier 7","Hamberger"],"Erbs Croutons":["Metro shop","Hamberger"],"Fajita tex-mex":["Pier 7","Hamberger"],"Feta Cheese":["Chefs Culinar","Metro shop","Pier 7","Hamberger"],"Folded Pizza":["Pier 7"],"Fresh Mint":["Chefs Culinar","Metro shop"],"Fried Onions":["Chefs Culinar","Metro shop","Hamberger","Kreyenhop+Kluge"],"Fusilli":["Chefs Culinar","Metro shop","Hamberger"],"Glass Noodles":["Metro shop","Hamberger","Kreyenhop+Kluge","Asian Food Group"],"Goat Cheese":["Metro shop","Pier 7","Hamberger"],"Green Beans":["Chefs Culinar","Metro shop","Hamberger"],"Green Peas":["Chefs Culinar","Metro shop","Hamberger"],"Guacamole":["Chefs Culinar","Metro shop","Pier 7","Hamberger"],"Halloumi - Raw":["Chefs Culinar","Metro shop","Pier 7","Hamberger"],"Hard cheese - regular (instead of emmental, parmesan, grana padano)":["Chefs Culinar","Metro shop","Pier 7","Hamberger"],"Iceberg Lettuce":["Chefs Culinar","Metro shop","Hamberger"],"Indian Curry Dip":["Pier 7"],"Jalapeños":["Metro shop","Pier 7","Hamberger"],"Kale":["Metro shop"],"Körniger Frischkäse":["Chefs Culinar"],"Lasagne alla Bolognese":["Surgital"],"Leipziger Allerlei":["Metro shop","Hamberger"],"Lemon Dressing":["Chefs Culinar","Münchner Suppenküche","Wendland"],"Lemon Fresh":["Metro shop"],"Lentils - Green":["Metro shop","Hamberger"],"Makhani Sauce":["Pier 7"],"Mango chili dressing":["Chefs Culinar","Metro shop","Münchner Suppenküche"],"Meatballs":["Chefs Culinar","Metro shop","Pier 7"],"Milk":["Chefs Culinar","Metro shop","Pier 7","Hamberger"],"Minestrone":["Menu"],"Mint - fresh":["Chefs Culinar","Metro shop"],"Mozzarella Mini":["Chefs Culinar","Metro shop","Pier 7"],"Mushroom Lasagne":["Surgital"],"Mushroom Sauce":["Chefs Culinar","Trend Meal"],"Olive Oil":["Metro shop","Hamberger"],"Olives Black":["Metro shop","Hamberger"],"Orange vinegrette":["Münchner Suppenküche","Wendland"],"Paneer":["Pier 7"],"Paprika powder":["Metro shop","Hamberger"],"Parmigiana":["Surgital"],"Parsley":["Chefs Culinar","Metro shop","Hamberger"],"Peanut dressing":["Pier 7","Münchner Suppenküche","Wendland"],"Peanuts":["Chefs Culinar","Metro shop","Hamberger"],"Pearled Barley":["Metro shop","Hamberger"],"Penne Whole Wheat":["Metro shop"],"Pesto Sauce":["Metro shop","Pier 7","Hamberger","Robo"],"Phanaeng Curry":["Chefs Culinar"],"Pita Bread":["Chefs Culinar","Metro shop","Pier 7","Hamberger"],"Plant based chicken chunks":["Chefs Culinar","Metro shop"],"Polenta":["Metro shop","Hamberger"],"Pomegranite Seeds":["Metro shop"],"Potatoes Puree":["Chefs Culinar","Metro shop","Hamberger"],"Pumpkin Seeds":["Metro shop","Hamberger"],"Quick Cooking Noodles":["Hamberger","Kreyenhop+Kluge","Asian Food Group"],"Quinoa":["Chefs Culinar","Metro shop","Hamberger"],"Radicchio":["Chefs Culinar","Metro shop"],"Red Beets":["Chefs Culinar","Metro shop"],"Red Bell Pepper":["Chefs Culinar","Metro shop"],"Red Kidney Beans":["Metro shop","Hamberger"],"Red onion":["Chefs Culinar","Metro shop"],"Red pesto":["Metro shop","Pier 7","Hamberger","Robo"],"Regular tomatoes":["Chefs Culinar","Metro shop"],"Rice - White Basmati":["Chefs Culinar","Pier 7","Hamberger","Kreyenhop+Kluge"],"Rote bete curry":["Münchner Suppenküche"],"Rustic Panini":["Metro shop"],"Salt":["Metro shop","Hamberger"],"Sandwich Whole grain bread":["Chefs Culinar","Metro shop","Pier 7"],"Schupznudeln":["Metro shop"],"Semmelknödel":["Chefs Culinar","Metro shop","Pier 7"],"Sesame Seeds":["Chefs Culinar","Metro shop","Hamberger","Kreyenhop+Kluge"],"Sesame seeds black":["Metro shop","Hamberger"],"Small Potatoes":["Chefs Culinar","Metro shop"],"Smoked Salmon":["Chefs Culinar","Metro shop","Pier 7"],"Smoked Tofu Firm":["Chefs Culinar","Metro shop","Hamberger"],"Sour Cream":["Chefs Culinar","Metro shop","Pier 7","Hamberger"],"Soy Sauce":["Hamberger","Kreyenhop+Kluge"],"Soy sprouts":["Metro shop","Hamberger"],"Spatzle":["Chefs Culinar","Metro shop","Hamberger"],"Spinach leaves":["Metro shop","Pier 7"],"Sriracha Mayonese":["Metro shop","Hamberger","Kreyenhop+Kluge"],"Sunflower Oil":["Chefs Culinar","Metro shop","Hamberger"],"Sweet Potato":["Chefs Culinar","Metro shop"],"Tandoori Naan":["Chefs Culinar","Metro shop","Pier 7","Hamberger","Kreyenhop+Kluge"],"Tikka Masala Curry":["Pier 7"],"Tomato - Sun Dried":["Metro shop","Hamberger"],"Tomato Sauce":["Metro shop","Hamberger","Menu"],"Tortellini Spinach":["Chefs Culinar","Metro shop","Hamberger"],"Tuna":["Chefs Culinar","Metro shop","Pier 7","Hamberger"],"Tzatziki":["Chefs Culinar","Metro shop","Pier 7","Hamberger"],"Vegan Gyros":["Metro shop"],"Vegan Mayo":["Metro shop","Hamberger"],"Vegan Potatoe Pure":["Hamberger"],"Vegan bockwurst":["Chefs Culinar","Hamberger"],"Vegan meatballs":["Chefs Culinar","Metro shop","Vemiwa"],"Vegetable gyoza":["Metro shop","Hamberger","Kreyenhop+Kluge","Asian Food Group"],"Vinegar":["Metro shop","Hamberger"],"WallNuts":["Chefs Culinar","Metro shop","Hamberger"],"White Balsamic":["Chefs Culinar","Hamberger","Münchner Suppenküche","Wendland"],"White Beans":["Metro shop","Hamberger","Kreyenhop+Kluge"],"Wild Rice":["Chefs Culinar","Metro shop"],"Yellow Thai Curry":["Chefs Culinar","Münchner Suppenküche"],"Yogurt Dressing":["Metro shop","Pier 7","Hamberger"],"Zucchini":["Chefs Culinar","Metro shop"]},"supplierList":["Chefs Culinar","Metro shop","Pier 7","Hamberger","Zandbergen","Menu","Surgital","Münchner Suppenküche","Yfood","Kreyenhop+Kluge","KMS Verkaufsforderungs","Soul-K","Trend Meal","True Fruits","Wendland","Asian Food Group","Charitea","Forno D'asolo","Getvoila","Kai Cao","Lemonaid Beverages GmbH","Luce Gastronomie","Vemiwa","Robo"],"packs":{"Allgroo Udon Nudeln Spicy":0.69,"Artichokes":1.55,"Arugula":1.0,"Asparagus":1.0,"Aubergines":1.0,"Avocado Frozen":1.0,"Baby Spinach":1.0,"Bacon raw":1.0,"Balkan-Sauce":3.0,"Balsamic Dressing":1.0,"Bandnudeln":5.0,"Basil":1.0,"Beef Goulash":3.0,"Black Beans (frijoles)":1.75,"Black Pepper":1.1,"Broccoli":2.25,"Brussels Sprouts":10.0,"Bulgur":5.0,"Butter":0.25,"Caesar Dressing":1.0,"Cannelini Beans":1.5,"Canola Oil (rapsöl)":10.0,"Carrots":1.0,"Caulipower Mix":1.0,"Champignons":1.0,"Cheddar Cheese":1.0,"Cheddar Grated":0.5,"Cherry Tomatoes":1.0,"Chicken Breast":2.5,"Chicken Crunch Burger":0.15,"Chickpeas":1.5,"Chili Con Carne":2.5,"Chilli Flakes":0.5,"Coconut Curry Soup":3.0,"Coleslaw Salad":3.0,"Cooking Cream":1.0,"Corn":1.775,"Corn Cream Soup":3.0,"Cubed Pumpkin":10.0,"Cucumber":10.0,"Curry Ketchup":10.0,"Curry Korma Sauce":2.0,"Curry Madras":2.0,"Curry Powder":1.0,"Edamame":1.0,"Egg mix":1.0,"Eggs Large":30.0,"Erbs Croutons":0.5,"Fajita tex-mex":1.0,"Feta Cheese":2.0,"Folded Pizza":0.18,"Fresh Mint":1.0,"Fried Onions":1.0,"Fusilli":5.0,"Glass Noodles":1.0,"Goat Cheese":0.8,"Green Beans":2.5,"Green Peas":10.0,"Guacamole":1.0,"Halloumi - Raw":0.25,"Iceberg Lettuce":5.0,"Indian Curry Dip":1.0,"Jalapeños":2.9,"Kale":2.5,"Körniger Frischkäse":5.0,"Lasagne alla Bolognese":5.0,"Leipziger Allerlei":2.5,"Lemon Dressing":1.0,"Lemon Fresh":1.5,"Lentils - Green":2.65,"Makhani Sauce":6.0,"Mango chili dressing":3.0,"Meatballs":1.0,"Milk":1.0,"Minestrone":0.85,"Mint - fresh":0.1,"Mozzarella Mini":1.0,"Mushroom Lasagne":5.0,"Mushroom Sauce":3.0,"Olive Oil":5.0,"Olives Black":2.0,"Orange vinegrette":4.7,"Paneer":0.9,"Paprika powder":1.1,"Parmigiana":4.0,"Parsley":1.0,"Peanut dressing":4.7,"Peanuts":1.0,"Pearled Barley":1.0,"Pesto Sauce":0.5,"Phanaeng Curry":3.0,"Pita Bread":0.08,"Plant based chicken chunks":2.0,"Polenta":2.5,"Pomegranite Seeds":0.2,"Potatoes Puree":4.0,"Pumpkin Seeds":1.0,"Quick Cooking Noodles":0.5,"Quinoa":1.8,"Radicchio":1.0,"Red Beets":1.0,"Red Bell Pepper":1.0,"Red Kidney Beans":0.425,"Red onion":1.0,"Red pesto":0.45,"Regular tomatoes":1.0,"Rice - White Basmati":10.0,"Rote bete curry":2.5,"Rustic Panini":6.8,"Salt":10.0,"Schupznudeln":2.0,"Semmelknödel":1.87,"Sesame Seeds":1.0,"Sesame seeds black":0.454,"Small Potatoes":1.0,"Smoked Salmon":1.0,"Smoked Tofu Firm":1.75,"Sour Cream":1.0,"Soy Sauce":8.0,"Soy sprouts":2.9,"Spatzle":2.5,"Spinach leaves":2.5,"Sriracha Mayonese":0.73,"Sunflower Oil":10.0,"Sweet Potato":2.5,"Tandoori Naan":1.2,"Tikka Masala Curry":6.0,"Tomato - Sun Dried":1.7,"Tomato Sauce":2.5,"Tortellini Spinach":8.0,"Tuna":1.3,"Tzatziki":3.0,"Vegan Gyros":1.0,"Vegan Mayo":2.95,"Vegan Potatoe Pure":0.24,"Vegan bockwurst":0.8,"Vegan meatballs":2.0,"Vegetable gyoza":0.6,"Vinegar":10.0,"WallNuts":0.5,"White Balsamic":3.0,"White Beans":2.65,"Wild Rice":2.0,"Yellow Thai Curry":3.0,"Yogurt Dressing":1.0,"Zucchini":1.0},"packInfo":{"Allgroo Udon Nudeln Spicy":"Allgroo Udon Nudeln Spicy 690 g","Artichokes":"Artichokes 1.55 kg","Arugula":"Arugula 1 kg","Asparagus":"Asparagus 1 kg","Aubergines":"Aubergines Fresh Kiste (1 kg)","Avocado Frozen":"Avocado Frozen 1 kg","Baby Spinach":"Baby Spinach 1 kg","Bacon raw":"Bacon raw Pack (1000 g)","Balkan-Sauce":"Balkan-Sauce bag (3 kg)","Balsamic Dressing":"Balsamic Dressing Kühne Bottle (1 l)","Bandnudeln":"Bandnudeln Aro Pack (5 kg)","Basil":"Basil 1 kg","Beef Goulash":"Beef Goulash 3 kg","Black Beans (frijoles)":"Black Beans (frijoles) 2650 ml (1750 g)","Black Pepper":"Black Pepper Metro Chef Bag (1.1 kg)","Broccoli":"Broccoli Frozen pack (2.25 kg)","Brussels Sprouts":"Brussels Sprouts Box (10 kg)","Bulgur":"Bulgur 5 kg","Butter":"Butter 250 g","Caesar Dressing":"Caesar Dressing 1 kg","Cannelini Beans":"Cannelini Beans Can (1.5 kg)","Canola Oil (rapsöl)":"Canola Oil (rapsöl) 10000 ml","Carrots":"Carrots 1 kg","Caulipower Mix":"Caulipower Mix bag (1 kg)","Champignons":"Champignons Fresh Kiste (1 kg)","Cheddar Cheese":"Cheddar Cheese 1 kg","Cheddar Grated":"Cheddar Grated 500 g","Cherry Tomatoes":"Cherry Tomatoes 1 kg","Chicken Breast":"Chicken Breast Bag (Product B) (2500 g)","Chicken Crunch Burger":"Chicken Crunch Burger Box (Product A) (150 g)","Chickpeas":"Chickpeas 1500 g","Chili Con Carne":"Chili Con Carne 2.5 kg","Chilli Flakes":"Chilli Flakes 500 g","Coconut Curry Soup":"Coconut Curry Soup 3 kg","Coleslaw Salad":"Coleslaw Salad 3 kg","Cooking Cream":"Cooking Cream Pack (1 l)","Corn":"Corn 1775 g","Corn Cream Soup":"Corn Cream Soup bag (3 kg)","Cubed Pumpkin":"Cubed Pumpkin Bag (10 kg)","Cucumber":"Cucumber Sack (10 kg)","Curry Ketchup":"Curry Ketchup 10 kg","Curry Korma Sauce":"Curry Korma Sauce 2 kg","Curry Madras":"Curry Madras 2 kg","Curry Powder":"Curry Powder 1 kg","Daikon":"Daikon 1 piece","Dr. Oetker Professional Vegetable Gold Seasoning":"Dr. Oetker Professional Vegetable Gold Seasoning","Edamame":"Edamame Metro Chef (1 kg)","Egg mix":"Egg mix 1 kg","Eggs Large":"Eggs Large 30 piece","Erbs Croutons":"Erbs Croutons Pack (0.5 kg)","Fajita tex-mex":"Fajita tex-mex 1 kg","Feta Cheese":"Feta Cheese Kolios (2 kg)","Folded Pizza":"Folded Pizza 180 g","Fresh Mint":"Fresh Mint 1 kg","Fried Onions":"Fried Onions 1 kg","Fusilli":"Fusilli Wheat Pack (5 kg)","Glass Noodles":"Glass Noodles Lungkow pack (1 kg)","Goat Cheese":"Goat Cheese 800 g","Green Beans":"Green Beans Metro Chef Bag (2.5 kg)","Green Peas":"Green Peas Box (10 kg)","Guacamole":"Guacamole pack (1 kg)","Halloumi - Raw":"Halloumi - Raw 250 g","Hard cheese - regular (instead of emmental, parmesan, grana padano)":"Hard cheese - regular","Iceberg Lettuce":"Iceberg Lettuce 10 Pieces (5 kg)","Indian Curry Dip":"Indian Curry Dip 1 kg","Jalapeños":"Jalapeños Can (2900 g)","Kale":"Kale 2.5 kg","Körniger Frischkäse":"Körniger Frischkäse Bucket (5 kg)","Lasagne alla Bolognese":"Lasagne alla Bolognese 5 kg","Leipziger Allerlei":"Leipziger Allerlei 2.5 kg","Lemon Dressing":"Lemon Dressing 1 l","Lemon Fresh":"Lemon Fresh Bag (1.5 kg)","Lentils - Green":"Lentils - Green Can (2.65 kg)","Makhani Sauce":"Makhani Sauce 6 kg","Mango chili dressing":"Mango chili dressing 3 l","Meatballs":"Meatballs (Product A) (1 kg)","Milk":"Milk 1000 ml","Minestrone":"Minestrone 850 g","Mint - fresh":"Mint - fresh 100 g","Mozzarella Mini":"Mozzarella Mini 1 kg","Mushroom Lasagne":"Mushroom Lasagne 5 kg","Mushroom Sauce":"Mushroom Sauce Pkt (3 kg)","Olive Oil":"Olive Oil 5 l","Olives Black":"Olives Black 2000 g","Orange vinegrette":"Orange vinegrette 5 x 0.94 kg (4.7 kg)","Paneer":"Paneer pack (900 g)","Paprika powder":"Paprika powder 1.1 kg","Parmigiana":"Parmigiana 4 kg","Parsley":"Parsley 1 kg","Peanut dressing":"Peanut dressing 5x0.94kg (4.7 kg)","Peanuts":"Peanuts Unsalted (1 kg)","Pearled Barley":"Pearled Barley Pack (1 kg)","Penne Whole Wheat":"Penne Whole Wheat Mama Lucia Bio Vollkorn Pack","Pesto Sauce":"Pesto Sauce Metro Chef (500 g)","Phanaeng Curry":"Phanaeng Curry 3 kg","Pita Bread":"Pita Bread Mastemacher (80 g)","Plant based chicken chunks":"Plant based chicken chunks Bag (Product B) (2 kg)","Polenta":"Polenta 2.5 kg","Pomegranite Seeds":"Pomegranite Seeds 1 Piece (200 g)","Potatoes Puree":"Potatoes Puree 4 kg","Pumpkin Seeds":"Pumpkin Seeds 1 kg","Quick Cooking Noodles":"Quick Cooking Noodles 500 g","Quinoa":"Quinoa 1.8 kg","Radicchio":"Radicchio 1 kg","Red Beets":"Red Beets Fresh (1 kg)","Red Bell Pepper":"Red Bell Pepper 1 kg","Red Kidney Beans":"Red Kidney Beans Aro (425 g)","Red onion":"Red onion Fresh Kiste (1 kg)","Red pesto":"Red pesto BRESC Pesto Rosso (0.45 kg)","Regular tomatoes":"Regular tomatoes Fresh Kiste (1 kg)","Rice - White Basmati":"Rice - White Basmati 10 kg","Rote bete curry":"Rote bete curry 2.5 kg","Rustic Panini":"Rustic Panini Box (170g/pc) (6.8 kg)","Salt":"Salt Esco Sonnensalz (10 kg)","Sandwich Whole grain bread":"Sandwich Whole grain bread 20 piece","Schupznudeln":"Schupznudeln 2 kg","Semmelknödel":"Semmelknödel bag (1.87 kg)","Sesame Seeds":"Sesame Seeds 1000 g","Sesame seeds black":"Sesame seeds black 454 g","Small Potatoes":"Small Potatoes 1 kg","Smoked Salmon":"Smoked Salmon 1 kg","Smoked Tofu Firm":"Smoked Tofu Firm Bag (Product A) (1.75 kg)","Sour Cream":"Sour Cream 1 kg","Soy Sauce":"Soy Sauce 8 l","Soy sprouts":"Soy sprouts 2.9 kg","Spatzle":"Spatzle 2500 g","Spinach leaves":"Spinach leaves Blattspinat (2.5 kg)","Sriracha Mayonese":"Sriracha Mayonese Bottle (730 ml)","Sunflower Oil":"Sunflower Oil 10 l","Sweet Potato":"Sweet Potato Cubed (2.5 kg)","Tandoori Naan":"Tandoori Naan bag (1.2 kg)","Tikka Masala Curry":"Tikka Masala Curry 6 kg","Tomato - Sun Dried":"Tomato - Sun Dried 1.7 kg","Tomato Sauce":"Tomato Sauce 2.5 kg","Tortellini Spinach":"Tortellini Spinach box (Product A) (8 kg)","Tuna":"Tuna 1300 g","Tzatziki":"Tzatziki 3 kg","Vegan Gyros":"Vegan Gyros Bag (Product A) (1 kg)","Vegan Mayo":"Vegan Mayo 2.95 kg","Vegan Potatoe Pure":"Vegan Potatoe Pure box (240 g)","Vegan bockwurst":"Vegan bockwurst 800 g","Vegan meatballs":"Vegan meatballs 2 kg","Vegetable gyoza":"Vegetable gyoza 600 g","Vinegar":"Vinegar 10 l","WallNuts":"WallNuts 500 g","White Balsamic":"White Balsamic 3 l","White Beans":"White Beans 2.65 kg","Wild Rice":"Wild Rice 2 kg","Yellow Thai Curry":"Yellow Thai Curry 3 kg","Yogurt Dressing":"Yogurt Dressing 1 kg","Zucchini":"Zucchini 1 kg"},"units":{"Eggs Large":["eggs",55]},"groups":{"Chicken Breast":"Meat & fish","Bacon raw":"Meat & fish","Beef":"Meat & fish","Meatballs":"Meat & fish","Smoked Salmon":"Meat & fish","Tuna":"Meat & fish","Chicken Kebab":"Meat & fish","Plant based chicken chunks":"Vegan protein","Smoked Tofu Firm":"Vegan protein","Vegan meatballs":"Vegan protein","Vegan Gyros":"Vegan protein","Vegan bockwurst":"Vegan protein","Tofu Firm":"Vegan protein","Butter":"Dairy & eggs","Cheddar Cheese":"Dairy & eggs","Cheddar Grated":"Dairy & eggs","Cooking Cream":"Dairy & eggs","Egg mix":"Dairy & eggs","Eggs Large":"Dairy & eggs","Feta Cheese":"Dairy & eggs","Goat Cheese":"Dairy & eggs","Hard cheese - regular (instead of emmental, parmesan, grana padano)":"Dairy & eggs","Körniger Frischkäse":"Dairy & eggs","Milk":"Dairy & eggs","Paneer":"Dairy & eggs","Tzatziki":"Dairy & eggs","Mozzarella Mini":"Dairy & eggs","Halloumi - Raw":"Dairy & eggs","Sour Cream":"Dairy & eggs","Cream Cheese":"Dairy & eggs","Arugula":"Fresh veg, fruit & herbs","Asparagus":"Fresh veg, fruit & herbs","Aubergines":"Fresh veg, fruit & herbs","Avocado fresh":"Fresh veg, fruit & herbs","Baby Spinach":"Fresh veg, fruit & herbs","Basil":"Fresh veg, fruit & herbs","Brussels Sprouts":"Fresh veg, fruit & herbs","Carrots":"Fresh veg, fruit & herbs","Champignons":"Fresh veg, fruit & herbs","Cherry Tomatoes":"Fresh veg, fruit & herbs","Cucumber":"Fresh veg, fruit & herbs","Daikon":"Fresh veg, fruit & herbs","Fresh Mint":"Fresh veg, fruit & herbs","Iceberg Lettuce":"Fresh veg, fruit & herbs","Kale":"Fresh veg, fruit & herbs","Lemon Fresh":"Fresh veg, fruit & herbs","Mint - fresh":"Fresh veg, fruit & herbs","Parsley":"Fresh veg, fruit & herbs","Pomegranite Seeds":"Fresh veg, fruit & herbs","Radicchio":"Fresh veg, fruit & herbs","Red Bell Pepper":"Fresh veg, fruit & herbs","Red cabbage":"Fresh veg, fruit & herbs","Regular tomatoes":"Fresh veg, fruit & herbs","Small Potatoes":"Fresh veg, fruit & herbs","Soy sprouts":"Fresh veg, fruit & herbs","Sweet Potato":"Fresh veg, fruit & herbs","Zucchini":"Fresh veg, fruit & herbs","Red onion":"Fresh veg, fruit & herbs","Apple":"Fresh veg, fruit & herbs","Grapes - Red Seedless":"Fresh veg, fruit & herbs","Ananas":"Fresh veg, fruit & herbs","Honeydew Melon":"Fresh veg, fruit & herbs","Green Asparagus":"Fresh veg, fruit & herbs","Celeriac":"Fresh veg, fruit & herbs","Radish":"Fresh veg, fruit & herbs","Avocado Frozen":"Frozen veg","Broccoli":"Frozen veg","Cubed Pumpkin":"Frozen veg","Edamame":"Frozen veg","Green Beans":"Frozen veg","Green Peas":"Frozen veg","Spinach leaves":"Frozen veg","Mango - always frozen":"Frozen veg","Makhani Sauce":"Ready-made components","Coconut Curry Soup":"Ready-made components","Phanaeng Curry":"Ready-made components","Yellow Thai Curry":"Ready-made components","Curry Korma Sauce":"Ready-made components","Curry Madras":"Ready-made components","Tikka Masala Curry":"Ready-made components","Balkan-Sauce":"Ready-made components","Mushroom Sauce":"Ready-made components","Chili Con Carne":"Ready-made components","Corn Cream Soup":"Ready-made components","Indian Vegan Lentil Dal":"Ready-made components","Lasagne alla Bolognese":"Ready-made components","Parmigiana":"Ready-made components","Minestrone":"Ready-made components","Coleslaw Salad":"Ready-made components","Chicken Crunch Burger":"Ready-made components","Vegetable gyoza":"Ready-made components","Semmelknödel":"Ready-made components","Tortellini Spinach":"Ready-made components","Allgroo Udon Nudeln Spicy":"Ready-made components","Leipziger Allerlei":"Ready-made components","Caulipower Mix":"Ready-made components","Rote bete curry":"Ready-made components","Beef Goulash":"Ready-made components","Mushroom Lasagne":"Ready-made components","Schupznudeln":"Ready-made components","Sweet mash potatoe":"Ready-made components","Heat to Eat: Lentil Stew “Feijoada Style”":"Ready-made components","Heat to Eat: Chicken Teriyaki with vegetables":"Ready-made components","Heat to Eat: Vegetarian Cheese Tortellini":"Ready-made components","Heat to Eat: Bami Goreng":"Ready-made components","Balsamic Dressing":"Sauces & dressings","Caesar Dressing":"Sauces & dressings","Indian Curry Dip":"Sauces & dressings","Lemon Dressing":"Sauces & dressings","Mango chili dressing":"Sauces & dressings","Orange vinegrette":"Sauces & dressings","Peanut dressing":"Sauces & dressings","Pesto Sauce":"Sauces & dressings","Red pesto":"Sauces & dressings","Sriracha Mayonese":"Sauces & dressings","Vegan Mayo":"Sauces & dressings","Guacamole":"Sauces & dressings","Yogurt Dressing":"Sauces & dressings","Curry Ketchup":"Sauces & dressings","Hummus":"Sauces & dressings","Honey-Mustard dressing":"Sauces & dressings","Pita Bread":"Bread","Sandwich Whole grain bread":"Bread","Rustic Panini":"Bread","Tandoori Naan":"Bread","Erbs Croutons":"Bread","Folded Pizza":"Bread","Wraps 30\"":"Bread","Bulgur":"Dry goods","Fried Onions":"Dry goods","Fusilli":"Dry goods","Glass Noodles":"Dry goods","Peanuts":"Dry goods","Pearled Barley":"Dry goods","Penne Whole Wheat":"Dry goods","Polenta":"Dry goods","Potatoes Puree":"Dry goods","Pumpkin Seeds":"Dry goods","Quick Cooking Noodles":"Dry goods","Quinoa":"Dry goods","red rice":"Dry goods","Rice - White Basmati":"Dry goods","Sesame Seeds":"Dry goods","Spatzle":"Dry goods","WallNuts":"Dry goods","Wild Rice":"Dry goods","Sesame seeds black":"Dry goods","Vegan Potatoe Pure":"Dry goods","Bandnudeln":"Dry goods","Brown Sugar":"Dry goods","Black Beans (frijoles)":"Dry & canned","Cannelini Beans":"Dry & canned","Chickpeas":"Dry & canned","Corn":"Dry & canned","Jalapeños":"Dry & canned","Lentils - Green":"Dry & canned","Olives Black":"Dry & canned","Red Beets":"Dry & canned","Tomato - Sun Dried":"Dry & canned","Tomato Sauce":"Dry & canned","White Beans":"Dry & canned","Artichokes":"Dry & canned","Red Kidney Beans":"Dry & canned","Cucumber Pickled":"Dry & canned","Black Pepper":"Oils, spices & condiments","Canola Oil (rapsöl)":"Oils, spices & condiments","Chilli Flakes":"Oils, spices & condiments","Dr. Oetker Professional Vegetable Gold Seasoning":"Oils, spices & condiments","Fajita tex-mex":"Oils, spices & condiments","Olive Oil":"Oils, spices & condiments","Paprika powder":"Oils, spices & condiments","Salt":"Oils, spices & condiments","Soy Sauce":"Oils, spices & condiments","Sunflower Oil":"Oils, spices & condiments","Vinegar":"Oils, spices & condiments","White Balsamic":"Oils, spices & condiments","Curry Powder":"Oils, spices & condiments","Lime Juice":"Oils, spices & condiments"},"notes":{"Eggs Large":"Counted in eggs (55 g each).","Mint - fresh":"Same herb as 'Fresh Mint' (listed twice in DB). Order as one.","Fresh Mint":"Same herb as 'Mint - fresh' (listed twice in DB). Order as one."},"checks":["Menu: only NRW menus from the BB database (kitchen NRW, or NRW in the menu name, e.g. '5.10 to 9.10 Oct 26 NRW'). A week without an NRW menu stays empty until the menu team adds it. Data refreshes every hour.","Forecast: type the portions per dish and day in Menu & forecast. Nothing is taken from other kitchens.","Suppliers and pack sizes are the company's Apicbase defaults until the NRW outlet is set up in Apicbase. Confirm each supplier delivers to Remscheid, or change the supplier on the item.","Yields: many sub-recipe yields in the DB are wrong or missing. The Yields tab shows the ones this week uses; the kitchen lead confirms them.","Salad leaves, herbs, tomatoes and cucumber will not stay fresh from Friday to Friday. Plan a mid-week top-up.","The DB has net amounts only (no waste %). The buffer in Plan settings covers waste and safety stock.","Not included: water, packaging and cleaning."]}</script>
+<script type="application/json" id="seedDb">null</script>
+<script type="application/json" id="seedSettings">null</script>
 <script>
 /*CORE-START*/
 const WATER = /^(\[i\]\s*)?water$/i;
@@ -285,8 +314,23 @@ const KEY = 'nrw-stock-planner-v1';
 const XLSX_URL = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
 const TYPES = { LC: 'Lunch Classics', SB: 'Salads & Bowls', CI: 'Cucina Italiana', SW: 'Sandwiches & Wraps', HE: 'Heat to Eat', AD: 'Add-ons' };
 let DB, SET, PLAN, WEEK, FIRST_WEEK, LIVE = false, SEARCH = '';
-let ST = (() => { try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { return {}; } })();
-const save = () => { try { localStorage.setItem(KEY, JSON.stringify(ST)); } catch (e) { /* ponytail: storage blocked -> edits last until reload */ } };
+const FB_SDK = 'https://www.gstatic.com/firebasejs/10.12.2/';
+const FB_ROOT = 'nrw-stock-planner';
+const CACHE_KEY = 'nrw-stock-planner-cache';
+const enc = s => encodeURIComponent(s).replace(/\./g, '%2E'); // Firebase keys can't hold . # $ [ ] /
+const dec = s => { try { return decodeURIComponent(s); } catch (e) { return s; } };
+let STORE = null, USER = null, UNSUB = null, CONNECTED = null, LAST = null, OLD = null, REMOTE_PENDING = false;
+let STOCK_EDIT = false; // stock is locked until someone presses Edit stock (not saved: opens locked every time)
+const ST = {}; // team data (fc, stock, suppliers, packs, yields, buffer) from Firebase + this browser's tab and "show dishes"
+(() => {
+  try {
+    const s = JSON.parse(localStorage.getItem(KEY) || '{}') || {};
+    ST.view = s.view; ST.showDishes = s.showDishes;
+    const old = ['fc', 'stock', 'suppliers', 'packs', 'yields', 'buffer'].filter(k => s[k] != null && (typeof s[k] !== 'object' || Object.keys(s[k]).length));
+    if (old.length) OLD = Object.fromEntries(old.map(k => [k, s[k]]));
+  } catch (e) { /* nothing saved */ }
+})();
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify({ view: ST.view, showDishes: ST.showDishes })); } catch (e) { /* storage blocked */ } };
 
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const nf = (v, d) => Number(v).toLocaleString('en-GB', { minimumFractionDigits: d, maximumFractionDigits: d });
@@ -341,18 +385,6 @@ function defaultWeek() { // the next week that has an NRW menu and a delivery st
   return mondayOf(today);
 }
 
-function tidyOldData() { // settings saved by older versions of this page
-  for (const k of ['portions', 'off', 'delivery', 'days1', 'daysW', 'portionsPerDay']) delete ST[k];
-  const flat = Object.entries(ST.stock || {}).filter(([, v]) => typeof v !== 'object');
-  if (flat.length) {
-    const wk = iso(WEEK);
-    ST.stock[wk] = ST.stock[wk] || {};
-    for (const [k, v] of flat) { if (!(k in ST.stock[wk])) ST.stock[wk][k] = v; delete ST.stock[k]; }
-  }
-  if (ST.view && !VIEWS.includes(ST.view)) ST.view = 'forecast';
-  save();
-}
-
 function menuText(P) {
   if (!P.menus.length) return 'No NRW menu in the database for this week yet';
   return 'NRW menu: ' + P.menus.map(m => `${m.name} (${dm(fromIso(m.from))} – ${dm(fromIso(m.to))})`).join(', ');
@@ -365,6 +397,7 @@ function render() {
   PLAN.delivery = deliveryLabel(deliveriesFor(WEEK));
   $('#kitchen').textContent = `${SET.kitchen}. NRW menus only, forecast typed by you.`;
   $('#freshness').textContent = `BB database data from ${stamp(DB.generated)}${LIVE ? '' : ' (built-in copy)'}`;
+  renderStatus();
   renderWeek();
   const b = $('#sBuffer'); if (document.activeElement !== b) b.value = Math.round(PLAN.buf * 100);
   $('#showDishes').checked = showDishes();
@@ -446,7 +479,8 @@ function itemHtml(r) {
       <td>${r.dishes.length} ${r.dishes.length === 1 ? 'dish' : 'dishes'}</td>
       <td class="num">${nf(r.portions, 0)}</td>
       <td class="num qty">${qty(r.need, r.unit)}${u}</td>
-      <td class="num"><input type="number" min="0" step="any" inputmode="decimal" data-stock="${n}" data-fid="stock|${n}" value="${r.stock > 0 ? r.stock : ''}" placeholder="0" aria-label="Stock on hand in ${esc(r.unit)}, ${n}"></td>
+      <td class="num">${STOCK_EDIT ? `<input type="number" min="0" step="any" inputmode="decimal" data-stock="${n}" data-fid="stock|${n}" value="${r.stock > 0 ? r.stock : ''}" placeholder="0" aria-label="Stock on hand in ${esc(r.unit)}, ${n}">`
+        : `<span class="locked">${r.stock > 0 ? `${qty(r.stock, r.unit)}${u}` : '–'}</span>`}</td>
       <td class="num qty">${qty(r.toOrder, r.unit)}${u}</td>
       <td class="num"><input type="number" min="0" step="any" inputmode="decimal" data-pack="${n}" data-fid="pack|${n}" value="${r.pack > 0 ? r.pack : ''}" placeholder="–" aria-label="Pack size in ${esc(r.unit)}, ${n}"></td>
       <td class="num qty">${r.packs == null ? '–' : r.packs}</td>
@@ -462,6 +496,10 @@ function renderOrder() {
   const none = count(r => r.supplier === NO_SUPPLIER), est = count(r => r.estimate), noPack = count(r => !(r.pack > 0));
   $('#chips').innerHTML = [`${P.rows.length} items`, `${nf(P.portionsSum, 0)} portions`, `${sups} suppliers`, none ? `${none} without supplier` : '', est ? `${est} depend on a yield estimate` : '', noPack ? `${noPack} without pack size` : '']
     .filter(Boolean).map(x => `<span class="chip">${x}</span>`).join('');
+  const eb = $('#stockEditBtn');
+  eb.textContent = STOCK_EDIT ? 'Done' : 'Edit stock'; eb.setAttribute('aria-pressed', String(STOCK_EDIT));
+  $('#orderList').classList.toggle('editing', STOCK_EDIT);
+  if (STOCK_EDIT) $('#chips').insertAdjacentHTML('beforeend', `<span class="chip warn">Editing stock for week ${w.no}. Press Done when you finish.</span>`);
   if (!P.dishes.length) { $('#orderList').innerHTML = `<p class="empty">No NRW menu in the database for ${w.label} yet.</p>`; return; }
   if (!P.rows.length) { $('#orderList').innerHTML = '<p class="empty">No forecast for this week yet. Type the portions in <em>Menu &amp; forecast</em> and the order list fills in.</p>'; return; }
   const rows = q ? P.rows.filter(r => r.name.toLowerCase().includes(q) || r.dishes.some(d => d.name.toLowerCase().includes(q))) : P.rows;
@@ -498,8 +536,7 @@ function renderYields() {
       <thead><tr><th scope="col">Sub-recipe</th><th class="num" scope="col">Cooked this week</th><th class="num" scope="col">DB yield (g)</th><th class="num" scope="col">Batch input (g)</th><th class="num" scope="col">Yield used (g)</th><th class="num" scope="col">Batches this week</th><th scope="col">Status</th></tr></thead>
       <tbody>${rows}</tbody>
     </table></div>
-    <p class="small muted">To share suppliers, pack sizes, yields and forecasts with everyone, download the settings file and replace <code>data/kitchen-settings.json</code> in the GitHub repo.</p>
-    <p><button class="btn primary" id="settingsBtn">Download settings file</button></p>`;
+    <p class="small muted">Changes are saved online and shared with the whole team.</p>`;
 }
 
 function renderChecks() {
@@ -508,8 +545,8 @@ function renderChecks() {
     ${PLAN.dishes.some(d => d.incomplete) ? `<h2 class="h2">Recipes that look incomplete in the DB (this week)</h2><ul class="checks">${PLAN.dishes.filter(d => d.incomplete).map(d => `<li>${esc(d.name)}: recipe lines add up to ${nf(d.lineG, 0)} g of a ${nf(d.portion, 0)} g dish. The order list only has those lines.</li>`).join('')}</ul>` : ''}
     ${warn.length ? `<h2 class="h2">Recipe lines skipped</h2><ul class="checks">${warn.map(w => `<li>${esc(w)}</li>`).join('')}</ul>` : ''}
     <h2 class="h2">Where the numbers come from</h2>
-    <p class="lead">NRW menus and recipes come from the BB database (${esc(stamp(DB.generated))}). ${LIVE ? 'GitHub refreshes data/db-snapshot.json every hour.' : 'This is the copy built into the page. On GitHub the page loads the hourly refresh.'} Portions are only what you type in the forecast. Stock counts, forecasts, suppliers, pack sizes and yields you type are saved in this browser.</p>
-    <p><button class="btn" id="clearAll">Clear my changes</button></p>`;
+    <p class="lead">NRW menus and recipes come from the BB database (${esc(stamp(DB.generated))}). ${LIVE ? 'GitHub refreshes data/db-snapshot.json every hour.' : 'This is the copy built into the page. On GitHub the page loads the hourly refresh.'} Portions are only what you type in the forecast.</p>
+    <p class="lead">Forecasts, stock counts, suppliers, pack sizes, yields and the buffer are saved online in the team database (Firebase project <code>${esc((SET.firebase || {}).projectId || '')}</code>), shared live with everyone signed in. Nothing is written to the BB database or Apicbase.</p>`;
 }
 
 function download(name, text, type) {
@@ -548,26 +585,108 @@ async function exportExcel() {
   X.writeFile(wb, `nrw-order-week${P.week.no}-${P.week.key}.xlsx`);
 }
 
-function exportSettings() {
-  const out = JSON.parse(JSON.stringify(SET));
-  out.yields = out.yields || {}; out.packs = out.packs || {}; out.suppliers = out.suppliers || {};
-  for (const [name, v] of Object.entries(ST.yields || {})) out.yields[name] = Object.assign({}, out.yields[name], { yield: +v, confirmed: true });
-  for (const [name, v] of Object.entries(ST.packs || {})) { if (+v > 0) out.packs[name] = +v; else delete out.packs[name]; }
-  for (const [name, v] of Object.entries(ST.suppliers || {})) { if (v) out.suppliers[name] = v; else delete out.suppliers[name]; }
-  if (ST.fc) out.forecast = Object.assign({}, out.forecast, ST.fc);
-  if (ST.buffer != null) out.buffer = ST.buffer;
-  download('kitchen-settings.json', JSON.stringify(out, null, 2) + '\n', 'application/json');
+// ---------- team data: Firebase Realtime Database, shared live with everyone signed in ----------
+// Paths under nrw-stock-planner/: forecast/{day}/{dishId}, stock/{monday}/{item}, suppliers/{item}, packs/{item},
+// yields/{subRecipe}, settings/buffer, meta/lastChange. Item and sub-recipe names are encoded with enc().
+async function firebaseStore(config) {
+  if (!config || !config.databaseURL) throw new Error('Firebase settings are missing in data/kitchen-settings.json');
+  const [app, A, D] = await Promise.all(['firebase-app.js', 'firebase-auth.js', 'firebase-database.js'].map(f => import(FB_SDK + f)));
+  const fb = app.initializeApp(config), auth = A.getAuth(fb), db = D.getDatabase(fb);
+  return {
+    onAuth: cb => A.onAuthStateChanged(auth, cb),
+    signIn: (email, pass) => A.signInWithEmailAndPassword(auth, email, pass),
+    signUp: async (email, pass) => { const c = await A.createUserWithEmailAndPassword(auth, email, pass); await A.sendEmailVerification(c.user); },
+    resend: () => A.sendEmailVerification(auth.currentUser),
+    reset: email => A.sendPasswordResetEmail(auth, email),
+    refresh: async () => { await auth.currentUser.reload(); await auth.currentUser.getIdToken(true); return auth.currentUser; },
+    signOut: () => A.signOut(auth),
+    listen: (cb, onErr) => D.onValue(D.ref(db, FB_ROOT), snap => cb(snap.val() || {}), onErr),
+    connected: cb => D.onValue(D.ref(db, '.info/connected'), snap => cb(!!snap.val())),
+    update: changes => D.update(D.ref(db, FB_ROOT), changes),
+    now: () => D.serverTimestamp(),
+  };
 }
 
-function setMap(k, key, v) {
-  ST[k] = ST[k] || {};
-  if (v === null || v === undefined) delete ST[k][key]; else ST[k][key] = v;
+function applyRemote(data) {
+  const decode = o => Object.fromEntries(Object.entries(o || {}).map(([k, v]) => [dec(k), v]));
+  ST.fc = data.forecast || {};
+  ST.stock = Object.fromEntries(Object.entries(data.stock || {}).map(([w, m]) => [w, decode(m)]));
+  ST.suppliers = decode(data.suppliers); ST.packs = decode(data.packs); ST.yields = decode(data.yields);
+  ST.buffer = data.settings && Number.isFinite(+data.settings.buffer) ? +data.settings.buffer : null;
+  LAST = (data.meta && data.meta.lastChange) || null;
 }
-function setFc(dayIso, id, v) {
-  ST.fc = ST.fc || {};
-  const m = ST.fc[dayIso] = ST.fc[dayIso] || {};
-  if (v === null) delete m[id]; else m[id] = v;
-  if (!Object.keys(m).length) delete ST.fc[dayIso];
+const cacheLoad = () => { try { const d = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null'); if (d) applyRemote(d); } catch (e) { /* no copy yet */ } };
+const cacheSave = d => { try { localStorage.setItem(CACHE_KEY, JSON.stringify(d)); } catch (e) { /* storage blocked */ } };
+
+function put(changes, what) { // one save = one Firebase update (all paths at once), stamped with who and when
+  if (!STORE || !USER) { showError('Sign in first. Nothing was saved.'); return; }
+  changes['meta/lastChange'] = { by: USER.email, at: STORE.now(), what };
+  Promise.resolve().then(() => STORE.update(changes)).catch(e => showError(`Not saved: ${e.message}`));
+}
+
+function migrateOld(data) { // numbers typed in this browser before the team database: offer to upload them once
+  if (!OLD) return;
+  const old = OLD; OLD = null; save();
+  const remoteHas = ['forecast', 'stock', 'suppliers', 'packs', 'yields'].some(k => data[k] && Object.keys(data[k]).length);
+  if (remoteHas || !confirm('This browser still has numbers typed before the team database (forecast, stock, suppliers, pack sizes or yields). Upload them for the whole team?')) return;
+  const ch = {}, num = (path, v, min) => { if (v !== null && v !== '' && Number.isFinite(+v) && +v >= min) ch[path] = +v; };
+  for (const [d, m] of Object.entries(old.fc || {})) for (const [id, v] of Object.entries(m || {})) num(`forecast/${d}/${id}`, v, 0);
+  for (const [w, m] of Object.entries(old.stock || {})) {
+    if (m && typeof m === 'object') for (const [it, v] of Object.entries(m)) num(`stock/${w}/${enc(it)}`, v, 0);
+    else num(`stock/${iso(WEEK)}/${enc(w)}`, m, 0);
+  }
+  for (const [n, v] of Object.entries(old.suppliers || {})) ch[`suppliers/${enc(n)}`] = String(v).slice(0, 100);
+  for (const [n, v] of Object.entries(old.packs || {})) num(`packs/${enc(n)}`, v, 0);
+  for (const [n, v] of Object.entries(old.yields || {})) num(`yields/${enc(n)}`, v, 0.001);
+  if (old.buffer != null && +old.buffer >= 0 && +old.buffer <= 1) ch['settings/buffer'] = +old.buffer;
+  if (Object.keys(ch).length) put(ch, 'upload from browser');
+}
+
+const domain = () => String(SET.allowedEmailDomain || 'bellabona.com').toLowerCase();
+function showError(msg) { const el = $('#appError'); el.hidden = !msg; el.textContent = msg || ''; }
+const authMsg = (m, bad) => { const el = $('#authMsg'); el.textContent = m || ''; el.classList.toggle('warn', !!bad); };
+const friendly = e => ({
+  'auth/invalid-credential': 'Wrong email or password.', 'auth/invalid-login-credentials': 'Wrong email or password.',
+  'auth/wrong-password': 'Wrong email or password.', 'auth/user-not-found': 'No account with this email yet. Use Create account.',
+  'auth/email-already-in-use': 'This email already has an account. Sign in, or use Forgot password.',
+  'auth/weak-password': 'Use at least 6 characters for the password.', 'auth/invalid-email': 'This email address is not valid.',
+  'auth/too-many-requests': 'Too many tries. Wait a few minutes or use Forgot password.', 'auth/network-request-failed': 'No internet connection.',
+  'auth/operation-not-allowed': 'Email sign-in is not switched on in Firebase yet (Authentication > Sign-in method > Email/Password).',
+}[e && e.code] || (e && e.message) || String(e));
+
+function renderStatus() {
+  const when = t => new Date(t).toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+  $('#userEmail').textContent = USER ? USER.email : '';
+  $('#signOut').hidden = !USER;
+  $('#status').textContent = !USER ? '' : CONNECTED === false ? 'Offline: changes are saved when you are back online.'
+    : CONNECTED ? `Saved online${LAST && LAST.by ? `. Last change: ${LAST.by.split('@')[0]}, ${when(LAST.at)}.` : '.'}` : 'Connecting…';
+}
+function showAuth(mode) {
+  $('#app').hidden = true; $('#auth').hidden = false;
+  $('#authForm').hidden = mode !== 'signin'; $('#verifyBox').hidden = mode !== 'verify';
+  for (const el of document.querySelectorAll('.domain')) el.textContent = '@' + domain();
+  if (mode === 'verify') $('#verifyEmail').textContent = USER.email;
+  renderStatus();
+}
+function onAuth(user) {
+  USER = user;
+  if (UNSUB) { UNSUB(); UNSUB = null; }
+  if (!user) { // signed out: forget the team data on this device
+    for (const k of ['fc', 'stock', 'suppliers', 'packs', 'yields', 'buffer']) delete ST[k];
+    LAST = null;
+    try { localStorage.removeItem(CACHE_KEY); } catch (e) { /* storage blocked */ }
+    return showAuth('signin');
+  }
+  if (!user.emailVerified) return showAuth('verify');
+  showError(''); authMsg('');
+  $('#auth').hidden = true; $('#app').hidden = false;
+  render();
+  let first = true;
+  UNSUB = STORE.listen(data => {
+    applyRemote(data); cacheSave(data);
+    if (first) { first = false; migrateOld(data); }
+    renderStatus(); renderFromRemote();
+  }, e => showError(`No access to the team data (${e.message}). Sign in with a verified @${domain()} email, and check the database rules.`));
 }
 
 let pending = false;
@@ -576,69 +695,109 @@ function rerenderSoon() { // wait for focus to move, then re-render and put the 
   pending = true;
   setTimeout(() => {
     pending = false;
-    const fid = document.activeElement && document.activeElement.dataset ? document.activeElement.dataset.fid : null;
+    if ($('#app').hidden) return;
+    const a = document.activeElement;
+    if (a && a.closest && a.closest('#app') && a.tagName === 'INPUT' && a.value !== a.defaultValue) { REMOTE_PENDING = true; return; } // mid-typing: wait until the field is left
+    const fid = a && a.dataset ? a.dataset.fid : null;
     render();
     const el = fid && document.querySelector(`[data-fid="${CSS.escape(fid)}"]`);
     if (el) el.focus();
   }, 0);
 }
+function renderFromRemote() { // someone else changed something: don't wipe a number while it is being typed
+  const a = document.activeElement;
+  if (a && a.closest && a.closest('#app') && /^(INPUT|SELECT)$/.test(a.tagName)) { REMOTE_PENDING = true; return; }
+  rerenderSoon();
+}
+document.addEventListener('focusout', () => { if (REMOTE_PENDING) { REMOTE_PENDING = false; rerenderSoon(); } });
 
 document.addEventListener('change', e => {
   const el = e.target, d = el.dataset;
+  if (!el.closest('#app')) return;
   const val = el.value === '' || !Number.isFinite(+el.value) || +el.value < 0 ? null : +el.value;
-  if ('fc' in d) { const [dayIso, id] = d.fc.split('|'); setFc(dayIso, id, val); }
-  else if ('fill' in d) { const i = PLAN.dishes.findIndex(x => x.id === d.fill); if (i >= 0) PLAN.dishes[i].perDay.forEach((v, j) => { if (v !== null) setFc(PLAN.week.days[j], d.fill, val); }); }
-  else if ('stock' in d) { ST.stock = ST.stock || {}; ST.stock[PLAN.week.key] = ST.stock[PLAN.week.key] || {}; if (val === null) delete ST.stock[PLAN.week.key][d.stock]; else ST.stock[PLAN.week.key][d.stock] = val; }
-  else if ('pack' in d) setMap('packs', d.pack, val === null ? 0 : val);
-  else if ('sup' in d) setMap('suppliers', d.sup, el.value);
-  else if ('yield' in d) setMap('yields', d.yield, val > 0 ? val : null);
-  else if (el.id === 'showDishes') ST.showDishes = el.checked;
-  else if (el.id === 'sBuffer') ST.buffer = val === null ? null : val / 100;
+  const wk = PLAN.week.key;
+  if ('fc' in d) { const [dayIso, id] = d.fc.split('|'); put({ [`forecast/${dayIso}/${id}`]: val }, 'forecast'); }
+  else if ('fill' in d) {
+    const x = PLAN.dishes.find(t => t.id === d.fill), ch = {};
+    if (x) x.perDay.forEach((v, j) => { if (v !== null) ch[`forecast/${PLAN.week.days[j]}/${d.fill}`] = val; });
+    put(ch, 'forecast');
+  }
+  else if ('stock' in d) put({ [`stock/${wk}/${enc(d.stock)}`]: val }, 'stock count');
+  else if ('pack' in d) put({ [`packs/${enc(d.pack)}`]: val === null ? 0 : val }, 'pack size');
+  else if ('sup' in d) put({ [`suppliers/${enc(d.sup)}`]: el.value }, 'supplier');
+  else if ('yield' in d) put({ [`yields/${enc(d.yield)}`]: val > 0 ? val : null }, 'yield');
+  else if (el.id === 'sBuffer') put({ 'settings/buffer': val === null ? null : Math.min(1, val / 100) }, 'buffer');
+  else if (el.id === 'showDishes') { ST.showDishes = el.checked; save(); }
   else return;
-  save();
   rerenderSoon();
 });
 
 document.addEventListener('click', e => {
   const b = e.target.closest('button');
   if (!b) return;
-  if (b.dataset.tab) { ST.view = b.dataset.tab; save(); render(); }
-  else if (b.dataset.step) { WEEK = addDays(WEEK, +b.dataset.step); render(); }
-  else if (b.dataset.goto) { WEEK = mondayOf(fromIso(b.dataset.goto)); render(); }
-  else if (b.dataset.confirm) { const s = PLAN.subs.find(x => x.name === b.dataset.confirm); if (s) { setMap('yields', s.name, s.yield); save(); render(); } }
+  if (b.dataset.tab) { ST.view = b.dataset.tab; STOCK_EDIT = false; save(); render(); }
+  else if (b.dataset.step) { WEEK = addDays(WEEK, +b.dataset.step); STOCK_EDIT = false; render(); }
+  else if (b.dataset.goto) { WEEK = mondayOf(fromIso(b.dataset.goto)); STOCK_EDIT = false; render(); }
+  else if (b.id === 'stockEditBtn') { STOCK_EDIT = !STOCK_EDIT; renderOrder(); if (STOCK_EDIT) { const f = document.querySelector('input[data-stock]'); if (f) f.focus(); } }
+  else if (b.dataset.confirm) { const s = PLAN.subs.find(x => x.name === b.dataset.confirm); if (s) put({ [`yields/${enc(s.name)}`]: s.yield }, 'yield'); rerenderSoon(); }
   else if (b.id === 'xlsxBtn') exportExcel();
   else if (b.id === 'printBtn') { ST.view = 'order'; render(); window.print(); }
-  else if (b.id === 'settingsBtn') exportSettings();
-  else if (b.id === 'clearWeek' && confirm(`Clear the forecast for ${PLAN.week.label}?`)) { for (const d of PLAN.week.days) if (ST.fc) delete ST.fc[d]; save(); render(); }
-  else if (b.id === 'clearAll' && confirm('Clear everything you typed in this browser: forecasts, stock counts, suppliers, pack sizes, yields and the buffer?')) { ST = { view: 'checks' }; save(); render(); }
+  else if (b.id === 'clearWeek' && confirm(`Clear the forecast for ${PLAN.week.label}? This clears it for the whole team.`)) {
+    const ch = {}; for (const d of PLAN.week.days) ch[`forecast/${d}`] = null; put(ch, 'forecast cleared'); rerenderSoon();
+  }
+  else if (b.id === 'signOut') STORE.signOut();
+  else if (b.id === 'aSignup') {
+    const c = creds(); if (!c) return;
+    if (c.pass.length < 6) { authMsg('Use at least 6 characters for the password.', true); return; }
+    authMsg('Creating the account…');
+    STORE.signUp(c.email, c.pass).then(() => authMsg('')).catch(err => authMsg(friendly(err), true));
+  }
+  else if (b.id === 'aReset') {
+    const email = $('#aEmail').value.trim().toLowerCase();
+    if (!email) { authMsg('Type your email first.', true); return; }
+    STORE.reset(email).then(() => authMsg(`If ${email} has an account, a reset link is on its way.`)).catch(err => authMsg(friendly(err), true));
+  }
+  else if (b.id === 'vContinue') STORE.refresh().then(u => u.emailVerified ? onAuth(u) : authMsg('Not verified yet. Click the link in the email first.', true)).catch(err => authMsg(friendly(err), true));
+  else if (b.id === 'vResend') STORE.resend().then(() => authMsg('Sent again. Check the inbox and the spam folder.')).catch(err => authMsg(friendly(err), true));
 });
 
+function creds() {
+  const email = $('#aEmail').value.trim().toLowerCase(), pass = $('#aPass').value;
+  if (!email.endsWith('@' + domain())) { authMsg(`Use your @${domain()} email.`, true); return null; }
+  return { email, pass };
+}
+$('#authForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const c = creds(); if (!c) return;
+  authMsg('Signing in…');
+  STORE.signIn(c.email, c.pass).then(() => authMsg('')).catch(err => authMsg(friendly(err), true));
+});
 $('#search').addEventListener('input', e => { SEARCH = e.target.value; renderOrder(); });
+document.addEventListener('wheel', e => { const a = document.activeElement; if (a && a.type === 'number' && e.target === a) a.blur(); }, { passive: true }); // scrolling never changes a number
 
 async function loadJSON(path, seedId) {
   try {
     const r = await fetch(path, { cache: 'no-store' });
     if (r.ok) return { data: await r.json(), live: true };
   } catch (e) { /* opened as a file or offline: use the built-in copy */ }
-  return { data: JSON.parse(document.getElementById(seedId).textContent), live: false };
+  const seed = JSON.parse(document.getElementById(seedId).textContent);
+  if (!seed) throw new Error(`${path} could not be loaded`);
+  return { data: seed, live: false };
 }
 
 (async () => {
   try {
     const [a, b] = await Promise.all([loadJSON('data/db-snapshot.json', 'seedDb'), loadJSON('data/kitchen-settings.json', 'seedSettings')]);
     DB = a.data; SET = b.data; LIVE = a.live;
-    if (SET.forecast) { // shared forecast from the settings file fills days you have not typed yourself
-      ST.fc = ST.fc || {};
-      for (const [d, m] of Object.entries(SET.forecast)) ST.fc[d] = Object.assign({}, m, ST.fc[d]);
-    }
     FIRST_WEEK = firstServiceWeek();
     WEEK = defaultWeek();
-    tidyOldData();
-    render();
+    cacheLoad(); // last copy of the team data, so the page shows numbers at once
+    $('#status').textContent = 'Connecting…';
+    STORE = window.__STORE__ || await firebaseStore(SET.firebase);
+    STORE.connected(on => { CONNECTED = on; renderStatus(); });
+    STORE.onAuth(onAuth);
   } catch (e) {
-    const el = $('#appError');
-    el.hidden = false;
-    el.textContent = `The planner could not load its data (${e.message}). Check that data/db-snapshot.json and data/kitchen-settings.json are valid JSON.`;
+    showError(`The planner could not start (${e.message}). Check the internet connection and reload with Ctrl+F5.`);
   }
 })();
 </script>
