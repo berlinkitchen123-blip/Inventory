@@ -1,0 +1,1520 @@
+{
+  "kitchen": "NRW Remscheid, Adlerstraße 5",
+  "firstDelivery": "2026-09-29",
+  "buffer": 0.1,
+  "yields": {
+    "Aubergines - Cubed & Cooked": {
+      "yield": 56,
+      "why": "DB: 800 g out of 70 g in (impossible). Used 80% of input (cooking loss).",
+      "confirmed": false
+    },
+    "Basmati rice - steamed": {
+      "yield": 2200,
+      "why": "DB: 1 kg raw rice gives 1 kg cooked. Steamed basmati normally gives 2.2-2.5 kg per kg raw.",
+      "confirmed": false
+    },
+    "Bella&Bona Salad Mix 1": {
+      "yield": 65,
+      "why": "DB: 1,000 g out of 65 g in (impossible). Raw leaf mix: out = in.",
+      "confirmed": false
+    },
+    "Boiled - glass noodles": {
+      "yield": 350,
+      "why": "DB: 1,500 g from 100 g dry noodles. 100 g dry glass noodles is about 350 g cooked.",
+      "confirmed": false
+    },
+    "Boiled - Penne whole wheat": {
+      "yield": 220,
+      "why": "DB: 2,000 g from 100 g dry pasta. 100 g dry pasta is about 220 g cooked.",
+      "confirmed": false
+    },
+    "Boiled - Spatzle": {
+      "yield": 1000,
+      "why": "No yield in DB. Spätzle only heated: out = in.",
+      "confirmed": false
+    },
+    "Champignons - sliced and cooked": {
+      "yield": 70,
+      "why": "No yield in DB. Mushrooms lose about 30% when cooked.",
+      "confirmed": false
+    },
+    "Cucumber - sliced": {
+      "yield": 100,
+      "why": "No yield in DB. Slicing only: out = in.",
+      "confirmed": false
+    },
+    "Daikon - diced": {
+      "yield": 100,
+      "why": "No yield in DB. Cutting only: out = in.",
+      "confirmed": false
+    },
+    "Paprika Chickpeas": {
+      "yield": 100,
+      "why": "DB: 1,000 g out of 106 g in (impossible). Roasted chickpeas: about out = in.",
+      "confirmed": false
+    },
+    "Polenta": {
+      "yield": 4500,
+      "why": "No yield in DB. About all input minus some evaporation.",
+      "confirmed": false
+    },
+    "Potato Pure": {
+      "yield": 30000,
+      "why": "No yield in DB. Mash is about all input.",
+      "confirmed": false
+    },
+    "Quinoa - Steamed": {
+      "yield": 2500,
+      "why": "No yield in DB and no water line. 1 kg dry quinoa is about 2.5 kg cooked.",
+      "confirmed": false
+    },
+    "Red Bell Peppers - Cubed & Cooked": {
+      "yield": 90,
+      "why": "DB: 800 g out of 112 g in (impossible). Used 80% of input.",
+      "confirmed": false
+    },
+    "Red cabbage - sliced": {
+      "yield": 80,
+      "why": "DB: 1,050 g out of 80 g in (impossible). Slicing only: out = in.",
+      "confirmed": false
+    },
+    "Red Rice- Steamed": {
+      "yield": 2500,
+      "why": "No yield in DB. 1 kg red rice + 1.5 L water is about 2.5 kg.",
+      "confirmed": false
+    },
+    "Regular tomatoes - Sliced": {
+      "yield": 100,
+      "why": "No yield in DB. Slicing only: out = in.",
+      "confirmed": false
+    },
+    "Roasted Potates - Cut & Cooked": {
+      "yield": 180,
+      "why": "DB: 1,000 g out of 220 g in (impossible). Roasting loses about 20%.",
+      "confirmed": false
+    },
+    "Steamed Barley": {
+      "yield": 5500,
+      "why": "DB: 1,897 g from 2 kg barley + 4 L water (too low). About 5.5 kg cooked.",
+      "confirmed": false
+    },
+    "Steamed Bulgur": {
+      "yield": 2750,
+      "why": "DB: 180 g from 1 kg bulgur + 2 L water (too low). 1 kg bulgur is about 2.75 kg cooked.",
+      "confirmed": false
+    },
+    "Sweet Potato- Roasted": {
+      "yield": 850,
+      "why": "No yield in DB. Roasting loses about 20%.",
+      "confirmed": false
+    },
+    "Tortellini Spinach boiled": {
+      "yield": 150,
+      "why": "No yield in DB. Used out = in (safe side).",
+      "confirmed": false
+    },
+    "Wild rice - steamed": {
+      "yield": 3300,
+      "why": "DB: 9,728 g from 1 kg wild rice + 2.5 L water (too high). About 3.3 kg cooked.",
+      "confirmed": false
+    },
+    "Zucchini - Cubed & Cooked": {
+      "yield": 80,
+      "why": "DB: 800 g out of 98 g in (impossible). Used about 80% of input.",
+      "confirmed": false
+    },
+    "Zucchini omelette": {
+      "yield": 300,
+      "why": "No yield in DB. About all input.",
+      "confirmed": false
+    },
+    "Vegan Parmigiana": {
+      "yield": 1500,
+      "why": "No yield in DB. Baking loses about 20%.",
+      "confirmed": false
+    },
+    "Schupfnudel boiled": {
+      "yield": 2000,
+      "why": "No yield in DB. Ready Schupfnudeln are only heated: out = in.",
+      "confirmed": false
+    },
+    "Vegan Potatoe Pure": {
+      "yield": 30000,
+      "why": "No yield in DB. Mash is about all input.",
+      "confirmed": false
+    },
+    "Boiled - Bandnudeln": {
+      "yield": 2200,
+      "why": "No yield in DB. Dry ribbon noodles (Metro Aro): 1 kg dry is about 2.2 kg cooked.",
+      "confirmed": false
+    },
+    "Halloumi oven roasted": {
+      "yield": 95,
+      "why": "No yield in DB. Roasting loses about 10%.",
+      "confirmed": false
+    },
+    "Apples - cubed": {
+      "yield": 900,
+      "why": "No yield in DB. Coring and peeling lose about 10%.",
+      "confirmed": false
+    },
+    "Juice Fruit Salad Mojito": {
+      "yield": 70,
+      "why": "No yield in DB. Mixed juice: out = in.",
+      "confirmed": false
+    }
+  },
+  "suppliers": {
+    "Allgroo Udon Nudeln Spicy": "Chefs Culinar",
+    "Artichokes": "Metro shop",
+    "Arugula": "Chefs Culinar",
+    "Asparagus": "Chefs Culinar",
+    "Aubergines": "Chefs Culinar",
+    "Avocado Frozen": "Metro shop",
+    "Baby Spinach": "Chefs Culinar",
+    "Bacon raw": "Chefs Culinar",
+    "Balkan-Sauce": "Chefs Culinar",
+    "Balsamic Dressing": "Chefs Culinar",
+    "Bandnudeln": "Metro shop",
+    "Basil": "Chefs Culinar",
+    "Beef Goulash": "Chefs Culinar",
+    "Black Beans (frijoles)": "Chefs Culinar",
+    "Black Pepper": "Metro shop",
+    "Broccoli": "Metro shop",
+    "Brussels Sprouts": "Chefs Culinar",
+    "Bulgur": "Chefs Culinar",
+    "Butter": "Metro shop",
+    "Caesar Dressing": "Chefs Culinar",
+    "Cannelini Beans": "Metro shop",
+    "Canola Oil (rapsöl)": "Metro shop",
+    "Carrots": "Chefs Culinar",
+    "Caulipower Mix": "Chefs Culinar",
+    "Champignons": "Chefs Culinar",
+    "Cheddar Cheese": "Chefs Culinar",
+    "Cheddar Grated": "Chefs Culinar",
+    "Cherry Tomatoes": "Chefs Culinar",
+    "Chicken Breast": "Chefs Culinar",
+    "Chicken Crunch Burger": "Pier 7",
+    "Chickpeas": "Chefs Culinar",
+    "Chili Con Carne": "Pier 7",
+    "Chilli Flakes": "Metro shop",
+    "Coconut Curry Soup": "Chefs Culinar",
+    "Coleslaw Salad": "Chefs Culinar",
+    "Cooking Cream": "Chefs Culinar",
+    "Corn": "Chefs Culinar",
+    "Corn Cream Soup": "Chefs Culinar",
+    "Cubed Pumpkin": "Chefs Culinar",
+    "Cucumber": "Metro shop",
+    "Curry Ketchup": "Metro shop",
+    "Curry Korma Sauce": "Pier 7",
+    "Curry Madras": "Pier 7",
+    "Curry Powder": "Metro shop",
+    "Daikon": "Chefs Culinar",
+    "Dr. Oetker Professional Vegetable Gold Seasoning": "Chefs Culinar",
+    "Edamame": "Metro shop",
+    "Egg mix": "Chefs Culinar",
+    "Eggs Large": "Chefs Culinar",
+    "Erbs Croutons": "Metro shop",
+    "Fajita tex-mex": "Pier 7",
+    "Feta Cheese": "Chefs Culinar",
+    "Folded Pizza": "Pier 7",
+    "Fresh Mint": "Chefs Culinar",
+    "Fried Onions": "Chefs Culinar",
+    "Fusilli": "Chefs Culinar",
+    "Glass Noodles": "Metro shop",
+    "Goat Cheese": "Metro shop",
+    "Green Beans": "Chefs Culinar",
+    "Green Peas": "Chefs Culinar",
+    "Guacamole": "Chefs Culinar",
+    "Halloumi - Raw": "Chefs Culinar",
+    "Hard cheese - regular (instead of emmental, parmesan, grana padano)": "Chefs Culinar",
+    "Iceberg Lettuce": "Chefs Culinar",
+    "Indian Curry Dip": "Pier 7",
+    "Jalapeños": "Metro shop",
+    "Kale": "Metro shop",
+    "Körniger Frischkäse": "Chefs Culinar",
+    "Lasagne alla Bolognese": "Surgital",
+    "Leipziger Allerlei": "Metro shop",
+    "Lemon Dressing": "Chefs Culinar",
+    "Lemon Fresh": "Metro shop",
+    "Lentils - Green": "Metro shop",
+    "Makhani Sauce": "Pier 7",
+    "Mango chili dressing": "Chefs Culinar",
+    "Meatballs": "Chefs Culinar",
+    "Milk": "Chefs Culinar",
+    "Minestrone": "Menu",
+    "Mint - fresh": "Chefs Culinar",
+    "Mozzarella Mini": "Chefs Culinar",
+    "Mushroom Lasagne": "Surgital",
+    "Mushroom Sauce": "Chefs Culinar",
+    "Olive Oil": "Metro shop",
+    "Olives Black": "Metro shop",
+    "Orange vinegrette": "Münchner Suppenküche",
+    "Paneer": "Pier 7",
+    "Paprika powder": "Metro shop",
+    "Parmigiana": "Surgital",
+    "Parsley": "Chefs Culinar",
+    "Peanut dressing": "Pier 7",
+    "Peanuts": "Chefs Culinar",
+    "Pearled Barley": "Metro shop",
+    "Penne Whole Wheat": "Metro shop",
+    "Pesto Sauce": "Metro shop",
+    "Phanaeng Curry": "Chefs Culinar",
+    "Pita Bread": "Chefs Culinar",
+    "Plant based chicken chunks": "Chefs Culinar",
+    "Polenta": "Metro shop",
+    "Pomegranite Seeds": "Metro shop",
+    "Potatoes Puree": "Chefs Culinar",
+    "Pumpkin Seeds": "Metro shop",
+    "Quick Cooking Noodles": "Hamberger",
+    "Quinoa": "Chefs Culinar",
+    "Radicchio": "Chefs Culinar",
+    "Red Beets": "Chefs Culinar",
+    "Red Bell Pepper": "Chefs Culinar",
+    "Red Kidney Beans": "Metro shop",
+    "Red onion": "Chefs Culinar",
+    "Red pesto": "Metro shop",
+    "Regular tomatoes": "Chefs Culinar",
+    "Rice - White Basmati": "Chefs Culinar",
+    "Rote bete curry": "Münchner Suppenküche",
+    "Rustic Panini": "Metro shop",
+    "Salt": "Metro shop",
+    "Sandwich Whole grain bread": "Chefs Culinar",
+    "Schupznudeln": "Metro shop",
+    "Semmelknödel": "Chefs Culinar",
+    "Sesame Seeds": "Chefs Culinar",
+    "Sesame seeds black": "Metro shop",
+    "Small Potatoes": "Chefs Culinar",
+    "Smoked Salmon": "Chefs Culinar",
+    "Smoked Tofu Firm": "Chefs Culinar",
+    "Sour Cream": "Chefs Culinar",
+    "Soy Sauce": "Hamberger",
+    "Soy sprouts": "Metro shop",
+    "Spatzle": "Chefs Culinar",
+    "Spinach leaves": "Metro shop",
+    "Sriracha Mayonese": "Metro shop",
+    "Sunflower Oil": "Chefs Culinar",
+    "Sweet Potato": "Chefs Culinar",
+    "Tandoori Naan": "Chefs Culinar",
+    "Tikka Masala Curry": "Pier 7",
+    "Tomato - Sun Dried": "Metro shop",
+    "Tomato Sauce": "Metro shop",
+    "Tortellini Spinach": "Chefs Culinar",
+    "Tuna": "Chefs Culinar",
+    "Tzatziki": "Chefs Culinar",
+    "Vegan Gyros": "Metro shop",
+    "Vegan Mayo": "Metro shop",
+    "Vegan Potatoe Pure": "Hamberger",
+    "Vegan bockwurst": "Chefs Culinar",
+    "Vegan meatballs": "Chefs Culinar",
+    "Vegetable gyoza": "Metro shop",
+    "Vinegar": "Metro shop",
+    "WallNuts": "Chefs Culinar",
+    "White Balsamic": "Chefs Culinar",
+    "White Beans": "Metro shop",
+    "Wild Rice": "Chefs Culinar",
+    "Yellow Thai Curry": "Chefs Culinar",
+    "Yogurt Dressing": "Metro shop",
+    "Zucchini": "Chefs Culinar"
+  },
+  "supplierOptions": {
+    "Allgroo Udon Nudeln Spicy": [
+      "Chefs Culinar"
+    ],
+    "Artichokes": [
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Arugula": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Asparagus": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Pier 7",
+      "Hamberger"
+    ],
+    "Aubergines": [
+      "Chefs Culinar"
+    ],
+    "Avocado Frozen": [
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Baby Spinach": [
+      "Chefs Culinar",
+      "Metro shop"
+    ],
+    "Bacon raw": [
+      "Chefs Culinar",
+      "Hamberger"
+    ],
+    "Balkan-Sauce": [
+      "Chefs Culinar"
+    ],
+    "Balsamic Dressing": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Bandnudeln": [
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Basil": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Beef Goulash": [
+      "Chefs Culinar",
+      "Trend Meal"
+    ],
+    "Black Beans (frijoles)": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Pier 7",
+      "Hamberger"
+    ],
+    "Black Pepper": [
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Broccoli": [
+      "Metro shop",
+      "Pier 7",
+      "Hamberger"
+    ],
+    "Brussels Sprouts": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Bulgur": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Butter": [
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Caesar Dressing": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Pier 7",
+      "Hamberger",
+      "Münchner Suppenküche"
+    ],
+    "Cannelini Beans": [
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Canola Oil (rapsöl)": [
+      "Metro shop"
+    ],
+    "Carrots": [
+      "Chefs Culinar",
+      "Metro shop"
+    ],
+    "Caulipower Mix": [
+      "Chefs Culinar"
+    ],
+    "Champignons": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Cheddar Cheese": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Cheddar Grated": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Pier 7",
+      "Hamberger"
+    ],
+    "Cherry Tomatoes": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Chicken Breast": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Zandbergen"
+    ],
+    "Chicken Crunch Burger": [
+      "Pier 7"
+    ],
+    "Chickpeas": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Pier 7",
+      "Hamberger",
+      "Kreyenhop+Kluge"
+    ],
+    "Chili Con Carne": [
+      "Pier 7",
+      "Münchner Suppenküche"
+    ],
+    "Chilli Flakes": [
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Coconut Curry Soup": [
+      "Chefs Culinar"
+    ],
+    "Coleslaw Salad": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Pier 7",
+      "Hamberger"
+    ],
+    "Cooking Cream": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Corn": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Pier 7",
+      "Hamberger"
+    ],
+    "Corn Cream Soup": [
+      "Chefs Culinar"
+    ],
+    "Cubed Pumpkin": [
+      "Chefs Culinar",
+      "Metro shop"
+    ],
+    "Cucumber": [
+      "Metro shop"
+    ],
+    "Curry Ketchup": [
+      "Metro shop",
+      "Pier 7",
+      "Hamberger"
+    ],
+    "Curry Korma Sauce": [
+      "Pier 7"
+    ],
+    "Curry Madras": [
+      "Pier 7"
+    ],
+    "Curry Powder": [
+      "Metro shop"
+    ],
+    "Daikon": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Dr. Oetker Professional Vegetable Gold Seasoning": [
+      "Chefs Culinar"
+    ],
+    "Edamame": [
+      "Metro shop",
+      "Hamberger",
+      "Kreyenhop+Kluge"
+    ],
+    "Egg mix": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Pier 7",
+      "Hamberger"
+    ],
+    "Eggs Large": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Pier 7",
+      "Hamberger"
+    ],
+    "Erbs Croutons": [
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Fajita tex-mex": [
+      "Pier 7",
+      "Hamberger"
+    ],
+    "Feta Cheese": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Pier 7",
+      "Hamberger"
+    ],
+    "Folded Pizza": [
+      "Pier 7"
+    ],
+    "Fresh Mint": [
+      "Chefs Culinar",
+      "Metro shop"
+    ],
+    "Fried Onions": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Hamberger",
+      "Kreyenhop+Kluge"
+    ],
+    "Fusilli": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Glass Noodles": [
+      "Metro shop",
+      "Hamberger",
+      "Kreyenhop+Kluge",
+      "Asian Food Group"
+    ],
+    "Goat Cheese": [
+      "Metro shop",
+      "Pier 7",
+      "Hamberger"
+    ],
+    "Green Beans": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Green Peas": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Guacamole": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Pier 7",
+      "Hamberger"
+    ],
+    "Halloumi - Raw": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Pier 7",
+      "Hamberger"
+    ],
+    "Hard cheese - regular (instead of emmental, parmesan, grana padano)": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Pier 7",
+      "Hamberger"
+    ],
+    "Iceberg Lettuce": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Indian Curry Dip": [
+      "Pier 7"
+    ],
+    "Jalapeños": [
+      "Metro shop",
+      "Pier 7",
+      "Hamberger"
+    ],
+    "Kale": [
+      "Metro shop"
+    ],
+    "Körniger Frischkäse": [
+      "Chefs Culinar"
+    ],
+    "Lasagne alla Bolognese": [
+      "Surgital"
+    ],
+    "Leipziger Allerlei": [
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Lemon Dressing": [
+      "Chefs Culinar",
+      "Münchner Suppenküche",
+      "Wendland"
+    ],
+    "Lemon Fresh": [
+      "Metro shop"
+    ],
+    "Lentils - Green": [
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Makhani Sauce": [
+      "Pier 7"
+    ],
+    "Mango chili dressing": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Münchner Suppenküche"
+    ],
+    "Meatballs": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Pier 7"
+    ],
+    "Milk": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Pier 7",
+      "Hamberger"
+    ],
+    "Minestrone": [
+      "Menu"
+    ],
+    "Mint - fresh": [
+      "Chefs Culinar",
+      "Metro shop"
+    ],
+    "Mozzarella Mini": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Pier 7"
+    ],
+    "Mushroom Lasagne": [
+      "Surgital"
+    ],
+    "Mushroom Sauce": [
+      "Chefs Culinar",
+      "Trend Meal"
+    ],
+    "Olive Oil": [
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Olives Black": [
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Orange vinegrette": [
+      "Münchner Suppenküche",
+      "Wendland"
+    ],
+    "Paneer": [
+      "Pier 7"
+    ],
+    "Paprika powder": [
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Parmigiana": [
+      "Surgital"
+    ],
+    "Parsley": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Peanut dressing": [
+      "Pier 7",
+      "Münchner Suppenküche",
+      "Wendland"
+    ],
+    "Peanuts": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Pearled Barley": [
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Penne Whole Wheat": [
+      "Metro shop"
+    ],
+    "Pesto Sauce": [
+      "Metro shop",
+      "Pier 7",
+      "Hamberger",
+      "Robo"
+    ],
+    "Phanaeng Curry": [
+      "Chefs Culinar"
+    ],
+    "Pita Bread": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Pier 7",
+      "Hamberger"
+    ],
+    "Plant based chicken chunks": [
+      "Chefs Culinar",
+      "Metro shop"
+    ],
+    "Polenta": [
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Pomegranite Seeds": [
+      "Metro shop"
+    ],
+    "Potatoes Puree": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Pumpkin Seeds": [
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Quick Cooking Noodles": [
+      "Hamberger",
+      "Kreyenhop+Kluge",
+      "Asian Food Group"
+    ],
+    "Quinoa": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Radicchio": [
+      "Chefs Culinar",
+      "Metro shop"
+    ],
+    "Red Beets": [
+      "Chefs Culinar",
+      "Metro shop"
+    ],
+    "Red Bell Pepper": [
+      "Chefs Culinar",
+      "Metro shop"
+    ],
+    "Red Kidney Beans": [
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Red onion": [
+      "Chefs Culinar",
+      "Metro shop"
+    ],
+    "Red pesto": [
+      "Metro shop",
+      "Pier 7",
+      "Hamberger",
+      "Robo"
+    ],
+    "Regular tomatoes": [
+      "Chefs Culinar",
+      "Metro shop"
+    ],
+    "Rice - White Basmati": [
+      "Chefs Culinar",
+      "Pier 7",
+      "Hamberger",
+      "Kreyenhop+Kluge"
+    ],
+    "Rote bete curry": [
+      "Münchner Suppenküche"
+    ],
+    "Rustic Panini": [
+      "Metro shop"
+    ],
+    "Salt": [
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Sandwich Whole grain bread": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Pier 7"
+    ],
+    "Schupznudeln": [
+      "Metro shop"
+    ],
+    "Semmelknödel": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Pier 7"
+    ],
+    "Sesame Seeds": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Hamberger",
+      "Kreyenhop+Kluge"
+    ],
+    "Sesame seeds black": [
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Small Potatoes": [
+      "Chefs Culinar",
+      "Metro shop"
+    ],
+    "Smoked Salmon": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Pier 7"
+    ],
+    "Smoked Tofu Firm": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Sour Cream": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Pier 7",
+      "Hamberger"
+    ],
+    "Soy Sauce": [
+      "Hamberger",
+      "Kreyenhop+Kluge"
+    ],
+    "Soy sprouts": [
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Spatzle": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Spinach leaves": [
+      "Metro shop",
+      "Pier 7"
+    ],
+    "Sriracha Mayonese": [
+      "Metro shop",
+      "Hamberger",
+      "Kreyenhop+Kluge"
+    ],
+    "Sunflower Oil": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Sweet Potato": [
+      "Chefs Culinar",
+      "Metro shop"
+    ],
+    "Tandoori Naan": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Pier 7",
+      "Hamberger",
+      "Kreyenhop+Kluge"
+    ],
+    "Tikka Masala Curry": [
+      "Pier 7"
+    ],
+    "Tomato - Sun Dried": [
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Tomato Sauce": [
+      "Metro shop",
+      "Hamberger",
+      "Menu"
+    ],
+    "Tortellini Spinach": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Tuna": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Pier 7",
+      "Hamberger"
+    ],
+    "Tzatziki": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Pier 7",
+      "Hamberger"
+    ],
+    "Vegan Gyros": [
+      "Metro shop"
+    ],
+    "Vegan Mayo": [
+      "Metro shop",
+      "Hamberger"
+    ],
+    "Vegan Potatoe Pure": [
+      "Hamberger"
+    ],
+    "Vegan bockwurst": [
+      "Chefs Culinar",
+      "Hamberger"
+    ],
+    "Vegan meatballs": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Vemiwa"
+    ],
+    "Vegetable gyoza": [
+      "Metro shop",
+      "Hamberger",
+      "Kreyenhop+Kluge",
+      "Asian Food Group"
+    ],
+    "Vinegar": [
+      "Metro shop",
+      "Hamberger"
+    ],
+    "WallNuts": [
+      "Chefs Culinar",
+      "Metro shop",
+      "Hamberger"
+    ],
+    "White Balsamic": [
+      "Chefs Culinar",
+      "Hamberger",
+      "Münchner Suppenküche",
+      "Wendland"
+    ],
+    "White Beans": [
+      "Metro shop",
+      "Hamberger",
+      "Kreyenhop+Kluge"
+    ],
+    "Wild Rice": [
+      "Chefs Culinar",
+      "Metro shop"
+    ],
+    "Yellow Thai Curry": [
+      "Chefs Culinar",
+      "Münchner Suppenküche"
+    ],
+    "Yogurt Dressing": [
+      "Metro shop",
+      "Pier 7",
+      "Hamberger"
+    ],
+    "Zucchini": [
+      "Chefs Culinar",
+      "Metro shop"
+    ]
+  },
+  "supplierList": [
+    "Chefs Culinar",
+    "Metro shop",
+    "Pier 7",
+    "Hamberger",
+    "Zandbergen",
+    "Menu",
+    "Surgital",
+    "Münchner Suppenküche",
+    "Yfood",
+    "Kreyenhop+Kluge",
+    "KMS Verkaufsforderungs",
+    "Soul-K",
+    "Trend Meal",
+    "True Fruits",
+    "Wendland",
+    "Asian Food Group",
+    "Charitea",
+    "Forno D'asolo",
+    "Getvoila",
+    "Kai Cao",
+    "Lemonaid Beverages GmbH",
+    "Luce Gastronomie",
+    "Vemiwa",
+    "Robo"
+  ],
+  "packs": {
+    "Allgroo Udon Nudeln Spicy": 0.69,
+    "Artichokes": 1.55,
+    "Arugula": 1.0,
+    "Asparagus": 1.0,
+    "Aubergines": 1.0,
+    "Avocado Frozen": 1.0,
+    "Baby Spinach": 1.0,
+    "Bacon raw": 1.0,
+    "Balkan-Sauce": 3.0,
+    "Balsamic Dressing": 1.0,
+    "Bandnudeln": 5.0,
+    "Basil": 1.0,
+    "Beef Goulash": 3.0,
+    "Black Beans (frijoles)": 1.75,
+    "Black Pepper": 1.1,
+    "Broccoli": 2.25,
+    "Brussels Sprouts": 10.0,
+    "Bulgur": 5.0,
+    "Butter": 0.25,
+    "Caesar Dressing": 1.0,
+    "Cannelini Beans": 1.5,
+    "Canola Oil (rapsöl)": 10.0,
+    "Carrots": 1.0,
+    "Caulipower Mix": 1.0,
+    "Champignons": 1.0,
+    "Cheddar Cheese": 1.0,
+    "Cheddar Grated": 0.5,
+    "Cherry Tomatoes": 1.0,
+    "Chicken Breast": 2.5,
+    "Chicken Crunch Burger": 0.15,
+    "Chickpeas": 1.5,
+    "Chili Con Carne": 2.5,
+    "Chilli Flakes": 0.5,
+    "Coconut Curry Soup": 3.0,
+    "Coleslaw Salad": 3.0,
+    "Cooking Cream": 1.0,
+    "Corn": 1.775,
+    "Corn Cream Soup": 3.0,
+    "Cubed Pumpkin": 10.0,
+    "Cucumber": 10.0,
+    "Curry Ketchup": 10.0,
+    "Curry Korma Sauce": 2.0,
+    "Curry Madras": 2.0,
+    "Curry Powder": 1.0,
+    "Edamame": 1.0,
+    "Egg mix": 1.0,
+    "Eggs Large": 30.0,
+    "Erbs Croutons": 0.5,
+    "Fajita tex-mex": 1.0,
+    "Feta Cheese": 2.0,
+    "Folded Pizza": 0.18,
+    "Fresh Mint": 1.0,
+    "Fried Onions": 1.0,
+    "Fusilli": 5.0,
+    "Glass Noodles": 1.0,
+    "Goat Cheese": 0.8,
+    "Green Beans": 2.5,
+    "Green Peas": 10.0,
+    "Guacamole": 1.0,
+    "Halloumi - Raw": 0.25,
+    "Iceberg Lettuce": 5.0,
+    "Indian Curry Dip": 1.0,
+    "Jalapeños": 2.9,
+    "Kale": 2.5,
+    "Körniger Frischkäse": 5.0,
+    "Lasagne alla Bolognese": 5.0,
+    "Leipziger Allerlei": 2.5,
+    "Lemon Dressing": 1.0,
+    "Lemon Fresh": 1.5,
+    "Lentils - Green": 2.65,
+    "Makhani Sauce": 6.0,
+    "Mango chili dressing": 3.0,
+    "Meatballs": 1.0,
+    "Milk": 1.0,
+    "Minestrone": 0.85,
+    "Mint - fresh": 0.1,
+    "Mozzarella Mini": 1.0,
+    "Mushroom Lasagne": 5.0,
+    "Mushroom Sauce": 3.0,
+    "Olive Oil": 5.0,
+    "Olives Black": 2.0,
+    "Orange vinegrette": 4.7,
+    "Paneer": 0.9,
+    "Paprika powder": 1.1,
+    "Parmigiana": 4.0,
+    "Parsley": 1.0,
+    "Peanut dressing": 4.7,
+    "Peanuts": 1.0,
+    "Pearled Barley": 1.0,
+    "Pesto Sauce": 0.5,
+    "Phanaeng Curry": 3.0,
+    "Pita Bread": 0.08,
+    "Plant based chicken chunks": 2.0,
+    "Polenta": 2.5,
+    "Pomegranite Seeds": 0.2,
+    "Potatoes Puree": 4.0,
+    "Pumpkin Seeds": 1.0,
+    "Quick Cooking Noodles": 0.5,
+    "Quinoa": 1.8,
+    "Radicchio": 1.0,
+    "Red Beets": 1.0,
+    "Red Bell Pepper": 1.0,
+    "Red Kidney Beans": 0.425,
+    "Red onion": 1.0,
+    "Red pesto": 0.45,
+    "Regular tomatoes": 1.0,
+    "Rice - White Basmati": 10.0,
+    "Rote bete curry": 2.5,
+    "Rustic Panini": 6.8,
+    "Salt": 10.0,
+    "Schupznudeln": 2.0,
+    "Semmelknödel": 1.87,
+    "Sesame Seeds": 1.0,
+    "Sesame seeds black": 0.454,
+    "Small Potatoes": 1.0,
+    "Smoked Salmon": 1.0,
+    "Smoked Tofu Firm": 1.75,
+    "Sour Cream": 1.0,
+    "Soy Sauce": 8.0,
+    "Soy sprouts": 2.9,
+    "Spatzle": 2.5,
+    "Spinach leaves": 2.5,
+    "Sriracha Mayonese": 0.73,
+    "Sunflower Oil": 10.0,
+    "Sweet Potato": 2.5,
+    "Tandoori Naan": 1.2,
+    "Tikka Masala Curry": 6.0,
+    "Tomato - Sun Dried": 1.7,
+    "Tomato Sauce": 2.5,
+    "Tortellini Spinach": 8.0,
+    "Tuna": 1.3,
+    "Tzatziki": 3.0,
+    "Vegan Gyros": 1.0,
+    "Vegan Mayo": 2.95,
+    "Vegan Potatoe Pure": 0.24,
+    "Vegan bockwurst": 0.8,
+    "Vegan meatballs": 2.0,
+    "Vegetable gyoza": 0.6,
+    "Vinegar": 10.0,
+    "WallNuts": 0.5,
+    "White Balsamic": 3.0,
+    "White Beans": 2.65,
+    "Wild Rice": 2.0,
+    "Yellow Thai Curry": 3.0,
+    "Yogurt Dressing": 1.0,
+    "Zucchini": 1.0
+  },
+  "packInfo": {
+    "Allgroo Udon Nudeln Spicy": "Allgroo Udon Nudeln Spicy 690 g",
+    "Artichokes": "Artichokes 1.55 kg",
+    "Arugula": "Arugula 1 kg",
+    "Asparagus": "Asparagus 1 kg",
+    "Aubergines": "Aubergines Fresh Kiste (1 kg)",
+    "Avocado Frozen": "Avocado Frozen 1 kg",
+    "Baby Spinach": "Baby Spinach 1 kg",
+    "Bacon raw": "Bacon raw Pack (1000 g)",
+    "Balkan-Sauce": "Balkan-Sauce bag (3 kg)",
+    "Balsamic Dressing": "Balsamic Dressing Kühne Bottle (1 l)",
+    "Bandnudeln": "Bandnudeln Aro Pack (5 kg)",
+    "Basil": "Basil 1 kg",
+    "Beef Goulash": "Beef Goulash 3 kg",
+    "Black Beans (frijoles)": "Black Beans (frijoles) 2650 ml (1750 g)",
+    "Black Pepper": "Black Pepper Metro Chef Bag (1.1 kg)",
+    "Broccoli": "Broccoli Frozen pack (2.25 kg)",
+    "Brussels Sprouts": "Brussels Sprouts Box (10 kg)",
+    "Bulgur": "Bulgur 5 kg",
+    "Butter": "Butter 250 g",
+    "Caesar Dressing": "Caesar Dressing 1 kg",
+    "Cannelini Beans": "Cannelini Beans Can (1.5 kg)",
+    "Canola Oil (rapsöl)": "Canola Oil (rapsöl) 10000 ml",
+    "Carrots": "Carrots 1 kg",
+    "Caulipower Mix": "Caulipower Mix bag (1 kg)",
+    "Champignons": "Champignons Fresh Kiste (1 kg)",
+    "Cheddar Cheese": "Cheddar Cheese 1 kg",
+    "Cheddar Grated": "Cheddar Grated 500 g",
+    "Cherry Tomatoes": "Cherry Tomatoes 1 kg",
+    "Chicken Breast": "Chicken Breast Bag (Product B) (2500 g)",
+    "Chicken Crunch Burger": "Chicken Crunch Burger Box (Product A) (150 g)",
+    "Chickpeas": "Chickpeas 1500 g",
+    "Chili Con Carne": "Chili Con Carne 2.5 kg",
+    "Chilli Flakes": "Chilli Flakes 500 g",
+    "Coconut Curry Soup": "Coconut Curry Soup 3 kg",
+    "Coleslaw Salad": "Coleslaw Salad 3 kg",
+    "Cooking Cream": "Cooking Cream Pack (1 l)",
+    "Corn": "Corn 1775 g",
+    "Corn Cream Soup": "Corn Cream Soup bag (3 kg)",
+    "Cubed Pumpkin": "Cubed Pumpkin Bag (10 kg)",
+    "Cucumber": "Cucumber Sack (10 kg)",
+    "Curry Ketchup": "Curry Ketchup 10 kg",
+    "Curry Korma Sauce": "Curry Korma Sauce 2 kg",
+    "Curry Madras": "Curry Madras 2 kg",
+    "Curry Powder": "Curry Powder 1 kg",
+    "Daikon": "Daikon 1 piece",
+    "Dr. Oetker Professional Vegetable Gold Seasoning": "Dr. Oetker Professional Vegetable Gold Seasoning",
+    "Edamame": "Edamame Metro Chef (1 kg)",
+    "Egg mix": "Egg mix 1 kg",
+    "Eggs Large": "Eggs Large 30 piece",
+    "Erbs Croutons": "Erbs Croutons Pack (0.5 kg)",
+    "Fajita tex-mex": "Fajita tex-mex 1 kg",
+    "Feta Cheese": "Feta Cheese Kolios (2 kg)",
+    "Folded Pizza": "Folded Pizza 180 g",
+    "Fresh Mint": "Fresh Mint 1 kg",
+    "Fried Onions": "Fried Onions 1 kg",
+    "Fusilli": "Fusilli Wheat Pack (5 kg)",
+    "Glass Noodles": "Glass Noodles Lungkow pack (1 kg)",
+    "Goat Cheese": "Goat Cheese 800 g",
+    "Green Beans": "Green Beans Metro Chef Bag (2.5 kg)",
+    "Green Peas": "Green Peas Box (10 kg)",
+    "Guacamole": "Guacamole pack (1 kg)",
+    "Halloumi - Raw": "Halloumi - Raw 250 g",
+    "Hard cheese - regular (instead of emmental, parmesan, grana padano)": "Hard cheese - regular",
+    "Iceberg Lettuce": "Iceberg Lettuce 10 Pieces (5 kg)",
+    "Indian Curry Dip": "Indian Curry Dip 1 kg",
+    "Jalapeños": "Jalapeños Can (2900 g)",
+    "Kale": "Kale 2.5 kg",
+    "Körniger Frischkäse": "Körniger Frischkäse Bucket (5 kg)",
+    "Lasagne alla Bolognese": "Lasagne alla Bolognese 5 kg",
+    "Leipziger Allerlei": "Leipziger Allerlei 2.5 kg",
+    "Lemon Dressing": "Lemon Dressing 1 l",
+    "Lemon Fresh": "Lemon Fresh Bag (1.5 kg)",
+    "Lentils - Green": "Lentils - Green Can (2.65 kg)",
+    "Makhani Sauce": "Makhani Sauce 6 kg",
+    "Mango chili dressing": "Mango chili dressing 3 l",
+    "Meatballs": "Meatballs (Product A) (1 kg)",
+    "Milk": "Milk 1000 ml",
+    "Minestrone": "Minestrone 850 g",
+    "Mint - fresh": "Mint - fresh 100 g",
+    "Mozzarella Mini": "Mozzarella Mini 1 kg",
+    "Mushroom Lasagne": "Mushroom Lasagne 5 kg",
+    "Mushroom Sauce": "Mushroom Sauce Pkt (3 kg)",
+    "Olive Oil": "Olive Oil 5 l",
+    "Olives Black": "Olives Black 2000 g",
+    "Orange vinegrette": "Orange vinegrette 5 x 0.94 kg (4.7 kg)",
+    "Paneer": "Paneer pack (900 g)",
+    "Paprika powder": "Paprika powder 1.1 kg",
+    "Parmigiana": "Parmigiana 4 kg",
+    "Parsley": "Parsley 1 kg",
+    "Peanut dressing": "Peanut dressing 5x0.94kg (4.7 kg)",
+    "Peanuts": "Peanuts Unsalted (1 kg)",
+    "Pearled Barley": "Pearled Barley Pack (1 kg)",
+    "Penne Whole Wheat": "Penne Whole Wheat Mama Lucia Bio Vollkorn Pack",
+    "Pesto Sauce": "Pesto Sauce Metro Chef (500 g)",
+    "Phanaeng Curry": "Phanaeng Curry 3 kg",
+    "Pita Bread": "Pita Bread Mastemacher (80 g)",
+    "Plant based chicken chunks": "Plant based chicken chunks Bag (Product B) (2 kg)",
+    "Polenta": "Polenta 2.5 kg",
+    "Pomegranite Seeds": "Pomegranite Seeds 1 Piece (200 g)",
+    "Potatoes Puree": "Potatoes Puree 4 kg",
+    "Pumpkin Seeds": "Pumpkin Seeds 1 kg",
+    "Quick Cooking Noodles": "Quick Cooking Noodles 500 g",
+    "Quinoa": "Quinoa 1.8 kg",
+    "Radicchio": "Radicchio 1 kg",
+    "Red Beets": "Red Beets Fresh (1 kg)",
+    "Red Bell Pepper": "Red Bell Pepper 1 kg",
+    "Red Kidney Beans": "Red Kidney Beans Aro (425 g)",
+    "Red onion": "Red onion Fresh Kiste (1 kg)",
+    "Red pesto": "Red pesto BRESC Pesto Rosso (0.45 kg)",
+    "Regular tomatoes": "Regular tomatoes Fresh Kiste (1 kg)",
+    "Rice - White Basmati": "Rice - White Basmati 10 kg",
+    "Rote bete curry": "Rote bete curry 2.5 kg",
+    "Rustic Panini": "Rustic Panini Box (170g/pc) (6.8 kg)",
+    "Salt": "Salt Esco Sonnensalz (10 kg)",
+    "Sandwich Whole grain bread": "Sandwich Whole grain bread 20 piece",
+    "Schupznudeln": "Schupznudeln 2 kg",
+    "Semmelknödel": "Semmelknödel bag (1.87 kg)",
+    "Sesame Seeds": "Sesame Seeds 1000 g",
+    "Sesame seeds black": "Sesame seeds black 454 g",
+    "Small Potatoes": "Small Potatoes 1 kg",
+    "Smoked Salmon": "Smoked Salmon 1 kg",
+    "Smoked Tofu Firm": "Smoked Tofu Firm Bag (Product A) (1.75 kg)",
+    "Sour Cream": "Sour Cream 1 kg",
+    "Soy Sauce": "Soy Sauce 8 l",
+    "Soy sprouts": "Soy sprouts 2.9 kg",
+    "Spatzle": "Spatzle 2500 g",
+    "Spinach leaves": "Spinach leaves Blattspinat (2.5 kg)",
+    "Sriracha Mayonese": "Sriracha Mayonese Bottle (730 ml)",
+    "Sunflower Oil": "Sunflower Oil 10 l",
+    "Sweet Potato": "Sweet Potato Cubed (2.5 kg)",
+    "Tandoori Naan": "Tandoori Naan bag (1.2 kg)",
+    "Tikka Masala Curry": "Tikka Masala Curry 6 kg",
+    "Tomato - Sun Dried": "Tomato - Sun Dried 1.7 kg",
+    "Tomato Sauce": "Tomato Sauce 2.5 kg",
+    "Tortellini Spinach": "Tortellini Spinach box (Product A) (8 kg)",
+    "Tuna": "Tuna 1300 g",
+    "Tzatziki": "Tzatziki 3 kg",
+    "Vegan Gyros": "Vegan Gyros Bag (Product A) (1 kg)",
+    "Vegan Mayo": "Vegan Mayo 2.95 kg",
+    "Vegan Potatoe Pure": "Vegan Potatoe Pure box (240 g)",
+    "Vegan bockwurst": "Vegan bockwurst 800 g",
+    "Vegan meatballs": "Vegan meatballs 2 kg",
+    "Vegetable gyoza": "Vegetable gyoza 600 g",
+    "Vinegar": "Vinegar 10 l",
+    "WallNuts": "WallNuts 500 g",
+    "White Balsamic": "White Balsamic 3 l",
+    "White Beans": "White Beans 2.65 kg",
+    "Wild Rice": "Wild Rice 2 kg",
+    "Yellow Thai Curry": "Yellow Thai Curry 3 kg",
+    "Yogurt Dressing": "Yogurt Dressing 1 kg",
+    "Zucchini": "Zucchini 1 kg"
+  },
+  "units": {
+    "Eggs Large": [
+      "eggs",
+      55
+    ]
+  },
+  "groups": {
+    "Chicken Breast": "Meat & fish",
+    "Bacon raw": "Meat & fish",
+    "Beef": "Meat & fish",
+    "Meatballs": "Meat & fish",
+    "Smoked Salmon": "Meat & fish",
+    "Tuna": "Meat & fish",
+    "Chicken Kebab": "Meat & fish",
+    "Plant based chicken chunks": "Vegan protein",
+    "Smoked Tofu Firm": "Vegan protein",
+    "Vegan meatballs": "Vegan protein",
+    "Vegan Gyros": "Vegan protein",
+    "Vegan bockwurst": "Vegan protein",
+    "Tofu Firm": "Vegan protein",
+    "Butter": "Dairy & eggs",
+    "Cheddar Cheese": "Dairy & eggs",
+    "Cheddar Grated": "Dairy & eggs",
+    "Cooking Cream": "Dairy & eggs",
+    "Egg mix": "Dairy & eggs",
+    "Eggs Large": "Dairy & eggs",
+    "Feta Cheese": "Dairy & eggs",
+    "Goat Cheese": "Dairy & eggs",
+    "Hard cheese - regular (instead of emmental, parmesan, grana padano)": "Dairy & eggs",
+    "Körniger Frischkäse": "Dairy & eggs",
+    "Milk": "Dairy & eggs",
+    "Paneer": "Dairy & eggs",
+    "Tzatziki": "Dairy & eggs",
+    "Mozzarella Mini": "Dairy & eggs",
+    "Halloumi - Raw": "Dairy & eggs",
+    "Sour Cream": "Dairy & eggs",
+    "Cream Cheese": "Dairy & eggs",
+    "Arugula": "Fresh veg, fruit & herbs",
+    "Asparagus": "Fresh veg, fruit & herbs",
+    "Aubergines": "Fresh veg, fruit & herbs",
+    "Avocado fresh": "Fresh veg, fruit & herbs",
+    "Baby Spinach": "Fresh veg, fruit & herbs",
+    "Basil": "Fresh veg, fruit & herbs",
+    "Brussels Sprouts": "Fresh veg, fruit & herbs",
+    "Carrots": "Fresh veg, fruit & herbs",
+    "Champignons": "Fresh veg, fruit & herbs",
+    "Cherry Tomatoes": "Fresh veg, fruit & herbs",
+    "Cucumber": "Fresh veg, fruit & herbs",
+    "Daikon": "Fresh veg, fruit & herbs",
+    "Fresh Mint": "Fresh veg, fruit & herbs",
+    "Iceberg Lettuce": "Fresh veg, fruit & herbs",
+    "Kale": "Fresh veg, fruit & herbs",
+    "Lemon Fresh": "Fresh veg, fruit & herbs",
+    "Mint - fresh": "Fresh veg, fruit & herbs",
+    "Parsley": "Fresh veg, fruit & herbs",
+    "Pomegranite Seeds": "Fresh veg, fruit & herbs",
+    "Radicchio": "Fresh veg, fruit & herbs",
+    "Red Bell Pepper": "Fresh veg, fruit & herbs",
+    "Red cabbage": "Fresh veg, fruit & herbs",
+    "Regular tomatoes": "Fresh veg, fruit & herbs",
+    "Small Potatoes": "Fresh veg, fruit & herbs",
+    "Soy sprouts": "Fresh veg, fruit & herbs",
+    "Sweet Potato": "Fresh veg, fruit & herbs",
+    "Zucchini": "Fresh veg, fruit & herbs",
+    "Red onion": "Fresh veg, fruit & herbs",
+    "Apple": "Fresh veg, fruit & herbs",
+    "Grapes - Red Seedless": "Fresh veg, fruit & herbs",
+    "Ananas": "Fresh veg, fruit & herbs",
+    "Honeydew Melon": "Fresh veg, fruit & herbs",
+    "Green Asparagus": "Fresh veg, fruit & herbs",
+    "Celeriac": "Fresh veg, fruit & herbs",
+    "Radish": "Fresh veg, fruit & herbs",
+    "Avocado Frozen": "Frozen veg",
+    "Broccoli": "Frozen veg",
+    "Cubed Pumpkin": "Frozen veg",
+    "Edamame": "Frozen veg",
+    "Green Beans": "Frozen veg",
+    "Green Peas": "Frozen veg",
+    "Spinach leaves": "Frozen veg",
+    "Mango - always frozen": "Frozen veg",
+    "Makhani Sauce": "Ready-made components",
+    "Coconut Curry Soup": "Ready-made components",
+    "Phanaeng Curry": "Ready-made components",
+    "Yellow Thai Curry": "Ready-made components",
+    "Curry Korma Sauce": "Ready-made components",
+    "Curry Madras": "Ready-made components",
+    "Tikka Masala Curry": "Ready-made components",
+    "Balkan-Sauce": "Ready-made components",
+    "Mushroom Sauce": "Ready-made components",
+    "Chili Con Carne": "Ready-made components",
+    "Corn Cream Soup": "Ready-made components",
+    "Indian Vegan Lentil Dal": "Ready-made components",
+    "Lasagne alla Bolognese": "Ready-made components",
+    "Parmigiana": "Ready-made components",
+    "Minestrone": "Ready-made components",
+    "Coleslaw Salad": "Ready-made components",
+    "Chicken Crunch Burger": "Ready-made components",
+    "Vegetable gyoza": "Ready-made components",
+    "Semmelknödel": "Ready-made components",
+    "Tortellini Spinach": "Ready-made components",
+    "Allgroo Udon Nudeln Spicy": "Ready-made components",
+    "Leipziger Allerlei": "Ready-made components",
+    "Caulipower Mix": "Ready-made components",
+    "Rote bete curry": "Ready-made components",
+    "Beef Goulash": "Ready-made components",
+    "Mushroom Lasagne": "Ready-made components",
+    "Schupznudeln": "Ready-made components",
+    "Sweet mash potatoe": "Ready-made components",
+    "Heat to Eat: Lentil Stew “Feijoada Style”": "Ready-made components",
+    "Heat to Eat: Chicken Teriyaki with vegetables": "Ready-made components",
+    "Heat to Eat: Vegetarian Cheese Tortellini": "Ready-made components",
+    "Heat to Eat: Bami Goreng": "Ready-made components",
+    "Balsamic Dressing": "Sauces & dressings",
+    "Caesar Dressing": "Sauces & dressings",
+    "Indian Curry Dip": "Sauces & dressings",
+    "Lemon Dressing": "Sauces & dressings",
+    "Mango chili dressing": "Sauces & dressings",
+    "Orange vinegrette": "Sauces & dressings",
+    "Peanut dressing": "Sauces & dressings",
+    "Pesto Sauce": "Sauces & dressings",
+    "Red pesto": "Sauces & dressings",
+    "Sriracha Mayonese": "Sauces & dressings",
+    "Vegan Mayo": "Sauces & dressings",
+    "Guacamole": "Sauces & dressings",
+    "Yogurt Dressing": "Sauces & dressings",
+    "Curry Ketchup": "Sauces & dressings",
+    "Hummus": "Sauces & dressings",
+    "Honey-Mustard dressing": "Sauces & dressings",
+    "Pita Bread": "Bread",
+    "Sandwich Whole grain bread": "Bread",
+    "Rustic Panini": "Bread",
+    "Tandoori Naan": "Bread",
+    "Erbs Croutons": "Bread",
+    "Folded Pizza": "Bread",
+    "Wraps 30\"": "Bread",
+    "Bulgur": "Dry goods",
+    "Fried Onions": "Dry goods",
+    "Fusilli": "Dry goods",
+    "Glass Noodles": "Dry goods",
+    "Peanuts": "Dry goods",
+    "Pearled Barley": "Dry goods",
+    "Penne Whole Wheat": "Dry goods",
+    "Polenta": "Dry goods",
+    "Potatoes Puree": "Dry goods",
+    "Pumpkin Seeds": "Dry goods",
+    "Quick Cooking Noodles": "Dry goods",
+    "Quinoa": "Dry goods",
+    "red rice": "Dry goods",
+    "Rice - White Basmati": "Dry goods",
+    "Sesame Seeds": "Dry goods",
+    "Spatzle": "Dry goods",
+    "WallNuts": "Dry goods",
+    "Wild Rice": "Dry goods",
+    "Sesame seeds black": "Dry goods",
+    "Vegan Potatoe Pure": "Dry goods",
+    "Bandnudeln": "Dry goods",
+    "Brown Sugar": "Dry goods",
+    "Black Beans (frijoles)": "Dry & canned",
+    "Cannelini Beans": "Dry & canned",
+    "Chickpeas": "Dry & canned",
+    "Corn": "Dry & canned",
+    "Jalapeños": "Dry & canned",
+    "Lentils - Green": "Dry & canned",
+    "Olives Black": "Dry & canned",
+    "Red Beets": "Dry & canned",
+    "Tomato - Sun Dried": "Dry & canned",
+    "Tomato Sauce": "Dry & canned",
+    "White Beans": "Dry & canned",
+    "Artichokes": "Dry & canned",
+    "Red Kidney Beans": "Dry & canned",
+    "Cucumber Pickled": "Dry & canned",
+    "Black Pepper": "Oils, spices & condiments",
+    "Canola Oil (rapsöl)": "Oils, spices & condiments",
+    "Chilli Flakes": "Oils, spices & condiments",
+    "Dr. Oetker Professional Vegetable Gold Seasoning": "Oils, spices & condiments",
+    "Fajita tex-mex": "Oils, spices & condiments",
+    "Olive Oil": "Oils, spices & condiments",
+    "Paprika powder": "Oils, spices & condiments",
+    "Salt": "Oils, spices & condiments",
+    "Soy Sauce": "Oils, spices & condiments",
+    "Sunflower Oil": "Oils, spices & condiments",
+    "Vinegar": "Oils, spices & condiments",
+    "White Balsamic": "Oils, spices & condiments",
+    "Curry Powder": "Oils, spices & condiments",
+    "Lime Juice": "Oils, spices & condiments"
+  },
+  "notes": {
+    "Eggs Large": "Counted in eggs (55 g each).",
+    "Mint - fresh": "Same herb as 'Fresh Mint' (listed twice in DB). Order as one.",
+    "Fresh Mint": "Same herb as 'Mint - fresh' (listed twice in DB). Order as one."
+  },
+  "checks": [
+    "Menu: only NRW menus from the BB database (kitchen NRW, or NRW in the menu name, e.g. '5.10 to 9.10 Oct 26 NRW'). A week without an NRW menu stays empty until the menu team adds it. Data refreshes every hour.",
+    "Forecast: type the portions per dish and day in Menu & forecast. Nothing is taken from other kitchens.",
+    "Suppliers and pack sizes are the company's Apicbase defaults until the NRW outlet is set up in Apicbase. Confirm each supplier delivers to Remscheid, or change the supplier on the item.",
+    "Yields: many sub-recipe yields in the DB are wrong or missing. The Yields tab shows the ones this week uses; the kitchen lead confirms them.",
+    "Salad leaves, herbs, tomatoes and cucumber will not stay fresh from Friday to Friday. Plan a mid-week top-up.",
+    "The DB has net amounts only (no waste %). The buffer in Plan settings covers waste and safety stock.",
+    "Not included: water, packaging and cleaning."
+  ]
+}

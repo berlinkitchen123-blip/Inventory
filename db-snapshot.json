@@ -1,0 +1,2651 @@
+{
+ "generated": "2026-09-24T16:10+00:00",
+ "kitchen": "NRW",
+ "menus": [
+  {
+   "id": "282f47de-07b9-4911-b49e-6893ed4a56d3",
+   "name": "NRW Test Menu",
+   "from": "2026-09-07",
+   "to": "2026-09-11",
+   "dishes": [
+    "030cc06f-65d5-482f-b86c-9de245919fc6",
+    "bf2cbf30-ebb9-11eb-bf3e-4d3f316ceaeb"
+   ]
+  },
+  {
+   "id": "77ea43aa-995a-4cd4-935b-27422b1ca3e9",
+   "name": "5.10 to 9.10 Oct 26 NRW",
+   "from": "2026-10-05",
+   "to": "2026-10-09",
+   "dishes": [
+    "20914ac4-bdbc-4514-ad9d-3d91d8253c18",
+    "236a0b67-6229-4e3e-a11e-6d80baa45e54",
+    "2ac07483-8ea4-4f12-9ca7-4470dcab49a4",
+    "3c39c686-7924-479c-824c-fa9f846ad31e",
+    "3feab834-c8dd-446d-a0c8-9fd431fff2d3",
+    "4621de3f-e5fc-4ea4-85df-eeb4a4a96289",
+    "57e4e2a4-c823-4119-a492-7b07f3e6e013",
+    "6ca59bf4-b292-403b-8f7a-a7bb71fca357",
+    "7f3ae5c1-8814-44c5-adeb-724c986f3adc",
+    "96dc9d62-be95-4b96-9b31-1dcd5fb98ff3",
+    "b330962c-5285-4102-b049-0116e2cfdf6d",
+    "bf2cbf30-ebb9-11eb-bf3e-4d3f316ceaeb",
+    "e146eb1c-2ef3-4f8c-ba85-967889071b4f",
+    "f70405bb-96cb-4bf7-9b18-57f34babfb0a",
+    "ffc1f6c2-9bee-4b28-ade9-b763a6e4616a"
+   ]
+  },
+  {
+   "id": "36a4ce79-c8b3-4098-8f9c-9f3c67b47364",
+   "name": "12.10 to 16.10 Oct 26 NRW",
+   "from": "2026-10-12",
+   "to": "2026-10-16",
+   "dishes": [
+    "20914ac4-bdbc-4514-ad9d-3d91d8253c18",
+    "236a0b67-6229-4e3e-a11e-6d80baa45e54",
+    "2ac07483-8ea4-4f12-9ca7-4470dcab49a4",
+    "3c39c686-7924-479c-824c-fa9f846ad31e",
+    "3feab834-c8dd-446d-a0c8-9fd431fff2d3",
+    "4621de3f-e5fc-4ea4-85df-eeb4a4a96289",
+    "57e4e2a4-c823-4119-a492-7b07f3e6e013",
+    "6ca59bf4-b292-403b-8f7a-a7bb71fca357",
+    "7f3ae5c1-8814-44c5-adeb-724c986f3adc",
+    "96dc9d62-be95-4b96-9b31-1dcd5fb98ff3",
+    "b330962c-5285-4102-b049-0116e2cfdf6d",
+    "bf2cbf30-ebb9-11eb-bf3e-4d3f316ceaeb",
+    "e146eb1c-2ef3-4f8c-ba85-967889071b4f",
+    "f70405bb-96cb-4bf7-9b18-57f34babfb0a",
+    "ffc1f6c2-9bee-4b28-ade9-b763a6e4616a"
+   ]
+  },
+  {
+   "id": "e546506d-e950-461b-b583-9c75adb40d90",
+   "name": "19.10 to 23.10 Oct 26 NRW",
+   "from": "2026-10-19",
+   "to": "2026-10-23",
+   "dishes": [
+    "0740661e-b17f-4b4d-8153-8ff1ca2ba4ce",
+    "095eb07d-9bb2-4a75-936c-676da52108ec",
+    "0acef14a-f8f7-44d4-87d2-0da6c4dd8f94",
+    "0fb29bf9-250f-4dba-b12e-9311ad6bcfcd",
+    "22b3467f-0c92-4f41-9fa1-af3bcdee7357",
+    "28fc455b-a3f4-406e-b0c3-bdb19ea755b2",
+    "29a026b9-5b18-476e-af41-dbf0f09502be",
+    "376f9a81-a2e7-457a-9115-b2f5466ab851",
+    "4af75912-cd9e-4b08-9621-ff63332e1d5c",
+    "522452a0-5555-40fa-854e-6d17b4d4c511",
+    "5fa5f0c4-074c-49ca-a79f-80768b1db0dd",
+    "5fc698c2-c88b-40a9-870d-4252521076a7",
+    "6e58f730-7793-472d-98b2-27d5c8fdc8ae",
+    "c221d980-8024-4004-afc2-ce67cc763d9a",
+    "e148f6c5-55ee-4cad-81ca-c67b6bcf3bd3"
+   ]
+  },
+  {
+   "id": "b74b717f-da47-4c17-843d-b57f8382ad78",
+   "name": "26.10 to 30.10 Oct 26 NRW",
+   "from": "2026-10-26",
+   "to": "2026-10-30",
+   "dishes": [
+    "08904a55-3857-4648-bc48-f874d38f0deb",
+    "121256c2-ea39-4365-b7c8-807523882b5e",
+    "41221ae9-4322-4259-8006-0889ba6f26f5",
+    "52275d04-2142-4c1b-9a66-f6aa1ca53661",
+    "6f25f51f-ac7d-4dd1-bd73-db97125b33bf",
+    "7ea33c80-1ce2-4156-a1f3-7a3730779563",
+    "805e5239-d496-4bed-8d2a-5f0c77d1ecf2",
+    "a5d3c923-fecd-4ad0-94d9-a994d2b292ce",
+    "bc1c0da4-ae70-4f75-b3f7-f4e97e96e3fb",
+    "bf2cbf30-ebb9-11eb-bf3e-4d3f316ceaeb",
+    "d9ef52f1-6fdd-4c53-a0ae-ca8412726d3a",
+    "ece8c7ce-f929-4b95-ab05-6d8aa483b54b",
+    "ed44ec3c-205f-4756-aa6f-b4fd98f42d46",
+    "fd898ae9-ffcb-4c2f-8fe8-367612b5cf4e"
+   ]
+  }
+ ],
+ "dishes": {
+  "030cc06f-65d5-482f-b86c-9de245919fc6": {
+   "name": "Fruit Salad Mojito",
+   "type": "AD",
+   "portion": 270
+  },
+  "bf2cbf30-ebb9-11eb-bf3e-4d3f316ceaeb": {
+   "name": "Indian Butter Chicken",
+   "type": "LC",
+   "portion": 500
+  },
+  "20914ac4-bdbc-4514-ad9d-3d91d8253c18": {
+   "name": "Garden Green Salad with Chicken",
+   "type": "SB",
+   "portion": 450
+  },
+  "236a0b67-6229-4e3e-a11e-6d80baa45e54": {
+   "name": "Test & Tell: Tuscan-Style Chicken with Vegetables and Mash",
+   "type": "LC",
+   "portion": 590
+  },
+  "2ac07483-8ea4-4f12-9ca7-4470dcab49a4": {
+   "name": "Club Sandwich",
+   "type": "SW",
+   "portion": 420
+  },
+  "3c39c686-7924-479c-824c-fa9f846ad31e": {
+   "name": "Parmigiana",
+   "type": "CI",
+   "portion": 500
+  },
+  "3feab834-c8dd-446d-a0c8-9fd431fff2d3": {
+   "name": "Heat to Eat: Lentil Stew “Feijoada Style”",
+   "type": "HE",
+   "portion": 400
+  },
+  "4621de3f-e5fc-4ea4-85df-eeb4a4a96289": {
+   "name": "Spinach Ricotta Tortellini with cream tomato sauce",
+   "type": "CI",
+   "portion": 500
+  },
+  "57e4e2a4-c823-4119-a492-7b07f3e6e013": {
+   "name": "Chicken in champignon sauce with Spatzle",
+   "type": "LC",
+   "portion": 550
+  },
+  "6ca59bf4-b292-403b-8f7a-a7bb71fca357": {
+   "name": "Heat to Eat: Chicken Teriyaki with vegetables",
+   "type": "HE",
+   "portion": 400
+  },
+  "7f3ae5c1-8814-44c5-adeb-724c986f3adc": {
+   "name": "Test & Tell: High Protein Salmon Salad",
+   "type": "SB",
+   "portion": 476
+  },
+  "96dc9d62-be95-4b96-9b31-1dcd5fb98ff3": {
+   "name": "Test&Tell: High-Protien Thai Peanut Bowl with Chickpea & Tofu",
+   "type": "SB",
+   "portion": 560
+  },
+  "b330962c-5285-4102-b049-0116e2cfdf6d": {
+   "name": "Test & Tell: Mediterranean Barley Bowl",
+   "type": "SB",
+   "portion": 520
+  },
+  "e146eb1c-2ef3-4f8c-ba85-967889071b4f": {
+   "name": "Phanaeng Vegan Chicken Curry (XL)",
+   "type": "LC",
+   "portion": 630
+  },
+  "f70405bb-96cb-4bf7-9b18-57f34babfb0a": {
+   "name": "Turkish Chickpeas & Spinach Tomato Stew with Bulgur",
+   "type": "LC",
+   "portion": 550
+  },
+  "ffc1f6c2-9bee-4b28-ade9-b763a6e4616a": {
+   "name": "Salade Lyonnaise",
+   "type": "SB",
+   "portion": 500
+  },
+  "08904a55-3857-4648-bc48-f874d38f0deb": {
+   "name": "Test & Tell: Tabbouleh",
+   "type": "SB",
+   "portion": null
+  },
+  "121256c2-ea39-4365-b7c8-807523882b5e": {
+   "name": "Test&Tell: High Protein Mediterranean Chicken Wrap",
+   "type": "SW",
+   "portion": 440
+  },
+  "41221ae9-4322-4259-8006-0889ba6f26f5": {
+   "name": "Semmelknödel with Mushroom sauce",
+   "type": "LC",
+   "portion": 450
+  },
+  "52275d04-2142-4c1b-9a66-f6aa1ca53661": {
+   "name": "Southwest Chicken Corn Chowder",
+   "type": "SB",
+   "portion": 600
+  },
+  "6f25f51f-ac7d-4dd1-bd73-db97125b33bf": {
+   "name": "High protein Tuna Egg Rice Bowl",
+   "type": "SB",
+   "portion": 550
+  },
+  "7ea33c80-1ce2-4156-a1f3-7a3730779563": {
+   "name": "Hungarian goulash with bandnudeln",
+   "type": "LC",
+   "portion": 550
+  },
+  "805e5239-d496-4bed-8d2a-5f0c77d1ecf2": {
+   "name": "Test & Tell: Chickpea, Pumpkin & Kale Coconut Curry",
+   "type": "LC",
+   "portion": 550
+  },
+  "a5d3c923-fecd-4ad0-94d9-a994d2b292ce": {
+   "name": "Roasted Veggie & Grain Bowl",
+   "type": "SB",
+   "portion": 540
+  },
+  "bc1c0da4-ae70-4f75-b3f7-f4e97e96e3fb": {
+   "name": "Vegan Turkish Eggplant with Rice (XL)",
+   "type": "LC",
+   "portion": 650
+  },
+  "d9ef52f1-6fdd-4c53-a0ae-ca8412726d3a": {
+   "name": "Feta Mushroom Boost",
+   "type": "CI",
+   "portion": 570
+  },
+  "ece8c7ce-f929-4b95-ab05-6d8aa483b54b": {
+   "name": "Chicken Pasta Salad bowl",
+   "type": "CI",
+   "portion": 550
+  },
+  "ed44ec3c-205f-4756-aa6f-b4fd98f42d46": {
+   "name": "Thai Gyoza Peanut noodle bowl",
+   "type": "SB",
+   "portion": 550
+  },
+  "fd898ae9-ffcb-4c2f-8fe8-367612b5cf4e": {
+   "name": "Hawaian Chicken Poke",
+   "type": "SB",
+   "portion": 500
+  },
+  "0740661e-b17f-4b4d-8153-8ff1ca2ba4ce": {
+   "name": "Chicken with Mashed Sweet potatoes, Broccoli and Beans",
+   "type": "LC",
+   "portion": 570
+  },
+  "095eb07d-9bb2-4a75-936c-676da52108ec": {
+   "name": "Mediterranean Cruise",
+   "type": "CI",
+   "portion": 550
+  },
+  "0acef14a-f8f7-44d4-87d2-0da6c4dd8f94": {
+   "name": "Avocado Caesar Crunch",
+   "type": "SB",
+   "portion": 550
+  },
+  "0fb29bf9-250f-4dba-b12e-9311ad6bcfcd": {
+   "name": "Test & Tell: High Protein Chicken Chopped Salad",
+   "type": "SB",
+   "portion": 520
+  },
+  "22b3467f-0c92-4f41-9fa1-af3bcdee7357": {
+   "name": "An Orange Salad",
+   "type": "SB",
+   "portion": 500
+  },
+  "28fc455b-a3f4-406e-b0c3-bdb19ea755b2": {
+   "name": "Far West Chili con Carne",
+   "type": "LC",
+   "portion": 540
+  },
+  "29a026b9-5b18-476e-af41-dbf0f09502be": {
+   "name": "Golden Tofu Coconut Curry with Barley",
+   "type": "LC",
+   "portion": 530
+  },
+  "376f9a81-a2e7-457a-9115-b2f5466ab851": {
+   "name": "Schupfnudeln with mushroom sauce",
+   "type": "LC",
+   "portion": 500
+  },
+  "4af75912-cd9e-4b08-9621-ff63332e1d5c": {
+   "name": "Heat to Eat: Vegetarian Cheese Tortellini",
+   "type": "HE",
+   "portion": 400
+  },
+  "522452a0-5555-40fa-854e-6d17b4d4c511": {
+   "name": "Vegan Cobb Salad",
+   "type": "SB",
+   "portion": 450
+  },
+  "5fa5f0c4-074c-49ca-a79f-80768b1db0dd": {
+   "name": "Gyoza Korean Bowl",
+   "type": "SB",
+   "portion": 550
+  },
+  "5fc698c2-c88b-40a9-870d-4252521076a7": {
+   "name": "Lasagna Bolognese with Seasonal Veggies",
+   "type": "CI",
+   "portion": 500
+  },
+  "6e58f730-7793-472d-98b2-27d5c8fdc8ae": {
+   "name": "Heat to Eat: Bami Goreng",
+   "type": "HE",
+   "portion": 400
+  },
+  "c221d980-8024-4004-afc2-ce67cc763d9a": {
+   "name": "Doner Kebab",
+   "type": "SW",
+   "portion": 430
+  },
+  "e148f6c5-55ee-4cad-81ca-c67b6bcf3bd3": {
+   "name": "B&B Butter Chicken with Rice & Naan",
+   "type": "LC",
+   "portion": 535
+  }
+ },
+ "lines": {
+  "030cc06f-65d5-482f-b86c-9de245919fc6": [
+   [
+    "Apple",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Juice Fruit Salad Mojito",
+    "S",
+    70,
+    "g"
+   ],
+   [
+    "Grapes - Red Seedless",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Ananas",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Honeydew Melon",
+    "I",
+    50,
+    "g"
+   ]
+  ],
+  "bf2cbf30-ebb9-11eb-bf3e-4d3f316ceaeb": [
+   [
+    "Chicken Breast",
+    "I",
+    100,
+    "g"
+   ],
+   [
+    "Parsley",
+    "I",
+    2,
+    "g"
+   ],
+   [
+    "Makhani Sauce",
+    "I",
+    200,
+    "g"
+   ],
+   [
+    "Basmati rice - steamed",
+    "S",
+    200,
+    "g"
+   ],
+   [
+    "Sesame Seeds",
+    "I",
+    5,
+    "g"
+   ]
+  ],
+  "20914ac4-bdbc-4514-ad9d-3d91d8253c18": [
+   [
+    "Bella&Bona Salad Mix 1",
+    "S",
+    150,
+    "g"
+   ],
+   [
+    "Carrots - Cubed & Cooked",
+    "S",
+    50,
+    "g"
+   ],
+   [
+    "Cherry Tomatoes",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Cucumber - sliced",
+    "S",
+    50,
+    "g"
+   ],
+   [
+    "Olives Black",
+    "I",
+    30,
+    "g"
+   ],
+   [
+    "Orange vinegrette",
+    "I",
+    60,
+    "g"
+   ],
+   [
+    "Chicken Breast",
+    "I",
+    80,
+    "g"
+   ]
+  ],
+  "236a0b67-6229-4e3e-a11e-6d80baa45e54": [
+   [
+    "Potato Pure",
+    "S",
+    150,
+    "g"
+   ],
+   [
+    "Cooking Cream",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Basil",
+    "I",
+    5,
+    "g"
+   ],
+   [
+    "Chicken Breast",
+    "I",
+    100,
+    "g"
+   ],
+   [
+    "Green Beans",
+    "I",
+    80,
+    "g"
+   ],
+   [
+    "Broccoli",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Tomato Sauce",
+    "I",
+    150,
+    "g"
+   ],
+   [
+    "Hard cheese - regular (instead of emmental, parmesan, grana padano)",
+    "I",
+    5,
+    "g"
+   ]
+  ],
+  "2ac07483-8ea4-4f12-9ca7-4470dcab49a4": [
+   [
+    "Regular tomatoes",
+    "I",
+    40,
+    "g"
+   ],
+   [
+    "Cheddar Cheese",
+    "I",
+    20,
+    "g"
+   ],
+   [
+    "Bacon raw",
+    "I",
+    20,
+    "g"
+   ],
+   [
+    "Iceberg Lettuce",
+    "I",
+    30,
+    "g"
+   ],
+   [
+    "Chicken Breast",
+    "I",
+    100,
+    "g"
+   ],
+   [
+    "Vegan Mayo",
+    "I",
+    60,
+    "g"
+   ],
+   [
+    "Cucumber - sliced",
+    "S",
+    10,
+    "g"
+   ],
+   [
+    "Sandwich Whole grain bread",
+    "I",
+    140,
+    "g"
+   ]
+  ],
+  "3c39c686-7924-479c-824c-fa9f846ad31e": [
+   [
+    "Parmigiana",
+    "I",
+    300,
+    "g"
+   ],
+   [
+    "Basmati rice - steamed",
+    "S",
+    200,
+    "g"
+   ],
+   [
+    "Parsley",
+    "I",
+    5,
+    "g"
+   ]
+  ],
+  "3feab834-c8dd-446d-a0c8-9fd431fff2d3": [
+   [
+    "Heat to Eat: Lentil Stew “Feijoada Style”",
+    "I",
+    400,
+    "g"
+   ]
+  ],
+  "4621de3f-e5fc-4ea4-85df-eeb4a4a96289": [
+   [
+    "Tomato Sauce",
+    "I",
+    100,
+    "g"
+   ],
+   [
+    "Cooking Cream",
+    "I",
+    30,
+    "g"
+   ],
+   [
+    "Red pesto",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Tortellini Spinach boiled",
+    "S",
+    300,
+    "g"
+   ],
+   [
+    "Spinach leaves",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Hard cheese - regular (instead of emmental, parmesan, grana padano)",
+    "I",
+    10,
+    "g"
+   ]
+  ],
+  "57e4e2a4-c823-4119-a492-7b07f3e6e013": [
+   [
+    "Parsley",
+    "I",
+    2,
+    "g"
+   ],
+   [
+    "Mushroom Sauce",
+    "I",
+    150,
+    "g"
+   ],
+   [
+    "Boiled - Spatzle",
+    "S",
+    250,
+    "g"
+   ],
+   [
+    "Chicken Breast",
+    "I",
+    100,
+    "g"
+   ],
+   [
+    "Champignons - sliced and cooked",
+    "S",
+    50,
+    "g"
+   ]
+  ],
+  "6ca59bf4-b292-403b-8f7a-a7bb71fca357": [
+   [
+    "Heat to Eat: Chicken Teriyaki with vegetables",
+    "I",
+    400,
+    "g"
+   ]
+  ],
+  "7f3ae5c1-8814-44c5-adeb-724c986f3adc": [
+   [
+    "Roasted Potates - Cut & Cooked",
+    "S",
+    150,
+    "g"
+   ],
+   [
+    "Smoked Salmon",
+    "I",
+    80,
+    "g"
+   ],
+   [
+    "Green Asparagus",
+    "I",
+    80,
+    "g"
+   ],
+   [
+    "Goat Cheese",
+    "I",
+    30,
+    "g"
+   ],
+   [
+    "White Balsamic",
+    "I",
+    70,
+    "g"
+   ],
+   [
+    "Baby Spinach",
+    "I",
+    10,
+    "g"
+   ],
+   [
+    "Black Pepper",
+    "I",
+    1,
+    "g"
+   ],
+   [
+    "Eggs Large",
+    "I",
+    55,
+    "g"
+   ]
+  ],
+  "96dc9d62-be95-4b96-9b31-1dcd5fb98ff3": [
+   [
+    "Sesame Seeds",
+    "I",
+    1,
+    "g"
+   ],
+   [
+    "Carrots - Cubed & Cooked",
+    "S",
+    80,
+    "g"
+   ],
+   [
+    "Peanut dressing",
+    "I",
+    70,
+    "g"
+   ],
+   [
+    "Smoked Tofu Firm",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Paprika Chickpeas",
+    "S",
+    100,
+    "g"
+   ],
+   [
+    "Quinoa - Steamed",
+    "S",
+    150,
+    "g"
+   ],
+   [
+    "Red cabbage - sliced",
+    "S",
+    50,
+    "g"
+   ],
+   [
+    "Peanuts",
+    "I",
+    10,
+    "g"
+   ],
+   [
+    "Cucumber - sliced",
+    "S",
+    50,
+    "g"
+   ]
+  ],
+  "b330962c-5285-4102-b049-0116e2cfdf6d": [
+   [
+    "Pumpkin Seeds",
+    "I",
+    10,
+    "g"
+   ],
+   [
+    "Red Bell Peppers - Cubed & Cooked",
+    "S",
+    50,
+    "g"
+   ],
+   [
+    "Steamed Barley",
+    "S",
+    100,
+    "g"
+   ],
+   [
+    "Baby Spinach",
+    "I",
+    10,
+    "g"
+   ],
+   [
+    "Vegan Gyros",
+    "I",
+    80,
+    "g"
+   ],
+   [
+    "Cherry Tomatoes",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Lemon Dressing",
+    "I",
+    70,
+    "g"
+   ],
+   [
+    "Zucchini - Cubed & Cooked",
+    "S",
+    50,
+    "g"
+   ],
+   [
+    "Lentils - Green",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Celeriac",
+    "I",
+    50,
+    "g"
+   ]
+  ],
+  "e146eb1c-2ef3-4f8c-ba85-967889071b4f": [
+   [
+    "Basmati rice - steamed",
+    "S",
+    250,
+    "g"
+   ],
+   [
+    "Phanaeng Curry",
+    "I",
+    200,
+    "g"
+   ],
+   [
+    "Red Bell Peppers - Cubed & Cooked",
+    "S",
+    30,
+    "g"
+   ],
+   [
+    "Parsley",
+    "I",
+    3,
+    "g"
+   ],
+   [
+    "Zucchini - Cubed & Cooked",
+    "S",
+    30,
+    "g"
+   ],
+   [
+    "Vegan Gyros",
+    "I",
+    120,
+    "g"
+   ]
+  ],
+  "f70405bb-96cb-4bf7-9b18-57f34babfb0a": [
+   [
+    "Tomato Sauce",
+    "I",
+    200,
+    "g"
+   ],
+   [
+    "Paprika Chickpeas",
+    "S",
+    80,
+    "g"
+   ],
+   [
+    "Parsley",
+    "I",
+    1,
+    "g"
+   ],
+   [
+    "Spinach leaves",
+    "I",
+    30,
+    "g"
+   ],
+   [
+    "Pita Bread",
+    "I",
+    40,
+    "g"
+   ],
+   [
+    "Chilli Flakes",
+    "I",
+    2,
+    "g"
+   ],
+   [
+    "Tzatziki",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Steamed Bulgur",
+    "S",
+    150,
+    "g"
+   ]
+  ],
+  "ffc1f6c2-9bee-4b28-ade9-b763a6e4616a": [
+   [
+    "Roasted Potates - Cut & Cooked",
+    "S",
+    150,
+    "g"
+   ],
+   [
+    "White Balsamic",
+    "I",
+    70,
+    "g"
+   ],
+   [
+    "Bella&Bona Salad Mix 1",
+    "S",
+    150,
+    "g"
+   ],
+   [
+    "Erbs Croutons",
+    "I",
+    10,
+    "g"
+   ],
+   [
+    "Bacon raw",
+    "I",
+    10,
+    "g"
+   ],
+   [
+    "Eggs Large",
+    "I",
+    110,
+    "g"
+   ]
+  ],
+  "08904a55-3857-4648-bc48-f874d38f0deb": [
+   [
+    "WallNuts",
+    "I",
+    10,
+    "g"
+   ],
+   [
+    "Cherry Tomatoes",
+    "I",
+    80,
+    "g"
+   ],
+   [
+    "Lemon Dressing",
+    "I",
+    70,
+    "g"
+   ],
+   [
+    "Parsley",
+    "I",
+    2,
+    "g"
+   ],
+   [
+    "Fresh Mint",
+    "I",
+    5,
+    "g"
+   ],
+   [
+    "Cucumber - sliced",
+    "S",
+    50,
+    "g"
+   ],
+   [
+    "Apples - cubed",
+    "S",
+    80,
+    "g"
+   ],
+   [
+    "Pomegranite Seeds",
+    "I",
+    10,
+    "g"
+   ],
+   [
+    "Kale",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Steamed Bulgur",
+    "S",
+    200,
+    "g"
+   ]
+  ],
+  "121256c2-ea39-4365-b7c8-807523882b5e": [
+   [
+    "Iceberg Lettuce",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Feta Cheese",
+    "I",
+    30,
+    "g"
+   ],
+   [
+    "Jalapeños",
+    "I",
+    10,
+    "g"
+   ],
+   [
+    "Cucumber - sliced",
+    "S",
+    30,
+    "g"
+   ],
+   [
+    "Olives Black",
+    "I",
+    30,
+    "g"
+   ],
+   [
+    "Chicken Kebab",
+    "I",
+    100,
+    "g"
+   ],
+   [
+    "Yogurt Dressing",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Cucumber Pickled",
+    "I",
+    10,
+    "g"
+   ],
+   [
+    "Wraps 30\"",
+    "I",
+    80,
+    "g"
+   ],
+   [
+    "Hummus",
+    "I",
+    50,
+    "g"
+   ]
+  ],
+  "41221ae9-4322-4259-8006-0889ba6f26f5": [
+   [
+    "Fried Onions",
+    "I",
+    2,
+    "g"
+   ],
+   [
+    "Semmelknödel",
+    "I",
+    180,
+    "g"
+   ],
+   [
+    "Cooking Cream",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Champignons - sliced and cooked",
+    "S",
+    100,
+    "g"
+   ],
+   [
+    "Mushroom Sauce",
+    "I",
+    150,
+    "g"
+   ]
+  ],
+  "52275d04-2142-4c1b-9a66-f6aa1ca53661": [
+   [
+    "Chicken Breast",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Red Kidney Beans",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Roasted Potates - Cut & Cooked",
+    "S",
+    50,
+    "g"
+   ],
+   [
+    "Jalapeños",
+    "I",
+    10,
+    "g"
+   ],
+   [
+    "Corn Cream Soup",
+    "I",
+    150,
+    "g"
+   ],
+   [
+    "Corn",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Red Bell Peppers - Cubed & Cooked",
+    "S",
+    80,
+    "g"
+   ],
+   [
+    "Parsley",
+    "I",
+    3,
+    "g"
+   ],
+   [
+    "Sour Cream",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Basmati rice - steamed",
+    "S",
+    80,
+    "g"
+   ],
+   [
+    "Cheddar Grated",
+    "I",
+    50,
+    "g"
+   ]
+  ],
+  "6f25f51f-ac7d-4dd1-bd73-db97125b33bf": [
+   [
+    "Basmati rice - steamed",
+    "S",
+    150,
+    "g"
+   ],
+   [
+    "Cucumber - sliced",
+    "S",
+    50,
+    "g"
+   ],
+   [
+    "Eggs Large",
+    "I",
+    55,
+    "g"
+   ],
+   [
+    "Tuna",
+    "I",
+    80,
+    "g"
+   ],
+   [
+    "Sesame Seeds",
+    "I",
+    5,
+    "g"
+   ],
+   [
+    "Sriracha Mayonese",
+    "I",
+    60,
+    "g"
+   ],
+   [
+    "Edamame",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Avocado Frozen",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Carrots - Cubed & Cooked",
+    "S",
+    50,
+    "g"
+   ]
+  ],
+  "7ea33c80-1ce2-4156-a1f3-7a3730779563": [
+   [
+    "Red Bell Peppers - Cubed & Cooked",
+    "S",
+    50,
+    "g"
+   ],
+   [
+    "Boiled - Bandnudeln",
+    "S",
+    250,
+    "g"
+   ],
+   [
+    "Beef Goulash",
+    "I",
+    200,
+    "g"
+   ]
+  ],
+  "805e5239-d496-4bed-8d2a-5f0c77d1ecf2": [
+   [
+    "Cubed Pumpkin",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Parsley",
+    "I",
+    1,
+    "g"
+   ],
+   [
+    "Chickpeas",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Yellow Thai Curry",
+    "I",
+    200,
+    "g"
+   ],
+   [
+    "Kale",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Basmati rice - steamed",
+    "S",
+    200,
+    "g"
+   ],
+   [
+    "Chilli Flakes",
+    "I",
+    1,
+    "g"
+   ]
+  ],
+  "a5d3c923-fecd-4ad0-94d9-a994d2b292ce": [
+   [
+    "Quinoa - Steamed",
+    "S",
+    50,
+    "g"
+   ],
+   [
+    "Sweet Potato- Roasted",
+    "S",
+    80,
+    "g"
+   ],
+   [
+    "Kale",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Pumpkin Seeds",
+    "I",
+    10,
+    "g"
+   ],
+   [
+    "Red Bell Peppers - Cubed & Cooked",
+    "S",
+    50,
+    "g"
+   ],
+   [
+    "Wild rice - steamed",
+    "S",
+    80,
+    "g"
+   ],
+   [
+    "Broccoli",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Steamed Bulgur",
+    "S",
+    50,
+    "g"
+   ],
+   [
+    "White Balsamic",
+    "I",
+    70,
+    "g"
+   ],
+   [
+    "Avocado fresh",
+    "I",
+    50,
+    "g"
+   ]
+  ],
+  "bc1c0da4-ae70-4f75-b3f7-f4e97e96e3fb": [
+   [
+    "Vegan Parmigiana",
+    "S",
+    400,
+    "g"
+   ],
+   [
+    "Basmati rice - steamed",
+    "S",
+    250,
+    "g"
+   ],
+   [
+    "Parsley",
+    "I",
+    1,
+    "g"
+   ]
+  ],
+  "d9ef52f1-6fdd-4c53-a0ae-ca8412726d3a": [
+   [
+    "Baby Spinach",
+    "I",
+    30,
+    "g"
+   ],
+   [
+    "Roasted Potates - Cut & Cooked",
+    "S",
+    150,
+    "g"
+   ],
+   [
+    "Champignons",
+    "I",
+    100,
+    "g"
+   ],
+   [
+    "Sweet Potato",
+    "I",
+    150,
+    "g"
+   ],
+   [
+    "Sriracha Mayonese",
+    "I",
+    80,
+    "g"
+   ],
+   [
+    "Parsley",
+    "I",
+    5,
+    "g"
+   ],
+   [
+    "Feta Cheese",
+    "I",
+    70,
+    "g"
+   ]
+  ],
+  "ece8c7ce-f929-4b95-ab05-6d8aa483b54b": [
+   [
+    "Olives Black",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Mozzarella Mini",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "White Balsamic",
+    "I",
+    60,
+    "g"
+   ],
+   [
+    "Chicken Breast",
+    "I",
+    80,
+    "g"
+   ],
+   [
+    "Tomato - Sun Dried",
+    "I",
+    20,
+    "g"
+   ],
+   [
+    "Boiled - Penne whole wheat",
+    "S",
+    250,
+    "g"
+   ],
+   [
+    "Red Bell Peppers - Cubed & Cooked",
+    "S",
+    50,
+    "g"
+   ]
+  ],
+  "ed44ec3c-205f-4756-aa6f-b4fd98f42d46": [
+   [
+    "Red Bell Peppers - Cubed & Cooked",
+    "S",
+    50,
+    "g"
+   ],
+   [
+    "Red cabbage - sliced",
+    "S",
+    50,
+    "g"
+   ],
+   [
+    "Peanuts",
+    "I",
+    10,
+    "g"
+   ],
+   [
+    "Peanut dressing",
+    "I",
+    60,
+    "g"
+   ],
+   [
+    "Boiled - glass noodles",
+    "S",
+    250,
+    "g"
+   ],
+   [
+    "Carrots - Cubed & Cooked",
+    "S",
+    50,
+    "g"
+   ],
+   [
+    "Soy Sauce",
+    "I",
+    20,
+    "ml"
+   ],
+   [
+    "Vegetable gyoza",
+    "I",
+    67.5,
+    "g"
+   ]
+  ],
+  "fd898ae9-ffcb-4c2f-8fe8-367612b5cf4e": [
+   [
+    "Edamame",
+    "I",
+    40,
+    "g"
+   ],
+   [
+    "Mango - always frozen",
+    "I",
+    40,
+    "g"
+   ],
+   [
+    "Cream Cheese",
+    "I",
+    30,
+    "g"
+   ],
+   [
+    "Carrots",
+    "I",
+    40,
+    "g"
+   ],
+   [
+    "Fried Onions",
+    "I",
+    5,
+    "g"
+   ],
+   [
+    "Basmati rice - steamed",
+    "S",
+    120,
+    "g"
+   ],
+   [
+    "Pomegranite Seeds",
+    "I",
+    5,
+    "g"
+   ],
+   [
+    "Radish",
+    "I",
+    15,
+    "g"
+   ],
+   [
+    "Chicken Breast",
+    "I",
+    80,
+    "g"
+   ],
+   [
+    "Honey-Mustard dressing",
+    "I",
+    70,
+    "g"
+   ],
+   [
+    "Cherry Tomatoes",
+    "I",
+    30,
+    "g"
+   ]
+  ],
+  "0740661e-b17f-4b4d-8153-8ff1ca2ba4ce": [
+   [
+    "Mushroom Sauce",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Chicken Breast",
+    "I",
+    150,
+    "g"
+   ],
+   [
+    "Carrots - Cubed & Cooked",
+    "S",
+    50,
+    "g"
+   ],
+   [
+    "Parsley",
+    "I",
+    5,
+    "g"
+   ],
+   [
+    "Sweet mash potatoe",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Broccoli",
+    "I",
+    80,
+    "g"
+   ],
+   [
+    "Green Beans",
+    "I",
+    80,
+    "g"
+   ]
+  ],
+  "095eb07d-9bb2-4a75-936c-676da52108ec": [
+   [
+    "Tomato - Sun Dried",
+    "I",
+    30,
+    "g"
+   ],
+   [
+    "Feta Cheese",
+    "I",
+    80,
+    "g"
+   ],
+   [
+    "Arugula",
+    "I",
+    10,
+    "g"
+   ],
+   [
+    "Olive Oil",
+    "I",
+    5,
+    "g"
+   ],
+   [
+    "Olives Black",
+    "I",
+    40,
+    "g"
+   ],
+   [
+    "Steamed fusilli",
+    "S",
+    250,
+    "g"
+   ],
+   [
+    "Red Bell Peppers - Cubed & Cooked",
+    "S",
+    50,
+    "g"
+   ],
+   [
+    "Balsamic Dressing",
+    "I",
+    80,
+    "g"
+   ]
+  ],
+  "0acef14a-f8f7-44d4-87d2-0da6c4dd8f94": [
+   [
+    "Cucumber",
+    "I",
+    80,
+    "g"
+   ],
+   [
+    "Bella&Bona Salad Mix 1",
+    "S",
+    100,
+    "g"
+   ],
+   [
+    "Avocado Frozen",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Chicken Breast",
+    "I",
+    100,
+    "g"
+   ],
+   [
+    "Corn",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Cherry Tomatoes",
+    "I",
+    80,
+    "g"
+   ],
+   [
+    "Erbs Croutons",
+    "I",
+    30,
+    "g"
+   ],
+   [
+    "Caesar Dressing",
+    "I",
+    70,
+    "g"
+   ],
+   [
+    "Cheddar Grated",
+    "I",
+    30,
+    "g"
+   ]
+  ],
+  "0fb29bf9-250f-4dba-b12e-9311ad6bcfcd": [
+   [
+    "Bella&Bona Salad Mix 1",
+    "S",
+    150,
+    "g"
+   ],
+   [
+    "Chicken Breast",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Chicken Kebab",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Feta Cheese",
+    "I",
+    30,
+    "g"
+   ],
+   [
+    "Jalapeños",
+    "I",
+    10,
+    "g"
+   ],
+   [
+    "Cucumber Pickled",
+    "I",
+    10,
+    "g"
+   ],
+   [
+    "Yogurt Dressing",
+    "I",
+    70,
+    "g"
+   ],
+   [
+    "Cherry Tomatoes",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Cucumber",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Red cabbage - sliced",
+    "S",
+    50,
+    "g"
+   ]
+  ],
+  "22b3467f-0c92-4f41-9fa1-af3bcdee7357": [
+   [
+    "Cherry Tomatoes",
+    "I",
+    60,
+    "g"
+   ],
+   [
+    "Cucumber - sliced",
+    "S",
+    50,
+    "g"
+   ],
+   [
+    "Erbs Croutons",
+    "I",
+    20,
+    "g"
+   ],
+   [
+    "Smoked Salmon",
+    "I",
+    80,
+    "g"
+   ],
+   [
+    "Parsley",
+    "I",
+    1,
+    "g"
+   ],
+   [
+    "Bella&Bona Salad Mix 1",
+    "S",
+    150,
+    "g"
+   ],
+   [
+    "Orange vinegrette",
+    "I",
+    80,
+    "g"
+   ],
+   [
+    "Sesame Seeds",
+    "I",
+    5,
+    "g"
+   ],
+   [
+    "Carrots",
+    "I",
+    60,
+    "g"
+   ]
+  ],
+  "28fc455b-a3f4-406e-b0c3-bdb19ea755b2": [
+   [
+    "Parsley",
+    "I",
+    5,
+    "g"
+   ],
+   [
+    "Chili Con Carne",
+    "I",
+    250,
+    "g"
+   ],
+   [
+    "Basmati rice - steamed",
+    "S",
+    200,
+    "g"
+   ],
+   [
+    "Zucchini",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Pita Bread",
+    "I",
+    40,
+    "g"
+   ]
+  ],
+  "29a026b9-5b18-476e-af41-dbf0f09502be": [
+   [
+    "Tofu Firm",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Steamed Barley",
+    "S",
+    200,
+    "g"
+   ],
+   [
+    "Yellow Thai Curry",
+    "I",
+    200,
+    "g"
+   ],
+   [
+    "Green Peas",
+    "I",
+    30,
+    "g"
+   ],
+   [
+    "Parsley",
+    "I",
+    1,
+    "g"
+   ],
+   [
+    "Red Bell Peppers - Cubed & Cooked",
+    "S",
+    50,
+    "g"
+   ]
+  ],
+  "376f9a81-a2e7-457a-9115-b2f5466ab851": [
+   [
+    "Schupfnudel boiled",
+    "S",
+    250,
+    "g"
+   ],
+   [
+    "Cooking Cream",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Mushroom Sauce",
+    "I",
+    150,
+    "g"
+   ],
+   [
+    "Fried Onions",
+    "I",
+    10,
+    "g"
+   ],
+   [
+    "Champignons - sliced and cooked",
+    "S",
+    50,
+    "g"
+   ]
+  ],
+  "4af75912-cd9e-4b08-9621-ff63332e1d5c": [
+   [
+    "Heat to Eat: Vegetarian Cheese Tortellini",
+    "I",
+    400,
+    "g"
+   ]
+  ],
+  "522452a0-5555-40fa-854e-6d17b4d4c511": [
+   [
+    "Cucumber",
+    "I",
+    50,
+    "g"
+   ]
+  ],
+  "5fa5f0c4-074c-49ca-a79f-80768b1db0dd": [
+   [
+    "Carrots - Cubed & Cooked",
+    "S",
+    50,
+    "g"
+   ],
+   [
+    "Broccoli",
+    "I",
+    80,
+    "g"
+   ],
+   [
+    "Sesame Seeds",
+    "I",
+    5,
+    "g"
+   ],
+   [
+    "Soy Sauce",
+    "I",
+    10,
+    "g"
+   ],
+   [
+    "Vegetable gyoza",
+    "I",
+    67.5,
+    "g"
+   ],
+   [
+    "Champignons - sliced and cooked",
+    "S",
+    50,
+    "g"
+   ],
+   [
+    "Peanut dressing",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Boiled - glass noodles",
+    "S",
+    200,
+    "g"
+   ]
+  ],
+  "5fc698c2-c88b-40a9-870d-4252521076a7": [
+   [
+    "Carrots - Cubed & Cooked",
+    "S",
+    50,
+    "g"
+   ],
+   [
+    "Aubergines - Cubed & Cooked",
+    "S",
+    50,
+    "g"
+   ],
+   [
+    "Broccoli",
+    "I",
+    50,
+    "g"
+   ],
+   [
+    "Parsley",
+    "I",
+    3,
+    "g"
+   ],
+   [
+    "Lasagne alla Bolognese",
+    "I",
+    300,
+    "g"
+   ],
+   [
+    "Red Bell Peppers - Cubed & Cooked",
+    "S",
+    50,
+    "g"
+   ]
+  ],
+  "6e58f730-7793-472d-98b2-27d5c8fdc8ae": [
+   [
+    "Heat to Eat: Bami Goreng",
+    "I",
+    400,
+    "g"
+   ]
+  ],
+  "c221d980-8024-4004-afc2-ce67cc763d9a": [
+   [
+    "Vegan Mayo",
+    "I",
+    40,
+    "g"
+   ],
+   [
+    "Cucumber Pickled",
+    "I",
+    35,
+    "g"
+   ],
+   [
+    "Red cabbage - sliced",
+    "S",
+    80,
+    "g"
+   ],
+   [
+    "Red onion",
+    "I",
+    10,
+    "g"
+   ],
+   [
+    "Bella&Bona Salad Mix 1",
+    "S",
+    80,
+    "g"
+   ],
+   [
+    "Chicken Kebab",
+    "I",
+    100,
+    "g"
+   ],
+   [
+    "Wraps 30\"",
+    "I",
+    80,
+    "g"
+   ]
+  ],
+  "e148f6c5-55ee-4cad-81ca-c67b6bcf3bd3": [
+   [
+    "Tandoori Naan",
+    "I",
+    80,
+    "g"
+   ],
+   [
+    "Basmati rice - steamed",
+    "S",
+    150,
+    "g"
+   ],
+   [
+    "Makhani Sauce",
+    "I",
+    200,
+    "g"
+   ],
+   [
+    "Sesame Seeds",
+    "I",
+    5,
+    "g"
+   ],
+   [
+    "Parsley",
+    "I",
+    1,
+    "g"
+   ],
+   [
+    "Chicken Breast",
+    "I",
+    100,
+    "g"
+   ]
+  ]
+ },
+ "subs": {
+  "Juice Fruit Salad Mojito": {
+   "dbYield": null,
+   "input": 70,
+   "lines": [
+    [
+     "Brown Sugar",
+     4,
+     "g",
+     "I"
+    ],
+    [
+     "Lime Juice",
+     2,
+     "g",
+     "I"
+    ],
+    [
+     "Water",
+     63,
+     "g",
+     "I"
+    ],
+    [
+     "Mint - fresh",
+     1,
+     "g",
+     "I"
+    ]
+   ]
+  },
+  "Basmati rice - steamed": {
+   "dbYield": 1000,
+   "input": 1500,
+   "lines": [
+    [
+     "Rice - White Basmati",
+     1000,
+     "g",
+     "I"
+    ],
+    [
+     "Water",
+     500,
+     "ml",
+     "I"
+    ]
+   ]
+  },
+  "Bella&Bona Salad Mix 1": {
+   "dbYield": 1000,
+   "input": 65,
+   "lines": [
+    [
+     "Baby Spinach",
+     10,
+     "g",
+     "I"
+    ],
+    [
+     "Radicchio",
+     5,
+     "g",
+     "I"
+    ],
+    [
+     "Iceberg Lettuce",
+     50,
+     "g",
+     "I"
+    ]
+   ]
+  },
+  "Carrots - Cubed & Cooked": {
+   "dbYield": 800,
+   "input": 1100,
+   "lines": [
+    [
+     "Canola Oil (rapsöl)",
+     50,
+     "g",
+     "I"
+    ],
+    [
+     "Dr. Oetker Professional Vegetable Gold Seasoning",
+     50,
+     "g",
+     "I"
+    ],
+    [
+     "Carrots",
+     1000,
+     "g",
+     "I"
+    ]
+   ]
+  },
+  "Cucumber - sliced": {
+   "dbYield": null,
+   "input": 100,
+   "lines": [
+    [
+     "Cucumber",
+     100,
+     "g",
+     "I"
+    ]
+   ]
+  },
+  "Potato Pure": {
+   "dbYield": null,
+   "input": 30550,
+   "lines": [
+    [
+     "Water",
+     13000,
+     "ml",
+     "I"
+    ],
+    [
+     "Butter",
+     500,
+     "g",
+     "I"
+    ],
+    [
+     "Salt",
+     50,
+     "g",
+     "I"
+    ],
+    [
+     "Potatoes Puree",
+     4000,
+     "g",
+     "I"
+    ],
+    [
+     "Milk",
+     13000,
+     "ml",
+     "I"
+    ]
+   ]
+  },
+  "Tortellini Spinach boiled": {
+   "dbYield": null,
+   "input": 150,
+   "lines": [
+    [
+     "Tortellini Spinach",
+     150,
+     "g",
+     "I"
+    ]
+   ]
+  },
+  "Boiled - Spatzle": {
+   "dbYield": null,
+   "input": 1000,
+   "lines": [
+    [
+     "Spatzle",
+     1000,
+     "g",
+     "I"
+    ]
+   ]
+  },
+  "Champignons - sliced and cooked": {
+   "dbYield": null,
+   "input": 102,
+   "lines": [
+    [
+     "Olive Oil",
+     4,
+     "g",
+     "I"
+    ],
+    [
+     "Champignons",
+     98,
+     "g",
+     "I"
+    ]
+   ]
+  },
+  "Roasted Potates - Cut & Cooked": {
+   "dbYield": 1000,
+   "input": 220,
+   "lines": [
+    [
+     "Small Potatoes",
+     200,
+     "g",
+     "I"
+    ],
+    [
+     "Canola Oil (rapsöl)",
+     20,
+     "g",
+     "I"
+    ]
+   ]
+  },
+  "Paprika Chickpeas": {
+   "dbYield": 1000,
+   "input": 106,
+   "lines": [
+    [
+     "Olive Oil",
+     3,
+     "g",
+     "I"
+    ],
+    [
+     "Paprika powder",
+     3,
+     "g",
+     "I"
+    ],
+    [
+     "Chickpeas",
+     100,
+     "g",
+     "I"
+    ]
+   ]
+  },
+  "Quinoa - Steamed": {
+   "dbYield": null,
+   "input": 1000,
+   "lines": [
+    [
+     "Quinoa",
+     1000,
+     "g",
+     "I"
+    ]
+   ]
+  },
+  "Red cabbage - sliced": {
+   "dbYield": 1050,
+   "input": 80,
+   "lines": [
+    [
+     "Red cabbage",
+     76,
+     "g",
+     "I"
+    ],
+    [
+     "Vinegar",
+     4,
+     "g",
+     "I"
+    ]
+   ]
+  },
+  "Red Bell Peppers - Cubed & Cooked": {
+   "dbYield": 800,
+   "input": 112,
+   "lines": [
+    [
+     "Red Bell Pepper",
+     110,
+     "g",
+     "I"
+    ],
+    [
+     "Olive Oil",
+     2,
+     "g",
+     "I"
+    ]
+   ]
+  },
+  "Steamed Barley": {
+   "dbYield": 1897,
+   "input": 6045,
+   "lines": [
+    [
+     "Salt",
+     15,
+     "g",
+     "I"
+    ],
+    [
+     "Pearled Barley",
+     2000,
+     "g",
+     "I"
+    ],
+    [
+     "Water",
+     4000,
+     "g",
+     "I"
+    ],
+    [
+     "Sunflower Oil",
+     30,
+     "g",
+     "I"
+    ]
+   ]
+  },
+  "Zucchini - Cubed & Cooked": {
+   "dbYield": 800,
+   "input": 98,
+   "lines": [
+    [
+     "Zucchini",
+     96,
+     "g",
+     "I"
+    ],
+    [
+     "Olive Oil",
+     2,
+     "g",
+     "I"
+    ]
+   ]
+  },
+  "Steamed Bulgur": {
+   "dbYield": 180,
+   "input": 3000,
+   "lines": [
+    [
+     "Water",
+     2000,
+     "ml",
+     "I"
+    ],
+    [
+     "Bulgur",
+     1000,
+     "g",
+     "I"
+    ]
+   ]
+  },
+  "Apples - cubed": {
+   "dbYield": null,
+   "input": 1000,
+   "lines": [
+    [
+     "Apple",
+     1000,
+     "g",
+     "I"
+    ]
+   ]
+  },
+  "Boiled - Bandnudeln": {
+   "dbYield": null,
+   "input": 1000,
+   "lines": [
+    [
+     "Bandnudeln",
+     1000,
+     "g",
+     "I"
+    ]
+   ]
+  },
+  "Sweet Potato- Roasted": {
+   "dbYield": null,
+   "input": 1050,
+   "lines": [
+    [
+     "Canola Oil (rapsöl)",
+     50,
+     "g",
+     "I"
+    ],
+    [
+     "Sweet Potato",
+     1000,
+     "g",
+     "I"
+    ]
+   ]
+  },
+  "Wild rice - steamed": {
+   "dbYield": 9728,
+   "input": 3500,
+   "lines": [
+    [
+     "Water",
+     2500,
+     "ml",
+     "I"
+    ],
+    [
+     "Wild Rice",
+     1000,
+     "g",
+     "I"
+    ]
+   ]
+  },
+  "Vegan Parmigiana": {
+   "dbYield": null,
+   "input": 1845,
+   "lines": [
+    [
+     "Olive Oil",
+     125,
+     "g",
+     "I"
+    ],
+    [
+     "Aubergines",
+     1000,
+     "g",
+     "I"
+    ],
+    [
+     "Salt",
+     20,
+     "g",
+     "I"
+    ],
+    [
+     "Tomato Sauce",
+     700,
+     "g",
+     "I"
+    ]
+   ]
+  },
+  "Boiled - Penne whole wheat": {
+   "dbYield": 2000,
+   "input": 100,
+   "lines": [
+    [
+     "Penne Whole Wheat",
+     100,
+     "g",
+     "I"
+    ]
+   ]
+  },
+  "Boiled - glass noodles": {
+   "dbYield": 1500,
+   "input": 200,
+   "lines": [
+    [
+     "Water",
+     100,
+     "ml",
+     "I"
+    ],
+    [
+     "Glass Noodles",
+     100,
+     "g",
+     "I"
+    ]
+   ]
+  },
+  "Steamed fusilli": {
+   "dbYield": 2500,
+   "input": 1050,
+   "lines": [
+    [
+     "Fusilli",
+     1000,
+     "g",
+     "I"
+    ],
+    [
+     "Sunflower Oil",
+     50,
+     "g",
+     "I"
+    ]
+   ]
+  },
+  "Schupfnudel boiled": {
+   "dbYield": null,
+   "input": 2000,
+   "lines": [
+    [
+     "Schupznudeln",
+     2000,
+     "g",
+     "I"
+    ]
+   ]
+  },
+  "Aubergines - Cubed & Cooked": {
+   "dbYield": 800,
+   "input": 70,
+   "lines": [
+    [
+     "Aubergines",
+     69,
+     "g",
+     "I"
+    ],
+    [
+     "Olive Oil",
+     1,
+     "g",
+     "I"
+    ]
+   ]
+  }
+ },
+ "ingredients": {},
+ "warnings": [
+  "Avocado Caesar Crunch: line 'Cheddar Grated' has no ingredient linked, skipped."
+ ]
+}
