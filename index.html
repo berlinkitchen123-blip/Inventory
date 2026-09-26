@@ -111,6 +111,12 @@ tfoot td{font-weight:800}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 code{background:var(--panel-2);padding:1px 5px;border-radius:4px}
 .print-title{display:none}
+.btn-order{display:block;width:100%;margin-top:7px;padding:5px 10px;background:var(--panel-2);border:1px solid var(--line);border-radius:8px;font-size:13px;font-weight:700;color:var(--ink-2);cursor:pointer;text-align:left;transition:all .15s}
+.btn-order:hover{border-color:var(--herb);color:var(--herb)}
+.btn-order.is-ordered{color:var(--herb);border-color:var(--herb);background:rgba(143,201,163,.12)}
+.btn-order.is-ordered:hover{color:var(--paprika);border-color:var(--paprika)}
+table.order tbody.item.ordered tr.total td:not(:first-child){opacity:.35}
+table.order tbody.item.ordered .name{text-decoration:line-through;color:var(--ink-3)}
 .uid-tag{display:none}
 .art-box{display:flex;align-items:center;gap:5px;margin-top:6px;flex-wrap:wrap}
 .art-num{font-family:monospace;font-size:15px;font-weight:800;color:var(--saffron);letter-spacing:.04em;background:rgba(240,181,65,.1);border:1px solid rgba(240,181,65,.28);border-radius:6px;padding:3px 8px;cursor:pointer;user-select:all}
@@ -356,7 +362,8 @@ const CACHE_KEY = 'nrw-stock-planner-cache';
 const enc = s => encodeURIComponent(s).replace(/\./g, '%2E'); // Firebase keys can't hold . # $ [ ] /
 const dec = s => { try { return decodeURIComponent(s); } catch (e) { return s; } };
 let STORE = null, USER = null, UNSUB = null, CONNECTED = null, LAST = null, OLD = null, REMOTE_PENDING = false;
-let STOCK_EDIT = false; // stock is locked until someone presses Edit stock (not saved: opens locked every time)
+let STOCK_EDIT = false;
+let ORDERED = {}; // stock is locked until someone presses Edit stock (not saved: opens locked every time)
 const ST = {}; // team data (fc, stock, suppliers, packs, yields, buffer) from Firebase + this browser's tab and "show dishes"
 (() => {
   try {
@@ -501,16 +508,41 @@ function supplierOptions(r) {
     + (others.length ? `<optgroup label="Other suppliers">${others.map(opt).join('')}</optgroup>` : '');
 }
 
+function isOrdered(n){return !!(ORDERED[iso(WEEK)]&&ORDERED[iso(WEEK)][enc(n)])}
+function toggleOrdered(name){
+  const wk=iso(WEEK),cur=isOrdered(name);
+  put({[`ordered/${wk}/${enc(name)}`]:cur?null:true},'ordered');
+  if(!ORDERED[wk])ORDERED[wk]={};
+  if(cur)delete ORDERED[wk][enc(name)];else ORDERED[wk][enc(name)]=true;
+  const btn=document.querySelector(`[data-order="${CSS.escape(name)}"]`);
+  if(btn){btn.closest('tbody.item')?.classList.toggle('ordered',!cur);btn.classList.toggle('is-ordered',!cur);btn.innerHTML=cur?'⬜&nbsp;Not ordered':'✅&nbsp;Ordered';}
+  renderOrderChips();
+}
+function renderOrderChips(){
+  if(!PLAN||!PLAN.rows)return;
+  const P=PLAN,ct=f=>P.rows.filter(f).length;
+  const sups=new Set(P.rows.map(r=>r.supplier).filter(s=>s!==NO_SUPPLIER)).size;
+  const none=ct(r=>r.supplier===NO_SUPPLIER),est=ct(r=>r.estimate),noPk=ct(r=>!(r.pack>0));
+  const ordC=P.rows.filter(r=>isOrdered(r.name)).length,tot=P.rows.length,pend=tot-ordC;
+  $('#chips').innerHTML=[
+    `${tot} items`,
+    ordC?`<span style="color:var(--herb)">✅ ${ordC} ordered</span>`:'',
+    pend?`<span style="color:var(--saffron)">⬜ ${pend} to order</span>`:'',
+    `${nf(P.portionsSum,0)} portions`,`${sups} suppliers`,
+    none?`${none} without supplier`:'',est?`${est} yield estimates`:'',noPk?`${noPk} no pack size`:''
+  ].filter(Boolean).map(x=>`<span class="chip">${x}</span>`).join('');
+}
 function itemHtml(r) {
   const n = esc(r.name), u = `<small>${esc(r.unit)}</small>`, show = showDishes();
   const tags = [r.group === FRESH ? '<span class="tag fresh">Fresh</span>' : '', r.estimate ? '<span class="tag est">Yield estimate</span>' : ''].join('');
   const dishRows = show ? r.dishes.map(d => `<tr class="dish"><td>${esc(d.name)}</td><td></td><td class="num">${nf(d.portions, 0)}</td><td class="num">${qty(d.need, r.unit)}${u}</td><td></td><td></td><td></td><td></td></tr>`).join('') : '';
-  return `<tbody class="item">
+  return `<tbody class="item${isOrdered(r.name) ? ' ordered' : ''}">
     <tr class="total">
       <th scope="rowgroup" rowspan="${1 + (show ? r.dishes.length : 0)}" class="item-cell">
         <div class="name">${n}</div>${tags ? `<div class="tags">${tags}</div>` : ''}<div>${NRW_UIDS[r.name] ? `<span class="uid-tag">${NRW_UIDS[r.name]}</span>` : '<span class="uid-tag missing">Art#?</span>'}</div>
         ${r.packInfo ? `<div class="note">Apicbase pack: ${esc(r.packInfo)}</div>` : ''}${r.note ? `<div class="note">${esc(r.note)}</div>` : ''}
         <label class="suppick">Supplier <select data-sup="${n}" data-fid="sup|${n}">${supplierOptions(r)}</select></label>
+        <button class="btn-order${isOrdered(r.name)?' is-ordered':''}" data-order="${n}">${isOrdered(r.name)?'✅&nbsp;Ordered':'⬜&nbsp;Not ordered'}</button>
       </th>
       <td>${(() => { const a=NRW_UIDS[r.name]; return a ? `<span class="art-num" style="font-size:14px" onclick="navigator.clipboard?.writeText('${a}');this.textContent='✓';setTimeout(()=>this.textContent='${a}',1200)" title="Click to copy">${a}</span>` : '<span style="color:var(--ink-3)">—</span>'; })()}</td>
       <td>${r.dishes.length} ${r.dishes.length === 1 ? 'dish' : 'dishes'}</td>
@@ -531,8 +563,7 @@ function renderOrder() {
   const count = f => P.rows.filter(f).length;
   const sups = new Set(P.rows.map(r => r.supplier).filter(s => s !== NO_SUPPLIER)).size;
   const none = count(r => r.supplier === NO_SUPPLIER), est = count(r => r.estimate), noPack = count(r => !(r.pack > 0));
-  $('#chips').innerHTML = [`${P.rows.length} items`, `${nf(P.portionsSum, 0)} portions`, `${sups} suppliers`, none ? `${none} without supplier` : '', est ? `${est} depend on a yield estimate` : '', noPack ? `${noPack} without pack size` : '']
-    .filter(Boolean).map(x => `<span class="chip">${x}</span>`).join('');
+  renderOrderChips();
   const eb = $('#stockEditBtn');
   eb.textContent = STOCK_EDIT ? 'Done' : 'Edit stock'; eb.setAttribute('aria-pressed', String(STOCK_EDIT));
   $('#orderList').classList.toggle('editing', STOCK_EDIT);
@@ -685,6 +716,7 @@ function applyRemote(data) {
   ST.fc = data.forecast || {};
   ST.stock = Object.fromEntries(Object.entries(data.stock || {}).map(([w, m]) => [w, decode(m)]));
   ST.suppliers = decode(data.suppliers); ST.packs = decode(data.packs); ST.yields = decode(data.yields);
+    ORDERED = data.ordered || {};
   ST.buffer = data.settings && Number.isFinite(+data.settings.buffer) ? +data.settings.buffer : null;
   LAST = (data.meta && data.meta.lastChange) || null;
 }
@@ -798,6 +830,7 @@ document.addEventListener('change', e => {
   else if ('stock' in d) put({ [`stock/${wk}/${enc(d.stock)}`]: val }, 'stock count');
   else if ('pack' in d) put({ [`packs/${enc(d.pack)}`]: val === null ? 0 : val }, 'pack size');
   else if ('sup' in d) put({ [`suppliers/${enc(d.sup)}`]: el.value }, 'supplier');
+  else if ('order' in b.dataset) toggleOrdered(b.dataset.order);
   else if ('yield' in d) put({ [`yields/${enc(d.yield)}`]: val > 0 ? val : null }, 'yield');
   else if (el.id === 'sBuffer') put({ 'settings/buffer': val === null ? null : Math.min(1, val / 100) }, 'buffer');
   else if (el.id === 'showDishes') { ST.showDishes = el.checked; save(); }
