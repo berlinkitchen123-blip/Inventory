@@ -103,6 +103,11 @@ tfoot td{font-weight:800}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 code{background:var(--panel-2);padding:1px 5px;border-radius:4px}
 .print-title{display:none}
+.btn.refresh{background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:3px 10px;font-size:12px;font-weight:600;color:var(--ink-2);display:inline-flex;align-items:center;gap:5px}
+.btn.refresh:hover{border-color:var(--herb);color:var(--herb)}
+.btn.refresh[aria-busy=true]{opacity:.6;pointer-events:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{display:inline-block;animation:spin .7s linear infinite}
 .who{text-align:right}.who p{margin:2px 0}
 .authcard{max-width:520px;margin:24px auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
 .authcard .h2{margin-top:0}
@@ -138,7 +143,7 @@ code{background:var(--panel-2);padding:1px 5px;border-radius:4px}
       <p class="muted small" id="kitchen"></p>
     </div>
     <div class="who">
-      <p class="muted small" id="freshness"></p>
+      <p class="muted small" id="freshness" style="display:flex;align-items:center;gap:8px;justify-content:flex-end;flex-wrap:wrap;"></p>
       <p class="muted small"><span id="status"></span> <span id="userEmail"></span> <button class="btn tiny" id="signOut" hidden>Sign out</button></p>
     </div>
   </header>
@@ -396,7 +401,7 @@ function render() {
   PLAN.week = week;
   PLAN.delivery = deliveryLabel(deliveriesFor(WEEK));
   $('#kitchen').textContent = `${SET.kitchen}. NRW menus only, forecast typed by you.`;
-  $('#freshness').textContent = `BB database data from ${stamp(DB.generated)}${LIVE ? '' : ' (built-in copy)'}`;
+  $('#freshness').innerHTML = `<span>BB database: <b>${stamp(DB.generated)}</b>${LIVE ? '' : ' (built-in copy)'}</span><button class="btn refresh" id="refreshBtn" aria-busy="false" title="Re-fetch from GitHub">&#x21BB; Refresh DB</button>`;
   renderStatus();
   renderWeek();
   const b = $('#sBuffer'); if (document.activeElement !== b) b.value = Math.round(PLAN.buf * 100);
@@ -556,6 +561,29 @@ function download(name, text, type) {
   document.body.appendChild(a);
   a.click();
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 0);
+}
+
+async function refreshDB() {
+  const btn = $('#refreshBtn');
+  if (!btn) return;
+  btn.setAttribute('aria-busy', 'true');
+  btn.innerHTML = '<span class="spin">&#x21BB;</span> Fetching…';
+  try {
+    const res = await fetch('data/db-snapshot.json?t=' + Date.now(), { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    DB = data; LIVE = true;
+    FIRST_WEEK = firstServiceWeek();
+    if (!weekMenu(DB, weekOf(WEEK).days).ids.length) WEEK = defaultWeek();
+    render();
+    const b2 = $('#refreshBtn');
+    if (b2) { b2.innerHTML = '&#x2713; Updated'; setTimeout(() => { const b3 = $('#refreshBtn'); if (b3) { b3.setAttribute('aria-busy','false'); b3.innerHTML = '&#x21BB; Refresh DB'; } }, 2500); }
+  } catch(e) {
+    btn.setAttribute('aria-busy','false');
+    btn.innerHTML = '&#x21BB; Refresh DB';
+    showError('DB refresh failed: ' + e.message);
+    setTimeout(() => showError(''), 4000);
+  }
 }
 
 function loadXLSX() { // ponytail: Excel library loads only when someone downloads
@@ -740,6 +768,7 @@ document.addEventListener('click', e => {
   else if (b.dataset.goto) { WEEK = mondayOf(fromIso(b.dataset.goto)); STOCK_EDIT = false; render(); }
   else if (b.id === 'stockEditBtn') { STOCK_EDIT = !STOCK_EDIT; renderOrder(); if (STOCK_EDIT) { const f = document.querySelector('input[data-stock]'); if (f) f.focus(); } }
   else if (b.dataset.confirm) { const s = PLAN.subs.find(x => x.name === b.dataset.confirm); if (s) put({ [`yields/${enc(s.name)}`]: s.yield }, 'yield'); rerenderSoon(); }
+  else if (b.id === 'refreshBtn') refreshDB();
   else if (b.id === 'xlsxBtn') exportExcel();
   else if (b.id === 'printBtn') { ST.view = 'order'; render(); window.print(); }
   else if (b.id === 'clearWeek' && confirm(`Clear the forecast for ${PLAN.week.label}? This clears it for the whole team.`)) {
