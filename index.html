@@ -103,6 +103,8 @@ tfoot td{font-weight:800}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 code{background:var(--panel-2);padding:1px 5px;border-radius:4px}
 .print-title{display:none}
+.uid-tag{display:inline-block;font-size:10px;font-family:monospace;color:var(--ink-3);background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:1px 5px;margin-top:2px;letter-spacing:.02em}
+.uid-tag.missing{color:var(--paprika);border-color:var(--paprika);opacity:.7}
 .btn.refresh{background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:3px 10px;font-size:12px;font-weight:600;color:var(--ink-2);display:inline-flex;align-items:center;gap:5px}
 .btn.refresh:hover{border-color:var(--herb);color:var(--herb)}
 .btn.refresh[aria-busy=true]{opacity:.6;pointer-events:none}
@@ -208,6 +210,7 @@ code{background:var(--panel-2);padding:1px 5px;border-radius:4px}
 /*CORE-START*/
 const WATER = /^(\[i\]\s*)?water$/i;
 const FRESH = 'Fresh veg, fruit & herbs';
+const NRW_UIDS = {"Ananas":"BB000008","Apple":"BB000009","Arugula":"BB000020","Baby Spinach":"BB000031","Bacon raw":"BB000034","Balsamic Dressing":"BB000040","Bandnudeln":"BB000044","Basil":"BB000045","Beef Goulash":"BB000051","Black Pepper":"BB000064","Broccoli":"BB000081","Brown Sugar":"BB000085","Bulgur":"BB000088","Burger Bun":"BB000089","Burger Meat":"BB000090","Butter":"BB000092","Butter Chicken":"BB000094","Caesar Dressing":"BB000104","Canola Oil (rapsöl)":"BB000107","Carrots":"BB000114","Cashew":"BB000117","Champignons":"BB000123","Cheddar Cheese":"BB000125","Cherry Tomatoes":"BB000129","Chicken Breast":"BB000132","Chicken Kebab":"BB000138","Chickpeas":"BB000151","Cooking Cream":"BB000180","Couscous Dry":"BB000186","Cream Cheese":"BB000189","Cucumber":"BB000196","Cucumber Pickled":"BB000197","Edamame":"BB000217","Eggs Large":"BB000221","Erbs Croutons":"BB000223","Feta Cheese":"BB000231","Fresh Mint":"BB000240","Fried Onions":"BB000242","Fusilli":"BB000243","Glass Noodles":"BB000255","Goat Cheese":"BB000257","Grapes - Red Seedless":"BB000269","Green Asparagus":"BB000271","Green Beans":"BB000272","Green Peas":"BB000276","Guacamole":"BB000279","Hard cheese - regular (instead of emmental, parmesan, grana padano)":"BB000286","Honey-Mustard dressing":"BB000294","Honeydew Melon":"BB000293","Iceberg Lettuce":"BB000296","Jalapeños":"BB000299","Kale":"BB000304","Lemon Dressing":"BB000325","Lentils - Green":"BB000328","Lime Juice":"BB000335","Mango - always frozen":"BB000341","Meatballs":"BB000348","Milk":"BB000355","Mint - fresh":"BB000359","Mozzarella Solid":"BB000368","Olive Oil":"BB000385","Olives Black":"BB000386","Orange vinegrette":"BB000396","Paprika powder":"BB000411","Parsley":"BB000420","Peanut dressing":"BB000428","Pesto Sauce":"BB000440","Pita Bread":"BB000446","Pomegranite Seeds":"BB000455","Potatoes Puree":"BB000466","Quick Cooking Noodles":"BB000220","Quinoa":"BB000483","Radicchio":"BB000484","Radish":"BB000486","Red Bell Pepper":"BB000496","Red cabbage":"BB000498","Red onion":"BB000506","Red pesto":"BB000508","Regular tomatoes":"BB000510","Rice - White Basmati":"BB000516","Salt":"BB000539","Sandwich Whole grain bread":"BB000541","Sesame Seeds":"BB000551","Small Potatoes":"BB000560","Smoked Salmon":"BB000561","Soy Sauce":"BB000573","Soy sprouts":"BB000574","Spatzle":"BB000576","Spinach leaves":"BB000582","Strawberry Jam":"BB000594","Sunflower Oil":"BB000597","Tofu Firm":"BB000618","Tomato - Sun Dried":"BB000626","Tomato Sauce":"BB000625","Tortellini Ham":"BB000629","Vegan Gyros":"BB000656","Vegan Mayo":"BB000658","Vegetable gyoza":"BB000667","Vinegar":"BB000675","WallNuts":"BB000678","Water":"BB000679","White Balsamic":"BB000683","Wraps 30\"":"BB000692","Yogurt Dressing":"BB000697","Zucchini":"BB000698","Avocado Frozen":"BB000025","Avocado fresh":"BB000026","Celeriac":"BB000119","Cheddar Grated":"BB000126","Chili Con Carne":"BB000155","Chilli Flakes":"BB000156","Corn":"BB000183","Corn Cream Soup":"BB000184","Cubed Pumpkin":"BB000195","Gelatin":"BB000250","Grapes - Green Seedless":"BB000270","Hummus":"BB000295","Lasagne alla Bolognese":"BB000323","Makhani Sauce":"BB000340","Mozzarella Mini":"BB000370","Peanuts":"BB000430","Pearled Barley":"BB000431","Penne Whole Wheat":"BB000432","Pumpkin Seeds":"BB000480","Red Kidney Beans":"BB000502","Schupznudeln":"BB000548","Semmelknödel":"BB000549","Smoked Tofu Firm":"BB000562","Sour Cream":"BB000570","Sriracha Mayonese":"BB000575","Sweet Potato":"BB000617","Sweet mash potatoe":"BB000619","Tandoori Naan":"BB000633","Tortellini Spinach":"BB000648","Tuna":"BB000651","Tzatziki":"BB000652","White Beans":"BB000682","Wild Rice":"BB000690","Yellow Thai Curry":"BB000696"};
 const NO_SUPPLIER = 'No supplier yet';
 const TYPE_ORDER = ['LC', 'SB', 'CI', 'SW', 'HE', 'AD'];
 
@@ -473,14 +476,15 @@ function supplierOptions(r) {
 function itemHtml(r) {
   const n = esc(r.name), u = `<small>${esc(r.unit)}</small>`, show = showDishes();
   const tags = [r.group === FRESH ? '<span class="tag fresh">Fresh</span>' : '', r.estimate ? '<span class="tag est">Yield estimate</span>' : ''].join('');
-  const dishRows = show ? r.dishes.map(d => `<tr class="dish"><td>${esc(d.name)}</td><td class="num">${nf(d.portions, 0)}</td><td class="num">${qty(d.need, r.unit)}${u}</td><td></td><td></td><td></td><td></td></tr>`).join('') : '';
+  const dishRows = show ? r.dishes.map(d => `<tr class="dish"><td>${esc(d.name)}</td><td></td><td class="num">${nf(d.portions, 0)}</td><td class="num">${qty(d.need, r.unit)}${u}</td><td></td><td></td><td></td><td></td></tr>`).join('') : '';
   return `<tbody class="item">
     <tr class="total">
       <th scope="rowgroup" rowspan="${1 + (show ? r.dishes.length : 0)}" class="item-cell">
-        <div class="name">${n}</div>${tags ? `<div class="tags">${tags}</div>` : ''}
+        <div class="name">${n}</div>${tags ? `<div class="tags">${tags}</div>` : ''}<div>${NRW_UIDS[r.name] ? `<span class="uid-tag">${NRW_UIDS[r.name]}</span>` : '<span class="uid-tag missing">UID?</span>'}</div>
         ${r.packInfo ? `<div class="note">Apicbase pack: ${esc(r.packInfo)}</div>` : ''}${r.note ? `<div class="note">${esc(r.note)}</div>` : ''}
         <label class="suppick">Supplier <select data-sup="${n}" data-fid="sup|${n}">${supplierOptions(r)}</select></label>
       </th>
+      <td style="font-family:monospace;font-size:11px;color:var(--ink-2)">${NRW_UIDS[r.name] || '—'}</td>
       <td>${r.dishes.length} ${r.dishes.length === 1 ? 'dish' : 'dishes'}</td>
       <td class="num">${nf(r.portions, 0)}</td>
       <td class="num qty">${qty(r.need, r.unit)}${u}</td>
@@ -512,7 +516,7 @@ function renderOrder() {
   $('#orderList').innerHTML = bySupplier(rows).map(([s, items]) => `
     <section class="sup${s === NO_SUPPLIER ? ' none' : ''}"><h2>${esc(s)} <span class="count">${items.length} ${items.length === 1 ? 'item' : 'items'}</span></h2>
       <div class="tablewrap"><table class="order">
-        <thead><tr><th scope="col">Item</th><th scope="col">Dish</th><th class="num" scope="col">Portions</th><th class="num" scope="col">Need, incl. ${Math.round(P.buf * 100)}% buffer</th><th class="num" scope="col">Stock on hand</th><th class="num" scope="col">To order</th><th class="num" scope="col">Pack size</th><th class="num" scope="col">Packs</th></tr></thead>
+        <thead><tr><th scope="col">Item</th><th scope="col">BB UID</th><th scope="col">Dish</th><th class="num" scope="col">Portions</th><th class="num" scope="col">Need, incl. ${Math.round(P.buf * 100)}% buffer</th><th class="num" scope="col">Stock on hand</th><th class="num" scope="col">To order</th><th class="num" scope="col">Pack size</th><th class="num" scope="col">Packs</th></tr></thead>
         ${items.map(itemHtml).join('')}
       </table></div>
     </section>`).join('');
