@@ -542,7 +542,7 @@ function itemHtml(r) {
         <div class="name">${n}</div>${tags ? `<div class="tags">${tags}</div>` : ''}<div>${NRW_UIDS[r.name] ? `<span class="uid-tag">${NRW_UIDS[r.name]}</span>` : '<span class="uid-tag missing">Art#?</span>'}</div>
         ${r.packInfo ? `<div class="note">Apicbase pack: ${esc(r.packInfo)}</div>` : ''}${r.note ? `<div class="note">${esc(r.note)}</div>` : ''}
         <label class="suppick">Supplier <select data-sup="${n}" data-fid="sup|${n}">${supplierOptions(r)}</select></label>
-        <button class="btn-order${isOrdered(r.name)?' is-ordered':''}" data-order="${n}">${isOrdered(r.name)?'✅&nbsp;Ordered':'⬜&nbsp;Not ordered'}</button>
+        <button type="button" class="btn-order${isOrdered(r.name)?' is-ordered':''}" data-order="${n}">${isOrdered(r.name)?'✅&nbsp;Ordered':'⬜&nbsp;Not ordered'}</button>
       </th>
       <td>${(() => { const a=NRW_UIDS[r.name]; return a ? `<span class="art-num" style="font-size:14px" onclick="navigator.clipboard?.writeText('${a}');this.textContent='✓';setTimeout(()=>this.textContent='${a}',1200)" title="Click to copy">${a}</span>` : '<span style="color:var(--ink-3)">—</span>'; })()}</td>
       <td>${r.dishes.length} ${r.dishes.length === 1 ? 'dish' : 'dishes'}</td>
