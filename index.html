@@ -67,19 +67,27 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--saffron)}
 .sup{margin-top:24px}
 .sup h2{margin:0 0 8px;font-size:19px;font-weight:800;display:flex;align-items:baseline;gap:10px}
 .sup h2 .count{font-size:13px;font-weight:600;color:var(--ink-3)}
+.sup h2{font-size:15px;font-weight:800;padding:10px 0 5px;border-bottom:2px solid rgba(240,181,65,.4);margin-bottom:0;display:flex;align-items:center;gap:7px}
+.sup h2::before{content:'📦'}
 .sup.none h2{color:var(--paprika)}
+.sup.none h2::before{content:'⚠️'}
 .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
 table{width:100%;border-collapse:collapse;font-size:14px}
 th,td{padding:8px 10px;text-align:left;vertical-align:top}
 thead th{background:var(--panel);font-size:12px;font-weight:600;color:var(--ink-3);white-space:nowrap}
 td.num,th.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
 table.order{min-width:900px}
-table.order tbody.item{border-top:1px solid var(--line)}
-table.order .item-cell{width:30%;font-weight:400}
+table.order tbody.item{border-top:2px solid var(--bg)}
+table.order tbody.item:nth-child(4n+1){background:#1e2c1a}
+table.order tbody.item:nth-child(4n+2){background:#1a2a2e}
+table.order tbody.item:nth-child(4n+3){background:#251a2c}
+table.order tbody.item:nth-child(4n+0){background:#2c1e1a}
+table.order .item-cell{width:28%;font-weight:400;vertical-align:top}
 table.order tr.total td{font-weight:600}
-table.order tr.dish td{padding-top:3px;padding-bottom:3px;font-size:13px;color:var(--ink-2)}
-table.order tr.dish:last-child td{padding-bottom:10px}
-.name{font-weight:700}
+table.order tr.total .qty{font-size:17px;font-weight:900}
+table.order tr.dish td{padding-top:3px;padding-bottom:3px;font-size:12.5px;color:var(--ink-2);background:transparent}
+table.order tr.dish:last-child td{padding-bottom:8px}
+.name{font-weight:800;font-size:15px}
 .note{font-size:12.5px;color:var(--ink-2);margin-top:2px}
 .tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
 .tag{display:inline-block;font-size:11.5px;font-weight:600;padding:1px 7px;border-radius:5px;border:1px solid currentColor}
@@ -103,15 +111,16 @@ tfoot td{font-weight:800}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 code{background:var(--panel-2);padding:1px 5px;border-radius:4px}
 .print-title{display:none}
-.btn-order{background:none;border:none;font-size:13px;cursor:pointer;padding:4px 8px;line-height:1;border-radius:6px;transition:all .15s;font-weight:600;display:block;margin-top:6px;width:100%;text-align:left;color:var(--ink-2);border:1px solid var(--line)}
-.btn-order:hover{border-color:var(--herb);color:var(--herb)}
-.btn-order.is-ordered{color:var(--herb);border-color:var(--herb);background:rgba(143,201,163,.12)}
-.btn-order.is-ordered:hover{color:var(--paprika);border-color:var(--paprika);background:rgba(236,143,116,.08)}
-table.order tbody.item.ordered tr.total td:not(:first-child){opacity:.35}
-table.order tbody.item.ordered tr.total .name{text-decoration:line-through;color:var(--ink-3)}
-table.order tbody.item.ordered{background:var(--panel)}
-.uid-tag{display:inline-block;font-size:10px;font-family:monospace;color:var(--ink-3);background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:1px 5px;margin-top:2px;letter-spacing:.02em}
-.uid-tag.missing{color:var(--paprika);border-color:var(--paprika);opacity:.7}
+.uid-tag{display:none}
+.art-box{display:flex;align-items:center;gap:5px;margin-top:6px;flex-wrap:wrap}
+.art-num{font-family:monospace;font-size:15px;font-weight:800;color:var(--saffron);letter-spacing:.04em;background:rgba(240,181,65,.1);border:1px solid rgba(240,181,65,.28);border-radius:6px;padding:3px 8px;cursor:pointer;user-select:all}
+.art-num:hover{background:rgba(240,181,65,.22)}
+.art-num.missing{color:var(--paprika);background:rgba(236,143,116,.08);border-color:rgba(236,143,116,.28);font-size:12px;font-weight:600}
+.art-copy{background:none;border:1px solid var(--line);border-radius:5px;padding:2px 7px;font-size:11px;color:var(--ink-3);cursor:pointer}
+.art-copy:hover{border-color:var(--saffron);color:var(--saffron)}
+.art-copy.copied{color:var(--herb);border-color:var(--herb)}
+.art-link{font-size:11px;color:var(--ink-3);text-decoration:none;border:1px solid var(--line);border-radius:5px;padding:2px 7px;white-space:nowrap}
+.art-link:hover{color:var(--herb);border-color:var(--herb)}
 .btn.refresh{background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:3px 10px;font-size:12px;font-weight:600;color:var(--ink-2);display:inline-flex;align-items:center;gap:5px}
 .btn.refresh:hover{border-color:var(--herb);color:var(--herb)}
 .btn.refresh[aria-busy=true]{opacity:.6;pointer-events:none}
@@ -217,6 +226,18 @@ table.order tbody.item.ordered{background:var(--panel)}
 /*CORE-START*/
 const WATER = /^(\[i\]\s*)?water$/i;
 const FRESH = 'Fresh veg, fruit & herbs';
+const SUP_SEARCH = {
+  "Chefs Culinar":    a => `https://www.chefscuinar.de/suche?q=${a||''}`,
+  "Metro shop":       a => `https://www.metro.de/search?searchTerm=${a||''}`,
+  "Hamberger":        a => `https://www.hamberger.de/`,
+  "Kreyenhop+Kluge":  a => `https://www.google.com/search?q=Kreyenhop+Kluge+${a||'Lieferant'}`,
+  "Pier 7":           a => `https://www.google.com/search?q=Pier7+Feinkost+NRW+${a||''}`,
+  "Surgital":         a => `https://www.surgital.it`,
+  "Trend Meal":       a => `https://www.google.com/search?q=Trendmeal+${a||''}`,
+  "Münchner Suppenküche": a => `https://www.google.com/search?q=Münchner+Suppenküche+${a||''}`,
+  "Wendland":         a => `https://www.wendland-olivenoel.de`,
+  "Menu":             a => `https://www.menu.ch/de/produkte`,
+};
 const NRW_UIDS = {"Bacon raw":"17972918","Bulgur":"60021056","Caesar Dressing":"13286385","Carrots":"17043236","Champignons":"14846519","Cherry Tomatoes":"60063961","Coconut Curry Soup":"17114479","Couscous Dry":"60021055","Dr. Oetker Professional Vegetable Gold Seasoning":"14155628","Honey-Mustard dressing":"14897214","Iceberg Lettuce":"14761683","Mint - fresh":"14760884","Mushroom Sauce":"17379243","Phanaeng Curry":"60105126","Red Bell Pepper":"14758041","Red cabbage":"14758799","Sesame Seeds":"14953446","Small Potatoes":"14759918","Sunflower Oil":"17268363","Zucchini":"14758737","Apple":"278281","Baby Spinach":"287190","Balsamic Dressing":"951488","Bandnudeln":"951968","Basil":"A001041","Black Pepper":"962969","Broccoli":"905267","Brown Sugar":"491160","Butter":"931441","Canola Oil (rapsöl)":"208622","Cheddar Cheese":"805952","Chicken Breast":"339263","Chicken Kebab":"9521","Chickpeas":"912663","Cooking Cream":"928957","Cream Cheese":"64817","Cucumber":"A002139","Edamame":"921813","Feta Cheese":"393263","Fusilli":"901600","Green Asparagus":"905266","Green Beans":"905283","Green Peas":"905429","Guacamole":"21140","Hard cheese - regular (instead of emmental, parmesan, grana padano)":"674516","Jalapeños":"902268","Kale":"10410","Lentils - Green":"973691","Mango - always frozen":"912408","Meatballs":"447797","Milk":"466469","Olive Oil":"905198","Paprika powder":"962968","Parsley":"126792","Pita Bread":"5075","Pomegranite Seeds":"A001070","Potatoes Puree":"393980","Quinoa":"983765","Radish":"297160","Salt":"197051","Sandwich Whole grain bread":"466249","Smoked Salmon":"938613","Spatzle":"33117","Spinach leaves":"905435","Strawberry Jam":"393070","Tofu Firm":"303153","Tomato - Sun Dried":"909132","Vegan Gyros":"361","Vegan Mayo":"526435","Vinegar":"64747","WallNuts":"19986","Water":"551216","Wraps 30\"":"29769","Yogurt Dressing":"109139","Cucumber Pickled":"100156","Erbs Croutons":"175908","Olives Black":"225180","Red pesto":"176329","Rice - White Basmati":"60313","Fried Onions":"22223","Glass Noodles":"7383","Soy Sauce":"8652","Vegetable gyoza":"980","Chocolate Mouse Powder":"00DH1X","Tomato Sauce":"00CAX","Lemon Dressing":"1422059","Orange vinegrette":"1143059","Peanut dressing":"2161059","Goat Cheese":"00013723","Parmigiana":"V111","Beef Goulash":"8810007","White Balsamic":"1641553"};
 const NO_SUPPLIER = 'No supplier yet';
 const TYPE_ORDER = ['LC', 'SB', 'CI', 'SW', 'HE', 'AD'];
@@ -335,8 +356,7 @@ const CACHE_KEY = 'nrw-stock-planner-cache';
 const enc = s => encodeURIComponent(s).replace(/\./g, '%2E'); // Firebase keys can't hold . # $ [ ] /
 const dec = s => { try { return decodeURIComponent(s); } catch (e) { return s; } };
 let STORE = null, USER = null, UNSUB = null, CONNECTED = null, LAST = null, OLD = null, REMOTE_PENDING = false;
-let STOCK_EDIT = false;
-let ORDERED = {}; // stock is locked until someone presses Edit stock (not saved: opens locked every time)
+let STOCK_EDIT = false; // stock is locked until someone presses Edit stock (not saved: opens locked every time)
 const ST = {}; // team data (fc, stock, suppliers, packs, yields, buffer) from Firebase + this browser's tab and "show dishes"
 (() => {
   try {
@@ -481,51 +501,18 @@ function supplierOptions(r) {
     + (others.length ? `<optgroup label="Other suppliers">${others.map(opt).join('')}</optgroup>` : '');
 }
 
-function isOrdered(name) {
-  return !!(ORDERED[iso(WEEK)] && ORDERED[iso(WEEK)][enc(name)]);
-}
-function toggleOrdered(name) {
-  const wk = iso(WEEK), cur = isOrdered(name);
-  put({ [`ordered/${wk}/${enc(name)}`]: cur ? null : true }, 'ordered');
-  if (!ORDERED[wk]) ORDERED[wk] = {};
-  if (cur) delete ORDERED[wk][enc(name)]; else ORDERED[wk][enc(name)] = true;
-  const el = document.querySelector(`[data-order="${CSS.escape(name)}"]`);
-  if (el) {
-    const tb = el.closest('tbody.item');
-    if (tb) tb.classList.toggle('ordered', !cur);
-    el.classList.toggle('is-ordered', !cur);
-    el.textContent = cur ? '⬜ Not ordered' : '✅ Ordered';
-    el.title = cur ? 'Mark as ordered' : 'Mark as NOT ordered';
-  }
-  renderOrderChips();
-}
-function renderOrderChips() {
-  if (!PLAN || !PLAN.rows) return;
-  const P = PLAN, count = f => P.rows.filter(f).length;
-  const sups = new Set(P.rows.map(r=>r.supplier).filter(s=>s!==NO_SUPPLIER)).size;
-  const none=count(r=>r.supplier===NO_SUPPLIER), est=count(r=>r.estimate), noPk=count(r=>!(r.pack>0));
-  const ordC=P.rows.filter(r=>isOrdered(r.name)).length, tot=P.rows.length, pend=tot-ordC;
-  $('#chips').innerHTML=[
-    `${tot} items`,
-    ordC?`<span style="color:var(--herb)">✅ ${ordC} ordered</span>`:'',
-    pend?`<span style="color:var(--saffron)">⬜ ${pend} to order</span>`:'',
-    `${nf(P.portionsSum,0)} portions`,`${sups} suppliers`,
-    none?`${none} without supplier`:'',est?`${est} yield estimates`:'',noPk?`${noPk} no pack size`:''
-  ].filter(Boolean).map(x=>`<span class="chip">${x}</span>`).join('');
-}
 function itemHtml(r) {
   const n = esc(r.name), u = `<small>${esc(r.unit)}</small>`, show = showDishes();
   const tags = [r.group === FRESH ? '<span class="tag fresh">Fresh</span>' : '', r.estimate ? '<span class="tag est">Yield estimate</span>' : ''].join('');
   const dishRows = show ? r.dishes.map(d => `<tr class="dish"><td>${esc(d.name)}</td><td></td><td class="num">${nf(d.portions, 0)}</td><td class="num">${qty(d.need, r.unit)}${u}</td><td></td><td></td><td></td><td></td></tr>`).join('') : '';
-  return `<tbody class="item${isOrdered(r.name) ? ' ordered' : ''}">
+  return `<tbody class="item">
     <tr class="total">
       <th scope="rowgroup" rowspan="${1 + (show ? r.dishes.length : 0)}" class="item-cell">
         <div class="name">${n}</div>${tags ? `<div class="tags">${tags}</div>` : ''}<div>${NRW_UIDS[r.name] ? `<span class="uid-tag">${NRW_UIDS[r.name]}</span>` : '<span class="uid-tag missing">Art#?</span>'}</div>
         ${r.packInfo ? `<div class="note">Apicbase pack: ${esc(r.packInfo)}</div>` : ''}${r.note ? `<div class="note">${esc(r.note)}</div>` : ''}
         <label class="suppick">Supplier <select data-sup="${n}" data-fid="sup|${n}">${supplierOptions(r)}</select></label>
-        <button class="btn-order${isOrdered(r.name) ? ' is-ordered' : ''}" data-order="${n}" title="${isOrdered(r.name) ? 'Mark as NOT ordered' : 'Mark as ordered'}">${isOrdered(r.name) ? '✅ Ordered' : '⬜ Not ordered'}</button>
       </th>
-      <td style="font-family:monospace;font-size:11px;color:var(--ink-2)">${NRW_UIDS[r.name] || '—'}</td>
+      <td>${(() => { const a=NRW_UIDS[r.name]; return a ? `<span class="art-num" style="font-size:14px" onclick="navigator.clipboard?.writeText('${a}');this.textContent='✓';setTimeout(()=>this.textContent='${a}',1200)" title="Click to copy">${a}</span>` : '<span style="color:var(--ink-3)">—</span>'; })()}</td>
       <td>${r.dishes.length} ${r.dishes.length === 1 ? 'dish' : 'dishes'}</td>
       <td class="num">${nf(r.portions, 0)}</td>
       <td class="num qty">${qty(r.need, r.unit)}${u}</td>
@@ -544,7 +531,8 @@ function renderOrder() {
   const count = f => P.rows.filter(f).length;
   const sups = new Set(P.rows.map(r => r.supplier).filter(s => s !== NO_SUPPLIER)).size;
   const none = count(r => r.supplier === NO_SUPPLIER), est = count(r => r.estimate), noPack = count(r => !(r.pack > 0));
-  renderOrderChips();
+  $('#chips').innerHTML = [`${P.rows.length} items`, `${nf(P.portionsSum, 0)} portions`, `${sups} suppliers`, none ? `${none} without supplier` : '', est ? `${est} depend on a yield estimate` : '', noPack ? `${noPack} without pack size` : '']
+    .filter(Boolean).map(x => `<span class="chip">${x}</span>`).join('');
   const eb = $('#stockEditBtn');
   eb.textContent = STOCK_EDIT ? 'Done' : 'Edit stock'; eb.setAttribute('aria-pressed', String(STOCK_EDIT));
   $('#orderList').classList.toggle('editing', STOCK_EDIT);
@@ -607,6 +595,19 @@ function download(name, text, type) {
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 0);
 }
 
+async function seedIngredientMaster() {
+  if (!STORE || !CONNECTED) { showError('Not connected'); return; }
+  const ch = {};
+  for (const [name, art] of Object.entries(NRW_UIDS)) {
+    ch[`ingredients/${enc(name)}/art`] = art;
+  }
+  for (const [name, sup] of Object.entries(ST.suppliers || {})) {
+    ch[`ingredients/${enc(name)}/sup`] = sup;
+  }
+  put(ch, 'ingredient master seed');
+  showError('✅ ' + Object.keys(ch).length + ' ingredient records seeded to Firebase');
+  setTimeout(() => showError(''), 3000);
+}
 async function refreshDB() {
   const btn = $('#refreshBtn');
   if (!btn) return;
@@ -684,7 +685,6 @@ function applyRemote(data) {
   ST.fc = data.forecast || {};
   ST.stock = Object.fromEntries(Object.entries(data.stock || {}).map(([w, m]) => [w, decode(m)]));
   ST.suppliers = decode(data.suppliers); ST.packs = decode(data.packs); ST.yields = decode(data.yields);
-    ORDERED = data.ordered || {};
   ST.buffer = data.settings && Number.isFinite(+data.settings.buffer) ? +data.settings.buffer : null;
   LAST = (data.meta && data.meta.lastChange) || null;
 }
@@ -798,7 +798,6 @@ document.addEventListener('change', e => {
   else if ('stock' in d) put({ [`stock/${wk}/${enc(d.stock)}`]: val }, 'stock count');
   else if ('pack' in d) put({ [`packs/${enc(d.pack)}`]: val === null ? 0 : val }, 'pack size');
   else if ('sup' in d) put({ [`suppliers/${enc(d.sup)}`]: el.value }, 'supplier');
-  else if ('order' in b.dataset) toggleOrdered(b.dataset.order);
   else if ('yield' in d) put({ [`yields/${enc(d.yield)}`]: val > 0 ? val : null }, 'yield');
   else if (el.id === 'sBuffer') put({ 'settings/buffer': val === null ? null : Math.min(1, val / 100) }, 'buffer');
   else if (el.id === 'showDishes') { ST.showDishes = el.checked; save(); }
