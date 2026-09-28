@@ -673,20 +673,155 @@ function loadXLSX() { // ponytail: Excel library loads only when someone downloa
 
 async function exportExcel() {
   let X;
-  try { X = await loadXLSX(); } catch (e) { alert('The Excel tool could not load. Check the internet connection and try again.'); return; }
-  const P = PLAN, order = [['Name', 'Qty', 'Unit']];
-  const detail = [['Supplier', 'Item', 'Dish', 'Portions', 'Need', 'Unit', 'Stock on hand', 'To order', 'Pack size', 'Packs']];
-  for (const [s, items] of bySupplier(P.rows)) for (const r of items) {
-    order.push([r.name, q2(r.toOrder, r.unit), r.unit]);
-    detail.push([s, r.name, 'All dishes', Math.round(r.portions), q2(r.need, r.unit), r.unit, r.stock, q2(r.toOrder, r.unit), r.pack > 0 ? r.pack : '', r.packs == null ? '' : r.packs]);
-    for (const d of r.dishes) detail.push([s, r.name, d.name, Math.round(d.portions), q2(d.need, r.unit), r.unit]);
+  try { X = await loadXLSX(); } catch (e) { alert('Excel library could not load. Check internet connection.'); return; }
+  const P = PLAN;
+  if (!P || !P.rows || !P.rows.length) { alert('No order data to export. Select a week with a menu first.'); return; }
+
+  const wb = X.utils.book_new();
+  const wk = `W${P.week.no} ${P.week.key}`;
+  const SAFF = 'FFF0B541'; const DARK = 'FF1B3A2D'; const GREEN = 'FFE8F5ED'; const AMBER = 'FFFFF8E1'; const RED = 'FFFFF0F0';
+
+  function hdr(row, bold=true) {
+    return row.map(v => ({v, t:'s', s:{font:{bold, color:{rgb:'FFFFFFFF'}}, fill:{fgColor:{rgb:DARK}}, alignment:{horizontal:'center',wrapText:true}}}));
   }
-  const wb = X.utils.book_new(), a = X.utils.aoa_to_sheet(order), b = X.utils.aoa_to_sheet(detail);
-  a['!cols'] = [{ wch: 46 }, { wch: 10 }, { wch: 6 }];
-  b['!cols'] = [{ wch: 22 }, { wch: 40 }, { wch: 48 }, { wch: 9 }, { wch: 9 }, { wch: 6 }, { wch: 13 }, { wch: 9 }, { wch: 9 }, { wch: 7 }];
-  X.utils.book_append_sheet(wb, a, 'Order');
-  X.utils.book_append_sheet(wb, b, 'By supplier and dish');
-  X.writeFile(wb, `nrw-order-week${P.week.no}-${P.week.key}.xlsx`);
+  function cell(v, opt={}) {
+    const s = {font:{bold:opt.bold||false, color:{rgb:opt.fg||'FF000000'}}, alignment:{horizontal:opt.al||'left',wrapText:!!opt.wrap}};
+    if (opt.bg) s.fill = {fgColor:{rgb:opt.bg}};
+    return {v: v==null?'':v, t: typeof v==='number'?'n':'s', s};
+  }
+  function numCell(v, opt={}) {
+    if (v==null||v==='') return cell('—', opt);
+    return {v:Number(v)||0, t:'n', s:{font:{bold:opt.bold||false, color:{rgb:opt.fg||'FF000000'}}, alignment:{horizontal:'right'}, fill: opt.bg?{fgColor:{rgb:opt.bg}}:undefined}};
+  }
+
+  // ── SHEET 1: Order Summary — one row per item ─────────────────────────
+  const s1rows = [
+    hdr(['#','Supplier Art#','Item Name','Supplier','Unit','Need (portions)','Stock on hand','To Order','Pack Size','Packs','Ordered?']),
+  ];
+  let seq = 1;
+  const grouped = bySupplier(P.rows);
+  for (const [sup, items] of grouped) {
+    // Supplier header row
+    s1rows.push([{v:`📦  ${sup.toUpperCase()}   —   ${items.length} items`, t:'s', s:{font:{bold:true,color:{rgb:'FF1C1504'}},fill:{fgColor:{rgb:SAFF}},alignment:{horizontal:'left'}}},...Array(10).fill({v:'',t:'s'})]);
+    for (const r of items) {
+      const art = NRW_UIDS[r.name] || '—';
+      const hasArt = art !== '—';
+      const bg = hasArt ? GREEN : AMBER;
+      const ord = isOrdered(r.name) ? '✅ Ordered' : '⬜ Pending';
+      s1rows.push([
+        cell(seq++,    {al:'center'}),
+        cell(art,      {bold:hasArt, fg:hasArt?'FF1B6B3A':'FFC0392B', bg, al:'center'}),
+        cell(r.name,   {bold:true,   bg}),
+        cell(sup,      {fg:'FF555555', bg}),
+        cell(r.unit,   {al:'center', bg}),
+        numCell(Math.round(r.portions), {bg}),
+        numCell(r.stock||0,             {bg}),
+        numCell(Number(q2(r.toOrder,r.unit))||0, {bold:true, bg}),
+        cell(r.pack>0?r.pack:'—',      {al:'center', bg}),
+        cell(r.packs==null?'—':r.packs,{al:'center', bg}),
+        cell(ord,                       {fg:isOrdered(r.name)?'FF1B6B3A':'FFCC7A00', bg}),
+      ]);
+    }
+    // Spacer
+    s1rows.push(Array(11).fill({v:'',t:'s'}));
+  }
+  const ws1 = X.utils.aoa_to_sheet(s1rows);
+  ws1['!cols'] = [{wch:4},{wch:14},{wch:44},{wch:22},{wch:6},{wch:14},{wch:13},{wch:10},{wch:10},{wch:7},{wch:12}];
+  ws1['!freeze'] = {xSplit:0, ySplit:1};
+  X.utils.book_append_sheet(wb, ws1, 'Order Summary');
+
+  // ── SHEET 2: Dish Breakdown — item + each dish + total ────────────────
+  const allDishes = [...new Set(P.rows.flatMap(r => r.dishes.map(d=>d.name)))].sort();
+  const s2rows = [
+    hdr(['Supplier Art#','Item Name','Supplier','Unit',...allDishes,'TOTAL']),
+  ];
+  for (const [sup, items] of grouped) {
+    s2rows.push([{v:`📦  ${sup.toUpperCase()}`,t:'s',s:{font:{bold:true,color:{rgb:'FF1C1504'}},fill:{fgColor:{rgb:SAFF}},alignment:{horizontal:'left'}}},...Array(3+allDishes.length+1).fill({v:'',t:'s'})]);
+    for (const r of items) {
+      const art = NRW_UIDS[r.name] || '—';
+      const hasArt = art !== '—';
+      const bg = hasArt ? GREEN : AMBER;
+      const dishQtys = allDishes.map(dname => {
+        const d = r.dishes.find(x=>x.name===dname);
+        return d ? numCell(Number(q2(d.need,r.unit))||0, {bg}) : cell('',{bg});
+      });
+      s2rows.push([
+        cell(art,    {bold:hasArt, fg:hasArt?'FF1B6B3A':'FFC0392B', bg, al:'center'}),
+        cell(r.name, {bold:true, bg}),
+        cell(sup,    {fg:'FF555555', bg}),
+        cell(r.unit, {al:'center', bg}),
+        ...dishQtys,
+        numCell(Number(q2(r.toOrder,r.unit))||0, {bold:true, bg:'FFD4EDDA', fg:'FF1B3A2D'}),
+      ]);
+    }
+    s2rows.push(Array(4+allDishes.length+1).fill({v:'',t:'s'}));
+  }
+  const ws2 = X.utils.aoa_to_sheet(s2rows);
+  const dishCols = allDishes.map(()=>({wch:10}));
+  ws2['!cols'] = [{wch:14},{wch:44},{wch:22},{wch:6},...dishCols,{wch:12}];
+  X.utils.book_append_sheet(wb, ws2, 'Dish Breakdown');
+
+  // ── SHEET 3: Per Supplier sheets (one sheet each) ─────────────────────
+  for (const [sup, items] of grouped) {
+    if (sup === 'No supplier yet') continue;
+    const sname = sup.slice(0,28); // Excel sheet name limit 31 chars
+    const srows = [
+      hdr(['Supplier Art#','Item Name','Unit','Need','Stock','To Order','Pack Size','Packs','Ordered?']),
+    ];
+    let totalCost = 0;
+    for (const r of items) {
+      const art = NRW_UIDS[r.name] || '—';
+      const hasArt = art !== '—';
+      const bg = hasArt ? GREEN : AMBER;
+      srows.push([
+        cell(art,    {bold:hasArt, fg:hasArt?'FF1B6B3A':'FFC0392B', bg, al:'center'}),
+        cell(r.name, {bold:true, bg}),
+        cell(r.unit, {al:'center', bg}),
+        numCell(Math.round(r.portions),            {bg}),
+        numCell(r.stock||0,                        {bg}),
+        numCell(Number(q2(r.toOrder,r.unit))||0,   {bold:true, bg}),
+        cell(r.pack>0?r.pack:'—',                  {al:'center', bg}),
+        cell(r.packs==null?'—':r.packs,            {al:'center', bg}),
+        cell(isOrdered(r.name)?'✅':'⬜',           {al:'center', fg:isOrdered(r.name)?'FF1B6B3A':'FFCC7A00', bg}),
+      ]);
+    }
+    // Total row
+    srows.push([
+      {v:`TOTAL — ${items.length} items`,t:'s',s:{font:{bold:true,color:{rgb:'FFFFFFFF'}},fill:{fgColor:{rgb:DARK}},alignment:{horizontal:'left'}}}
+      ,...Array(8).fill({v:'',t:'s'})
+    ]);
+    const ws = X.utils.aoa_to_sheet(srows);
+    ws['!cols'] = [{wch:14},{wch:44},{wch:6},{wch:10},{wch:10},{wch:10},{wch:10},{wch:7},{wch:9}];
+    X.utils.book_append_sheet(wb, ws, sname);
+  }
+
+  // ── SHEET 4: WhatsApp Messages ────────────────────────────────────────
+  const s4rows = [hdr(['Supplier','Message (copy and paste to WhatsApp)'])];
+  for (const [sup, items] of grouped) {
+    if (sup === 'No supplier yet') continue;
+    const missing = items.filter(r => !NRW_UIDS[r.name]);
+    const known   = items.filter(r =>  NRW_UIDS[r.name]);
+    let msg = `Hallo ${sup} Team,\n\nWir bestellen für NRW Remscheid — Woche ${wk} 🎉\n\n`;
+    if (missing.length) {
+      msg += `❓ Artikelnummer fehlt — bitte mitteilen:\n`;
+      missing.forEach(r => { msg += `  • ${r.name}  |  Bedarf: ${q2(r.toOrder,r.unit)} ${r.unit}\n`; });
+      msg += '\n';
+    }
+    if (known.length) {
+      msg += `✅ Bestellung (Art# bestätigt):\n`;
+      known.forEach(r => { msg += `  • Art# ${NRW_UIDS[r.name]}  —  ${r.name}  |  ${q2(r.toOrder,r.unit)} ${r.unit}\n`; });
+    }
+    msg += `\nVielen Dank!\nHarsh Patel — Bella & Bona GmbH NRW`;
+    s4rows.push([cell(sup,{bold:true}), cell(msg,{wrap:true})]);
+  }
+  const ws4 = X.utils.aoa_to_sheet(s4rows);
+  ws4['!cols'] = [{wch:24},{wch:110}];
+  X.utils.book_append_sheet(wb, ws4, 'WhatsApp Messages');
+
+  // ── Download ─────────────────────────────────────────────────────────
+  const week = P.week ? `W${P.week.no}-${P.week.key}` : 'export';
+  const iso_date = new Date().toISOString().slice(0,10);
+  X.writeFile(wb, `NRW-Order-${week}-${iso_date}.xlsx`);
 }
 
 // ---------- team data: Firebase Realtime Database, shared live with everyone signed in ----------
