@@ -1,0 +1,457 @@
+{
+  "version": "2026-10-07",
+  "nrw_stock": {
+    "week": "2026-10-05",
+    "delivery_date": "2026-10-02",
+    "source": "Chefs Culinar order Tom.Driessen@chefsculinar.de + Metro invoice 29.09.2026",
+    "items": {
+      "Arugula": {
+        "name": "Arugula",
+        "qty": 1,
+        "unit": "kg"
+      },
+      "Bacon%20raw": {
+        "name": "Bacon raw",
+        "qty": 2,
+        "unit": "kg"
+      },
+      "Balsamic%20Dressing": {
+        "name": "Balsamic Dressing",
+        "qty": 3,
+        "unit": "kg"
+      },
+      "Basil": {
+        "name": "Basil",
+        "qty": 2,
+        "unit": "kg"
+      },
+      "Carrots": {
+        "name": "Carrots",
+        "qty": 10,
+        "unit": "kg"
+      },
+      "Champignons": {
+        "name": "Champignons",
+        "qty": 5,
+        "unit": "kg"
+      },
+      "Cheddar%20Cheese": {
+        "name": "Cheddar Cheese",
+        "qty": 2,
+        "unit": "kg"
+      },
+      "Cherry%20Tomatoes": {
+        "name": "Cherry Tomatoes",
+        "qty": 10,
+        "unit": "kg"
+      },
+      "Chicken%20Breast": {
+        "name": "Chicken Breast",
+        "qty": 50,
+        "unit": "kg"
+      },
+      "Chickpeas": {
+        "name": "Chickpeas",
+        "qty": 22.5,
+        "unit": "kg"
+      },
+      "Cooking%20Cream": {
+        "name": "Cooking Cream",
+        "qty": 3,
+        "unit": "kg"
+      },
+      "Eggs%20Large": {
+        "name": "Eggs Large",
+        "qty": 30,
+        "unit": "kg"
+      },
+      "Feta%20Cheese": {
+        "name": "Feta Cheese",
+        "qty": 4,
+        "unit": "kg"
+      },
+      "Fusilli": {
+        "name": "Fusilli",
+        "qty": 25,
+        "unit": "kg"
+      },
+      "Green%20Beans": {
+        "name": "Green Beans",
+        "qty": 12.5,
+        "unit": "kg"
+      },
+      "Heat%20to%20Eat%3A%20Chicken%20Teriyaki%20with%20vegetables": {
+        "name": "Heat to Eat: Chicken Teriyaki with vegetables",
+        "qty": 12,
+        "unit": "kg"
+      },
+      "Heat%20to%20Eat%3A%20Lentil%20Stew%20%E2%80%9CFeijoada%20Style%E2%80%9D": {
+        "name": "Heat to Eat: Lentil Stew “Feijoada Style”",
+        "qty": 12,
+        "unit": "kg"
+      },
+      "Iceberg%20Lettuce": {
+        "name": "Iceberg Lettuce",
+        "qty": 25,
+        "unit": "kg"
+      },
+      "Lemon%20Dressing": {
+        "name": "Lemon Dressing",
+        "qty": 3,
+        "unit": "kg"
+      },
+      "Meatballs": {
+        "name": "Meatballs",
+        "qty": 5,
+        "unit": "kg"
+      },
+      "Mint%20-%20fresh": {
+        "name": "Mint - fresh",
+        "qty": 0.2,
+        "unit": "kg"
+      },
+      "Mozzarella%20Mini": {
+        "name": "Mozzarella Mini",
+        "qty": 2,
+        "unit": "kg"
+      },
+      "Mushroom%20Sauce": {
+        "name": "Mushroom Sauce",
+        "qty": 24,
+        "unit": "kg"
+      },
+      "Orange%20vinegrette": {
+        "name": "Orange vinegrette",
+        "qty": 4.7,
+        "unit": "kg"
+      },
+      "Parsley": {
+        "name": "Parsley",
+        "qty": 1,
+        "unit": "kg"
+      },
+      "Peanut%20dressing": {
+        "name": "Peanut dressing",
+        "qty": 4.7,
+        "unit": "kg"
+      },
+      "Peanuts": {
+        "name": "Peanuts",
+        "qty": 3,
+        "unit": "kg"
+      },
+      "Phanaeng%20Curry": {
+        "name": "Phanaeng Curry",
+        "qty": 18,
+        "unit": "kg"
+      },
+      "Pita%20Bread": {
+        "name": "Pita Bread",
+        "qty": 10,
+        "unit": "kg"
+      },
+      "Potatoes%20Puree": {
+        "name": "Potatoes Puree",
+        "qty": 16,
+        "unit": "kg"
+      },
+      "Quinoa": {
+        "name": "Quinoa",
+        "qty": 21.6,
+        "unit": "kg"
+      },
+      "Radicchio": {
+        "name": "Radicchio",
+        "qty": 2,
+        "unit": "kg"
+      },
+      "Red%20Bell%20Pepper": {
+        "name": "Red Bell Pepper",
+        "qty": 15,
+        "unit": "kg"
+      },
+      "Regular%20tomatoes": {
+        "name": "Regular tomatoes",
+        "qty": 3,
+        "unit": "kg"
+      },
+      "Sandwich%20Whole%20grain%20bread": {
+        "name": "Sandwich Whole grain bread",
+        "qty": 4,
+        "unit": "kg"
+      },
+      "Sesame%20Seeds": {
+        "name": "Sesame Seeds",
+        "qty": 1,
+        "unit": "kg"
+      },
+      "Small%20Potatoes": {
+        "name": "Small Potatoes",
+        "qty": 20,
+        "unit": "kg"
+      },
+      "Smoked%20Tofu%20Firm": {
+        "name": "Smoked Tofu Firm",
+        "qty": 3.5,
+        "unit": "kg"
+      },
+      "Spatzle": {
+        "name": "Spatzle",
+        "qty": 12.5,
+        "unit": "kg"
+      },
+      "Sunflower%20Oil": {
+        "name": "Sunflower Oil",
+        "qty": 100,
+        "unit": "kg"
+      },
+      "Tortellini%20Spinach": {
+        "name": "Tortellini Spinach",
+        "qty": 8,
+        "unit": "kg"
+      },
+      "Tuna": {
+        "name": "Tuna",
+        "qty": 16.9,
+        "unit": "kg"
+      },
+      "White%20Balsamic": {
+        "name": "White Balsamic",
+        "qty": 9,
+        "unit": "kg"
+      },
+      "Zucchini": {
+        "name": "Zucchini",
+        "qty": 5,
+        "unit": "kg"
+      }
+    }
+  },
+  "catering": {
+    "event": "Autumn Salon",
+    "dates": [
+      "2026-10-13",
+      "2026-10-15"
+    ],
+    "guests_per_event": 50,
+    "delivery_date": "2026-10-10",
+    "source": "Autumn_Salon_Procurement_and_Costing.xlsx",
+    "items": {
+      "Argentinisches%20Rinder-Roastbeef": {
+        "name": "Argentinisches Rinder-Roastbeef",
+        "qty": 2,
+        "unit": "kg"
+      },
+      "Argentinisches%20Rinder-Filet": {
+        "name": "Argentinisches Rinder-Filet",
+        "qty": 1.6,
+        "unit": "kg"
+      },
+      "Prosciutto%20di%20Parma%20300g": {
+        "name": "Prosciutto di Parma 300g",
+        "qty": 2,
+        "unit": "packs"
+      },
+      "H%C3%A4hnchen-Brustfilet": {
+        "name": "Hähnchen-Brustfilet",
+        "qty": 2.1,
+        "unit": "kg"
+      },
+      "Stracciatella%2045%25%20500g": {
+        "name": "Stracciatella 45% 500g",
+        "qty": 4,
+        "unit": "packs"
+      },
+      "Ziegenfrischk%C3%A4serolle%201kg": {
+        "name": "Ziegenfrischkäserolle 1kg",
+        "qty": 1,
+        "unit": "pack"
+      },
+      "Tr%C3%BCffel%20Mayonnaise%20875ml": {
+        "name": "Trüffel Mayonnaise 875ml",
+        "qty": 1,
+        "unit": "pack"
+      },
+      "Tr%C3%BCffel%C3%B6l%20250ml": {
+        "name": "Trüffelöl 250ml",
+        "qty": 1,
+        "unit": "pack"
+      },
+      "Rote%20Beete%20gegart%201kg": {
+        "name": "Rote Beete gegart 1kg",
+        "qty": 3,
+        "unit": "packs"
+      },
+      "Avocado%20Ready%20To%20Eat": {
+        "name": "Avocado Ready To Eat",
+        "qty": 7,
+        "unit": "pcs"
+      },
+      "Hummus%20Classic%201kg": {
+        "name": "Hummus Classic 1kg",
+        "qty": 2,
+        "unit": "packs"
+      },
+      "Falafelb%C3%A4llchen%20100x15g": {
+        "name": "Falafelbällchen 100x15g",
+        "qty": 1,
+        "unit": "pack"
+      },
+      "Pumpernickel%20250g": {
+        "name": "Pumpernickel 250g",
+        "qty": 5,
+        "unit": "packs"
+      },
+      "Brioche%207x500g": {
+        "name": "Brioche 7x500g",
+        "qty": 1,
+        "unit": "carton"
+      },
+      "Kuvert%C3%BCre%20Buttons%20Dark%202%2E5kg": {
+        "name": "Kuvertüre Buttons Dark 2.5kg",
+        "qty": 1,
+        "unit": "pack"
+      },
+      "Schlagsahne%2033%25%201l": {
+        "name": "Schlagsahne 33% 1l",
+        "qty": 1,
+        "unit": "pack"
+      },
+      "Himbeeren%20frisch%20125g": {
+        "name": "Himbeeren frisch 125g",
+        "qty": 6,
+        "unit": "packs"
+      },
+      "Granatapfel": {
+        "name": "Granatapfel",
+        "qty": 6,
+        "unit": "pcs"
+      },
+      "Feigen%20frisch%204er": {
+        "name": "Feigen frisch 4er",
+        "qty": 4,
+        "unit": "packs"
+      },
+      "Datteltomaten%201kg": {
+        "name": "Datteltomaten 1kg",
+        "qty": 2,
+        "unit": "packs"
+      },
+      "Chicor%C3%A9e%20500g": {
+        "name": "Chicorée 500g",
+        "qty": 4,
+        "unit": "packs"
+      },
+      "Walnusskerne%20500g": {
+        "name": "Walnusskerne 500g",
+        "qty": 1,
+        "unit": "pack"
+      },
+      "Pistazien%20ger%C3%B6stet%20500g": {
+        "name": "Pistazien geröstet 500g",
+        "qty": 1,
+        "unit": "pack"
+      },
+      "Rote%20Rettich%20Kresse%2040g": {
+        "name": "Rote Rettich Kresse 40g",
+        "qty": 6,
+        "unit": "packs"
+      },
+      "Gurke": {
+        "name": "Gurke",
+        "qty": 13,
+        "unit": "pcs"
+      },
+      "Trauben%20hell%20kernlos%20500g": {
+        "name": "Trauben hell kernlos 500g",
+        "qty": 2,
+        "unit": "packs"
+      },
+      "Frische%20Kr%C3%A4uter%20100g": {
+        "name": "Frische Kräuter 100g",
+        "qty": 10,
+        "unit": "packs"
+      },
+      "Zitronen%201%2E5kg%20Netz": {
+        "name": "Zitronen 1.5kg Netz",
+        "qty": 2,
+        "unit": "packs"
+      },
+      "Limetten%201kg": {
+        "name": "Limetten 1kg",
+        "qty": 1,
+        "unit": "pack"
+      },
+      "Pantry-Lot": {
+        "name": "Pantry-Lot",
+        "qty": 1,
+        "unit": "lot"
+      },
+      "Bambus%20Spie%C3%9Fe%20250St": {
+        "name": "Bambus Spieße 250St",
+        "qty": 1,
+        "unit": "pack"
+      },
+      "Servietten%20Dark%20Green": {
+        "name": "Servietten Dark Green",
+        "qty": 1,
+        "unit": "pack"
+      },
+      "Mini-Gl%C3%A4ser%20Verrines%2090ml": {
+        "name": "Mini-Gläser Verrines 90ml",
+        "qty": 1,
+        "unit": "pack"
+      },
+      "Mini-L%C3%B6ffel%20200St": {
+        "name": "Mini-Löffel 200St",
+        "qty": 1,
+        "unit": "pack"
+      },
+      "HUG%20Snack-Tartelettes%20200St": {
+        "name": "HUG Snack-Tartelettes 200St",
+        "qty": 1,
+        "unit": "carton"
+      },
+      "HUG%20Dessert-Tartelettes%20270St": {
+        "name": "HUG Dessert-Tartelettes 270St",
+        "qty": 1,
+        "unit": "carton"
+      },
+      "Macarons%20Rive%20Droite%2072St": {
+        "name": "Macarons Rive Droite 72St",
+        "qty": 1,
+        "unit": "carton"
+      },
+      "Bl%C3%BCten%20essbar%20Mix": {
+        "name": "Blüten essbar Mix",
+        "qty": 4,
+        "unit": "packs"
+      },
+      "Veilchenbl%C3%BCten%20essbar": {
+        "name": "Veilchenblüten essbar",
+        "qty": 2,
+        "unit": "packs"
+      },
+      "Microgreen%20Erbse%20100g": {
+        "name": "Microgreen Erbse 100g",
+        "qty": 2,
+        "unit": "packs"
+      },
+      "Microgreen%20Radieschen%20100g": {
+        "name": "Microgreen Radieschen 100g",
+        "qty": 2,
+        "unit": "packs"
+      },
+      "Microgreen%20Borretsch%2050g": {
+        "name": "Microgreen Borretsch 50g",
+        "qty": 2,
+        "unit": "packs"
+      },
+      "Granatapfelkerne%20100g": {
+        "name": "Granatapfelkerne 100g",
+        "qty": 3,
+        "unit": "packs"
+      }
+    }
+  }
+}

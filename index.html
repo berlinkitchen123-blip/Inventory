@@ -216,6 +216,7 @@ table.order tbody.item.ordered .name{text-decoration:line-through;color:var(--in
           <label class="toggle"><input type="checkbox" id="showDishes" data-fid="showDishes"> Show dishes</label>
           <button class="btn" id="stockEditBtn" aria-pressed="false">Edit stock</button>
           <button class="btn" id="xlsxBtn">Download Excel</button>
+          <button class="btn" id="seedStockBtn" title="Load stock from latest delivery data (stock-patch.json)" style="background:var(--herb);color:#fff">📦 Load Delivery Stock</button>
           <button class="btn primary" id="printBtn">Print order</button>
         </div>
       </div>
@@ -626,6 +627,40 @@ function download(name, text, type) {
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 0);
 }
 
+async function seedStock() {
+  // Reads data/stock-patch.json and writes all stock entries to Firebase
+  // Call once after delivery arrives to load stock into the system
+  if (!STORE || !CONNECTED) { showError('Not connected to Firebase'); return; }
+  showError('⏳ Loading stock from delivery data...');
+  try {
+    const r = await fetch('data/stock-patch.json?t=' + Date.now(), {cache:'no-store'});
+    const data = await r.json();
+
+    // Write NRW stock
+    const nrwWeek = data.nrw_stock.week;
+    const ch = {};
+    for (const [key, item] of Object.entries(data.nrw_stock.items)) {
+      ch[`stock/${nrwWeek}/${key}`] = item.qty;
+    }
+
+    // Write catering as a separate node
+    ch['catering/autumn-salon-2026'] = {
+      event: data.catering.event,
+      dates: data.catering.dates,
+      guests_per_event: data.catering.guests_per_event,
+      delivery_date: data.catering.delivery_date,
+      items: data.catering.items,
+      _loaded: new Date().toISOString()
+    };
+
+    await put(ch, 'stock seed from delivery');
+    showError('✅ Stock loaded: ' + Object.keys(data.nrw_stock.items).length + ' NRW items + ' + Object.keys(data.catering.items).length + ' catering items');
+    setTimeout(() => showError(''), 4000);
+  } catch(e) {
+    showError('❌ Stock load failed: ' + e.message);
+  }
+}
+
 async function seedIngredientMaster() {
   if (!STORE || !CONNECTED) { showError('Not connected'); return; }
   const ch = {};
@@ -983,6 +1018,7 @@ document.addEventListener('click', e => {
   else if (b.dataset.confirm) { const s = PLAN.subs.find(x => x.name === b.dataset.confirm); if (s) put({ [`yields/${enc(s.name)}`]: s.yield }, 'yield'); rerenderSoon(); }
   else if (b.id === 'refreshBtn') refreshDB();
   else if (b.id === 'xlsxBtn') exportExcel();
+  else if (b.id === 'seedStockBtn') seedStock();
   else if (b.id === 'printBtn') { ST.view = 'order'; render(); window.print(); }
   else if (b.id === 'clearWeek' && confirm(`Clear the forecast for ${PLAN.week.label}? This clears it for the whole team.`)) {
     const ch = {}; for (const d of PLAN.week.days) ch[`forecast/${d}`] = null; put(ch, 'forecast cleared'); rerenderSoon();
