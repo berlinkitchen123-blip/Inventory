@@ -32,7 +32,7 @@
       },
       "Champignons": {
         "name": "Champignons",
-        "qty": 5,
+        "qty": 4,
         "unit": "kg"
       },
       "Cheddar%20Cheese": {
@@ -42,17 +42,17 @@
       },
       "Cherry%20Tomatoes": {
         "name": "Cherry Tomatoes",
-        "qty": 10,
+        "qty": 9,
         "unit": "kg"
       },
       "Chicken%20Breast": {
         "name": "Chicken Breast",
-        "qty": 50,
+        "qty": 20,
         "unit": "kg"
       },
       "Chickpeas": {
         "name": "Chickpeas",
-        "qty": 24.0,
+        "qty": 26.5,
         "unit": "kg",
         "note": "22.5 kg Chefs Culinar + 1.5 kg Metro = 24 kg total"
       },
@@ -68,7 +68,7 @@
       },
       "Feta%20Cheese": {
         "name": "Feta Cheese",
-        "qty": 4,
+        "qty": 3.14,
         "unit": "kg"
       },
       "Fusilli": {
@@ -78,7 +78,7 @@
       },
       "Green%20Beans": {
         "name": "Green Beans",
-        "qty": 12.5,
+        "qty": 5,
         "unit": "kg"
       },
       "Heat%20to%20Eat%3A%20Chicken%20Teriyaki%20with%20vegetables": {
@@ -118,22 +118,22 @@
       },
       "Peanuts": {
         "name": "Peanuts",
-        "qty": 3,
+        "qty": 1,
         "unit": "kg"
       },
       "Phanaeng%20Curry": {
         "name": "Phanaeng Curry",
-        "qty": 18,
+        "qty": 0,
         "unit": "kg"
       },
       "Pita%20Bread": {
         "name": "Pita Bread",
-        "qty": 960,
+        "qty": 288,
         "unit": "pcs"
       },
       "Potatoes%20Puree": {
         "name": "Potatoes Puree",
-        "qty": 16,
+        "qty": 18,
         "unit": "kg"
       },
       "Quinoa": {
@@ -143,7 +143,7 @@
       },
       "Radicchio": {
         "name": "Radicchio",
-        "qty": 2,
+        "qty": 3,
         "unit": "kg"
       },
       "Red%20Bell%20Pepper": {
@@ -158,7 +158,7 @@
       },
       "Sandwich%20Whole%20grain%20bread": {
         "name": "Sandwich Whole grain bread",
-        "qty": 4,
+        "qty": 3,
         "unit": "kg"
       },
       "Sesame%20Seeds": {
@@ -183,8 +183,8 @@
       },
       "Sunflower%20Oil": {
         "name": "Sunflower Oil",
-        "qty": 100,
-        "unit": "kg"
+        "qty": 91,
+        "unit": "l"
       },
       "Tortellini%20Spinach": {
         "name": "Tortellini Spinach",
@@ -193,13 +193,13 @@
       },
       "Tuna": {
         "name": "Tuna",
-        "qty": 16.9,
+        "qty": 17.05,
         "unit": "kg"
       },
       "White%20Balsamic": {
         "name": "White Balsamic",
-        "qty": 9,
-        "unit": "kg"
+        "qty": 5,
+        "unit": "l"
       },
       "Zucchini": {
         "name": "Zucchini",
@@ -236,7 +236,7 @@
       },
       "White%20Beans": {
         "name": "White Beans",
-        "qty": 2.65,
+        "qty": 11.52,
         "unit": "kg",
         "art": "552276",
         "supplier": "Metro"
@@ -408,6 +408,48 @@
         "unit": "kg",
         "art": "130187",
         "supplier": "Metro"
+      },
+      "Glass%20Noodles": {
+        "name": "Glass Noodles (Diamond)",
+        "qty": 50,
+        "unit": "kg",
+        "supplier": "Kreyenhop",
+        "delivery_date": "30.09.26"
+      },
+      "Sriracha%20Sauce": {
+        "name": "Sriracha Chilisauce (Flying Goose)",
+        "qty": 10.92,
+        "unit": "l",
+        "supplier": "Kreyenhop",
+        "delivery_date": "30.09.26"
+      },
+      "Sriracha%20Mayo": {
+        "name": "Sriracha Mayo (Flying Goose)",
+        "qty": 52.56,
+        "unit": "l",
+        "supplier": "Kreyenhop",
+        "delivery_date": "30.09.26"
+      },
+      "Soy%20Sauce": {
+        "name": "Soy Sauce helle (Lee Kum Kee)",
+        "qty": 32,
+        "unit": "l",
+        "supplier": "Kreyenhop",
+        "delivery_date": "30.09.26"
+      },
+      "Edamame": {
+        "name": "Edamame/Mukimame",
+        "qty": 20,
+        "unit": "kg",
+        "supplier": "Kreyenhop",
+        "delivery_date": "30.09.26"
+      },
+      "Gyoza%20Dumplings": {
+        "name": "Gyoza Dumplings Veg (Allgroo)",
+        "qty": 19.44,
+        "unit": "kg",
+        "supplier": "Kreyenhop",
+        "delivery_date": "30.09.26"
       }
     },
     "notes": {
