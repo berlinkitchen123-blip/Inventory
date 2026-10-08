@@ -54,7 +54,7 @@
         "name": "Chickpeas",
         "qty": 24.0,
         "unit": "kg",
-        "note": "Metro + Chefs Culinar combined"
+        "note": "22.5 kg Chefs Culinar + 1.5 kg Metro = 24 kg total"
       },
       "Cooking%20Cream": {
         "name": "Cooking Cream",
@@ -394,6 +394,20 @@
         "unit": "l",
         "art": "133832",
         "supplier": "Metro"
+      },
+      "Celeriac": {
+        "name": "Celeriac",
+        "qty": 3,
+        "unit": "pcs",
+        "art": "294729",
+        "supplier": "Metro"
+      },
+      "Erbs%20Croutons": {
+        "name": "Erbs Croutons",
+        "qty": 2.5,
+        "unit": "kg",
+        "art": "130187",
+        "supplier": "Metro"
       }
     },
     "notes": {
@@ -645,6 +659,13 @@
         "name": "Granatapfelkerne 100g",
         "qty": 3,
         "unit": "packs"
+      },
+      "Bambus%20Fingerfood-Spie%C3%9Fe%20250St": {
+        "name": "Bambus Fingerfood-Spieße 250St",
+        "qty": 1,
+        "unit": "pack",
+        "art": "268705",
+        "supplier": "Metro"
       }
     }
   }
