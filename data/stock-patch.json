@@ -450,6 +450,13 @@
         "unit": "kg",
         "supplier": "Kreyenhop",
         "delivery_date": "30.09.26"
+      },
+      "Basmati%20Rice": {
+        "name": "Basmati Rice (Akash)",
+        "qty": 400,
+        "unit": "kg",
+        "supplier": "Kreyenhop",
+        "delivery_date": "30.09.26"
       }
     },
     "notes": {
