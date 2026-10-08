@@ -52,8 +52,9 @@
       },
       "Chickpeas": {
         "name": "Chickpeas",
-        "qty": 22.5,
-        "unit": "kg"
+        "qty": 24.0,
+        "unit": "kg",
+        "note": "Metro + Chefs Culinar combined"
       },
       "Cooking%20Cream": {
         "name": "Cooking Cream",
@@ -63,7 +64,7 @@
       "Eggs%20Large": {
         "name": "Eggs Large",
         "qty": 30,
-        "unit": "kg"
+        "unit": "eggs"
       },
       "Feta%20Cheese": {
         "name": "Feta Cheese",
@@ -82,27 +83,17 @@
       },
       "Heat%20to%20Eat%3A%20Chicken%20Teriyaki%20with%20vegetables": {
         "name": "Heat to Eat: Chicken Teriyaki with vegetables",
-        "qty": 12,
+        "qty": 4.8,
         "unit": "kg"
       },
       "Heat%20to%20Eat%3A%20Lentil%20Stew%20%E2%80%9CFeijoada%20Style%E2%80%9D": {
         "name": "Heat to Eat: Lentil Stew “Feijoada Style”",
-        "qty": 12,
+        "qty": 4.8,
         "unit": "kg"
       },
       "Iceberg%20Lettuce": {
         "name": "Iceberg Lettuce",
         "qty": 25,
-        "unit": "kg"
-      },
-      "Lemon%20Dressing": {
-        "name": "Lemon Dressing",
-        "qty": 3,
-        "unit": "kg"
-      },
-      "Meatballs": {
-        "name": "Meatballs",
-        "qty": 5,
         "unit": "kg"
       },
       "Mint%20-%20fresh": {
@@ -120,19 +111,9 @@
         "qty": 24,
         "unit": "kg"
       },
-      "Orange%20vinegrette": {
-        "name": "Orange vinegrette",
-        "qty": 4.7,
-        "unit": "kg"
-      },
       "Parsley": {
         "name": "Parsley",
         "qty": 1,
-        "unit": "kg"
-      },
-      "Peanut%20dressing": {
-        "name": "Peanut dressing",
-        "qty": 4.7,
         "unit": "kg"
       },
       "Peanuts": {
@@ -147,8 +128,8 @@
       },
       "Pita%20Bread": {
         "name": "Pita Bread",
-        "qty": 10,
-        "unit": "kg"
+        "qty": 960,
+        "unit": "pcs"
       },
       "Potatoes%20Puree": {
         "name": "Potatoes Puree",
@@ -224,8 +205,221 @@
         "name": "Zucchini",
         "qty": 5,
         "unit": "kg"
+      },
+      "Cucumber": {
+        "name": "Cucumber",
+        "qty": 10,
+        "unit": "kg",
+        "art": "194256",
+        "supplier": "Metro"
+      },
+      "Red%20cabbage": {
+        "name": "Red cabbage",
+        "qty": 10,
+        "unit": "kg",
+        "art": "283614",
+        "supplier": "Metro"
+      },
+      "Baby%20Spinach": {
+        "name": "Baby Spinach",
+        "qty": 1.2,
+        "unit": "kg",
+        "art": "287195",
+        "supplier": "Metro"
+      },
+      "Pumpkin%20Seeds": {
+        "name": "Pumpkin Seeds",
+        "qty": 1,
+        "unit": "kg",
+        "art": "023750",
+        "supplier": "Metro"
+      },
+      "White%20Beans": {
+        "name": "White Beans",
+        "qty": 2.65,
+        "unit": "kg",
+        "art": "552276",
+        "supplier": "Metro"
+      },
+      "Olives%20Black": {
+        "name": "Olives Black",
+        "qty": 4.25,
+        "unit": "kg",
+        "art": "894330",
+        "supplier": "Metro"
+      },
+      "Tomato%20-%20Sun%20Dried": {
+        "name": "Tomato - Sun Dried",
+        "qty": 1,
+        "unit": "pack",
+        "art": "909132",
+        "supplier": "Metro"
+      },
+      "Tomato%20Sauce": {
+        "name": "Tomato Sauce",
+        "qty": 57.5,
+        "unit": "kg",
+        "art": "932456",
+        "supplier": "Metro"
+      },
+      "Lentils%20-%20Green": {
+        "name": "Lentils - Green",
+        "qty": 2,
+        "unit": "kg",
+        "art": "973691",
+        "supplier": "Metro"
+      },
+      "Vinegar": {
+        "name": "Vinegar",
+        "qty": 10,
+        "unit": "l",
+        "art": "064747",
+        "supplier": "Metro"
+      },
+      "Canola%20Oil%20%28raps%C3%B6l%29": {
+        "name": "Canola Oil (rapsöl)",
+        "qty": 10,
+        "unit": "l",
+        "art": "208622",
+        "supplier": "Metro"
+      },
+      "Olive%20Oil": {
+        "name": "Olive Oil",
+        "qty": 5,
+        "unit": "l",
+        "art": "905198",
+        "supplier": "Metro"
+      },
+      "Chocolate%20Mouse%20Powder": {
+        "name": "Chocolate Mouse Powder",
+        "qty": 1,
+        "unit": "kg",
+        "art": "003818",
+        "supplier": "Metro"
+      },
+      "Salt": {
+        "name": "Salt",
+        "qty": 10,
+        "unit": "kg",
+        "art": "197051",
+        "supplier": "Metro"
+      },
+      "Brown%20Sugar": {
+        "name": "Brown Sugar",
+        "qty": 2,
+        "unit": "kg",
+        "art": "491160",
+        "supplier": "Metro"
+      },
+      "Strawberry%20Jam": {
+        "name": "Strawberry Jam",
+        "qty": 3,
+        "unit": "kg",
+        "art": "393070",
+        "supplier": "Metro"
+      },
+      "Pearled%20Barley": {
+        "name": "Pearled Barley",
+        "qty": 5,
+        "unit": "kg",
+        "art": "504786",
+        "supplier": "Metro"
+      },
+      "Chilli%20Flakes": {
+        "name": "Chilli Flakes",
+        "qty": 0.37,
+        "unit": "kg",
+        "art": "468477",
+        "supplier": "Metro"
+      },
+      "Paprika%20powder": {
+        "name": "Paprika powder",
+        "qty": 1.6,
+        "unit": "kg",
+        "art": "962968",
+        "supplier": "Metro"
+      },
+      "Black%20Pepper": {
+        "name": "Black Pepper",
+        "qty": 1.67,
+        "unit": "kg",
+        "art": "962969",
+        "supplier": "Metro"
+      },
+      "Pesto%20Sauce": {
+        "name": "Pesto Sauce",
+        "qty": 0.5,
+        "unit": "kg",
+        "art": "191435",
+        "supplier": "Metro"
+      },
+      "Vegan%20Mayo": {
+        "name": "Vegan Mayo",
+        "qty": 3,
+        "unit": "kg",
+        "art": "526435",
+        "supplier": "Metro"
+      },
+      "Milk": {
+        "name": "Milk",
+        "qty": 12,
+        "unit": "l",
+        "art": "863542",
+        "supplier": "Metro"
+      },
+      "Vegan%20Gyros": {
+        "name": "Vegan Gyros",
+        "qty": 5,
+        "unit": "kg",
+        "art": "000361",
+        "supplier": "Metro"
+      },
+      "Broccoli": {
+        "name": "Broccoli",
+        "qty": 4.5,
+        "unit": "kg",
+        "art": "905267",
+        "supplier": "Metro"
+      },
+      "Spinach%20leaves": {
+        "name": "Spinach leaves",
+        "qty": 10,
+        "unit": "kg",
+        "art": "905435",
+        "supplier": "Metro"
+      },
+      "Lime%20Juice": {
+        "name": "Lime Juice",
+        "qty": 4.5,
+        "unit": "l",
+        "art": "133832",
+        "supplier": "Metro"
       }
-    }
+    },
+    "notes": {
+      "wrong_art_numbers_not_ordered": [
+        "Lemon Dressing (1422059 — wrong number per Tom)",
+        "Meatballs (447797 — wrong number per Tom)",
+        "Orange vinegrette (1143059 — wrong number per Tom)",
+        "Peanut dressing (2161059 — wrong number per Tom)"
+      ],
+      "pending_clarification": [
+        "Basil — Tom asks: frozen or fresh?",
+        "Chicken Breast — Tom asks: frozen or fresh?",
+        "Phanaeng Curry — 10 workday lead time, may not arrive Friday",
+        "Heat to Eat Chicken Teriyaki + Lentil Stew — confirmed 12 portions (4.8 kg each)"
+      ],
+      "not_ordered_this_week": [
+        "Apple (278281 — no qty confirmed)",
+        "Hard cheese - regular (674516 — no qty confirmed)",
+        "Milk (466469 — 0 ordered)"
+      ]
+    },
+    "sources": [
+      "Chefs Culinar order — Tom.Driessen@chefsculinar.de — delivery 02.10.2026",
+      "Metro invoice 29.09.2026/011/0/0/0194/006539 — food items only (equipment excluded)"
+    ],
+    "metro_equipment_note": "Metro invoice also contained €2,367.39 kitchen equipment (GN containers, HACCP boards, knives, pots, pans) — NOT in stock system, these are fixed assets"
   },
   "catering": {
     "event": "Autumn Salon",
