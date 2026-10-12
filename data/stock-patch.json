@@ -7,7 +7,7 @@
     "items": {
       "Arugula": {
         "name": "Arugula",
-        "qty": 1,
+        "qty": 0,
         "unit": "kg"
       },
       "Bacon%20raw": {
@@ -22,17 +22,17 @@
       },
       "Basil": {
         "name": "Basil",
-        "qty": 2,
+        "qty": 0,
         "unit": "kg"
       },
       "Carrots": {
         "name": "Carrots",
-        "qty": 10,
+        "qty": 0,
         "unit": "kg"
       },
       "Champignons": {
         "name": "Champignons",
-        "qty": 4,
+        "qty": 0,
         "unit": "kg"
       },
       "Cheddar%20Cheese": {
@@ -42,7 +42,7 @@
       },
       "Cherry%20Tomatoes": {
         "name": "Cherry Tomatoes",
-        "qty": 9,
+        "qty": 0,
         "unit": "kg"
       },
       "Chicken%20Breast": {
@@ -78,7 +78,7 @@
       },
       "Green%20Beans": {
         "name": "Green Beans",
-        "qty": 5,
+        "qty": 0,
         "unit": "kg"
       },
       "Heat%20to%20Eat%3A%20Chicken%20Teriyaki%20with%20vegetables": {
@@ -98,7 +98,7 @@
       },
       "Mint%20-%20fresh": {
         "name": "Mint - fresh",
-        "qty": 0.2,
+        "qty": 0,
         "unit": "kg"
       },
       "Mozzarella%20Mini": {
@@ -113,7 +113,7 @@
       },
       "Parsley": {
         "name": "Parsley",
-        "qty": 1,
+        "qty": 0,
         "unit": "kg"
       },
       "Peanuts": {
@@ -143,17 +143,17 @@
       },
       "Radicchio": {
         "name": "Radicchio",
-        "qty": 3,
+        "qty": 0,
         "unit": "kg"
       },
       "Red%20Bell%20Pepper": {
         "name": "Red Bell Pepper",
-        "qty": 15,
+        "qty": 0,
         "unit": "kg"
       },
       "Regular%20tomatoes": {
         "name": "Regular tomatoes",
-        "qty": 3,
+        "qty": 0,
         "unit": "kg"
       },
       "Sandwich%20Whole%20grain%20bread": {
@@ -168,7 +168,7 @@
       },
       "Small%20Potatoes": {
         "name": "Small Potatoes",
-        "qty": 20,
+        "qty": 0,
         "unit": "kg"
       },
       "Smoked%20Tofu%20Firm": {
@@ -203,26 +203,26 @@
       },
       "Zucchini": {
         "name": "Zucchini",
-        "qty": 5,
+        "qty": 0,
         "unit": "kg"
       },
       "Cucumber": {
         "name": "Cucumber",
-        "qty": 10,
+        "qty": 0,
         "unit": "kg",
         "art": "194256",
         "supplier": "Metro"
       },
       "Red%20cabbage": {
         "name": "Red cabbage",
-        "qty": 10,
+        "qty": 0,
         "unit": "kg",
         "art": "283614",
         "supplier": "Metro"
       },
       "Baby%20Spinach": {
         "name": "Baby Spinach",
-        "qty": 1.2,
+        "qty": 0,
         "unit": "kg",
         "art": "287195",
         "supplier": "Metro"
@@ -383,7 +383,7 @@
       },
       "Spinach%20leaves": {
         "name": "Spinach leaves",
-        "qty": 10,
+        "qty": 0,
         "unit": "kg",
         "art": "905435",
         "supplier": "Metro"
@@ -457,6 +457,385 @@
         "unit": "kg",
         "supplier": "Kreyenhop",
         "delivery_date": "30.09.26"
+      },
+      "Lachsfilet%20Trim%20D": {
+        "name": "Lachsfilet Trim D",
+        "qty": 3.198,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Haehnchen%20Brustfilet": {
+        "name": "Hähnchen Brustfilet HKL A",
+        "qty": 2.413,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "ARG%20Roastbeef%20frisch": {
+        "name": "ARG. Roastbeef frisch",
+        "qty": 3.79,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "ARG%20Rinderfilet%20frisch": {
+        "name": "ARG. R.Filet 3-4 LBS frisch",
+        "qty": 1.62,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Stracciatella%2045pct": {
+        "name": "MC Stracciatella 45%",
+        "qty": 2,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Burrata%20Buffalo": {
+        "name": "MC Burrata Buffalo 4x125g",
+        "qty": 1,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Ziegenkaese%20Rolle": {
+        "name": "Soignon Ziegenkäse Rolle",
+        "qty": 1,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "ARO%20Schlagsahne%2032pct": {
+        "name": "ARO H-Schlagsahne 32%",
+        "qty": 2,
+        "unit": "L",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "ARO%20Schlagsahne%2033pct": {
+        "name": "ARO Schlagsahne 33%",
+        "qty": 1,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "ARO%20Butter%20mild": {
+        "name": "ARO Butter mild ges. 250g",
+        "qty": 1,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Hummus%20Traditionell": {
+        "name": "Hummus Traditionell",
+        "qty": 2,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Mango%20Wuerfel%20TK": {
+        "name": "MC Mango Würfel TK",
+        "qty": 1,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Falafel%20Baellchen": {
+        "name": "Falafel Bällchen",
+        "qty": 1.5,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Kaesekuchen%20TK": {
+        "name": "MC Käsekuchen 1.25kg TK",
+        "qty": 4,
+        "unit": "pcs",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Parmaschinken%20geschnitten": {
+        "name": "Parmaschinken geschnitten",
+        "qty": 0.6,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Zitronen%20ES": {
+        "name": "MC Zitronen ES",
+        "qty": 5,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Granatapfel%20ES": {
+        "name": "Granatäpfel ES",
+        "qty": 8,
+        "unit": "pcs",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Himbeeren": {
+        "name": "Himbeeren 125g",
+        "qty": 1.25,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Trauben%20hell%20kernlos": {
+        "name": "Trauben hell kernlos",
+        "qty": 1.5,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Limetten%20BR": {
+        "name": "MC Limetten BR",
+        "qty": 1,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Avocado%20ready": {
+        "name": "MC Avocado ready to eat",
+        "qty": 7,
+        "unit": "pcs",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Feigen%20frisch": {
+        "name": "Feigen frisch 4er TR",
+        "qty": 6,
+        "unit": "pcs",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Gurke%20ES": {
+        "name": "Gurke ES",
+        "qty": 13,
+        "unit": "pcs",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Erbsen%20Microgreens": {
+        "name": "MC Erbsen Microgreens",
+        "qty": 0.1,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Radieschen%20Microgreens": {
+        "name": "MC Radieschen Red Microgreens",
+        "qty": 0.1,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Dill%20frisch": {
+        "name": "MC Dill",
+        "qty": 0.2,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Petersilie%20frisch": {
+        "name": "MC Glatte Petersilie",
+        "qty": 0.3,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Basilikum%20NL": {
+        "name": "MC Basilikum NL",
+        "qty": 0.1,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Minze%20frisch%20DE": {
+        "name": "MC Minze DE",
+        "qty": 0.1,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Rote%20Rettich%20Kresse": {
+        "name": "MC Bio Rote Rettich Kresse",
+        "qty": 9,
+        "unit": "pcs",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Rosmarin%20frisch": {
+        "name": "MC Rosmarin",
+        "qty": 0.1,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Thymian%20frisch": {
+        "name": "MC Thymian",
+        "qty": 0.1,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Chicoree": {
+        "name": "Chicorée 500g",
+        "qty": 2,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Rote%20Beete%20gegart": {
+        "name": "MC Rote Beete gegart",
+        "qty": 4,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Hokkaido%20Kuerbis": {
+        "name": "Bio Hokkaido Kürbis",
+        "qty": 8,
+        "unit": "pcs",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Walnusskerne": {
+        "name": "MC Walnusskerne",
+        "qty": 1.5,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Pistazien": {
+        "name": "MC Pistazien G+G",
+        "qty": 1,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Erdnuesse%20GG": {
+        "name": "MC Erdnuesse G+G",
+        "qty": 3.25,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Kokosmilch%20ARO": {
+        "name": "ARO Kokosmilch 12-14%",
+        "qty": 2.4,
+        "unit": "L",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Agar%20Agar": {
+        "name": "MC Agar Agar",
+        "qty": 0.2,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Fond%20Braten": {
+        "name": "Juergen Langbein Fond Braten",
+        "qty": 0.5,
+        "unit": "L",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Trueffeloel": {
+        "name": "MC Trüffelöl",
+        "qty": 0.25,
+        "unit": "L",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Tafelsenf%20ARO": {
+        "name": "ARO Tafelsenf Mittelsch.",
+        "qty": 1.75,
+        "unit": "L",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Kuehne%20Dressing%20Balsamico": {
+        "name": "Kuehne Dressing Balsamico",
+        "qty": 1,
+        "unit": "L",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Maille%20Senf%20Dijon": {
+        "name": "Maille Senf Dijon",
+        "qty": 0.2,
+        "unit": "L",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Truffle%20Mayonnaise": {
+        "name": "Truffle Mayonnaise",
+        "qty": 0.875,
+        "unit": "L",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Mandeln%20gehobelt": {
+        "name": "Mandeln gehobelt",
+        "qty": 0.6,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Kuvertuere%20Butter%20Dark": {
+        "name": "MC Kuvertüre Butter Dark 55%",
+        "qty": 2.5,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Waldhonig%20ARO": {
+        "name": "ARO Waldhonig Spender",
+        "qty": 0.5,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Brioche%20geschnitten": {
+        "name": "Ibis Brioche geschnitten",
+        "qty": 0.5,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Mini%20Pasteten": {
+        "name": "Mini Pasteten 12Stck",
+        "qty": 6,
+        "unit": "pcs",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26",
+        "note": "4 on back-order"
+      },
+      "Pumpernickel": {
+        "name": "Gourmet Pumpernickel",
+        "qty": 1.25,
+        "unit": "kg",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Bambusspiess%206cm": {
+        "name": "Bambusspieß Knoten 6cm 250er",
+        "qty": 250,
+        "unit": "pcs",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
+      },
+      "Holz%20Loeffel%2016cm": {
+        "name": "Holz Löffel 16cm 100er",
+        "qty": 200,
+        "unit": "pcs",
+        "supplier": "Metro",
+        "delivery_date": "12.10.26"
       }
     },
     "notes": {
