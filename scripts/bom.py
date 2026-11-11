@@ -25,6 +25,8 @@ BASE = (os.getenv("APICBASE_BASE") or "https://api.apicbase.com/api/v2").rstrip(
 DB = (os.getenv("FIREBASE_DB_URL")
       or "https://stock-f24-default-rtdb.europe-west1.firebasedatabase.app").rstrip("/")
 PAGE, GAP = 200, 0.7
+MAP_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                        "data", "dish-map.json")
 _last = [0.0]
 
 
@@ -91,6 +93,10 @@ def pages(path, params=None):
         page += 1
 
 
+STOP = {"with", "and", "the", "a", "of", "in", "on", "for", "halves", "portions",
+        "mini", "style", "bite", "bites", "cup", "cups", "salad", "sandwich"}
+
+
 def norm(s):
     """Fold a dish name so small differences stop mattering."""
     s = unicodedata.normalize("NFKD", str(s or "")).encode("ascii", "ignore").decode()
@@ -99,37 +105,65 @@ def norm(s):
     return " ".join(s.split())
 
 
+def load_map():
+    """data/dish-map.json: a dish name a human has already tied to a recipe id."""
+    try:
+        raw = json.load(open(MAP_FILE, encoding="utf-8"))
+    except FileNotFoundError:
+        return {}
+    out = {}
+    for dish, val in (raw.get("map") or raw).items():
+        if isinstance(val, dict):
+            rid = val.get("id")
+        else:
+            rid = val
+        if rid:
+            out[norm(dish)] = str(rid)
+    return out
+
+
 def resolve(demand, recipes):
-    """Dish name -> recipe. Exact fold first, then a contained match. Never a guess."""
-    by_norm, matched, unmatched = {}, [], []
+    """Dish name -> recipe. The map first, then an exact name. Never a guess.
+
+    There used to be a contained-substring fallback here. It silently tied
+    "Caesar Salad with Chicken" to a recipe called "Chicken" and both couscous
+    cups to a bulk batch called "CousCous", so the order came out wrong while
+    looking complete. A dish that is not in the map and does not match a name
+    exactly is now reported as unmatched, and is left out of the order.
+    """
+    by_norm, by_id, matched, unmatched = {}, {}, [], []
     for r in recipes:
         by_norm.setdefault(norm(r.get("name")), []).append(r)
+        by_id[str(r.get("id"))] = r
+    dish_map = load_map()
     for row in demand:
         key = norm(row["dish"])
-        hits = by_norm.get(key) or []
-        how = "exact"
-        if not hits:                                   # one name contains the other
-            cands = [r for k, rs in by_norm.items() if k and (k in key or key in k) for r in rs]
-            hits, how = cands, "partial"
-        hits = [h for h in hits if not norm(h.get("name")).endswith(" ct")]   # never use "- CT"
-        if len(hits) == 1:
-            matched.append({**row, "id": hits[0]["id"], "matched": hits[0].get("name"), "how": how})
+        rid = dish_map.get(key)
+        if rid and rid in by_id:
+            r = by_id[rid]
+            matched.append({**row, "id": r["id"], "matched": r.get("name"), "how": "mapped"})
             continue
-        cands = [h.get("name") for h in hits][:6]
-        if not cands:                                  # nothing contained: offer the nearest by words
-            want = set(key.split())
-            scored = []
-            for k, rs in by_norm.items():
-                if not k or k.endswith(" ct"):
-                    continue
-                have = set(k.split())
-                shared = len(want & have)
-                if shared:
-                    scored.append((shared / len(want | have), rs[0].get("name")))
-            scored.sort(reverse=True)
-            cands = [n for s, n in scored[:4] if s > 0.25]
-        unmatched.append({**row, "candidates": cands,
-                          "why": "no match" if not hits else "ambiguous"})
+        if rid:
+            unmatched.append({**row, "candidates": [],
+                              "why": f"dish-map points at recipe {rid}, which is not in the library"})
+            continue
+        hits = [h for h in (by_norm.get(key) or []) if not norm(h.get("name")).endswith(" ct")]
+        if len(hits) == 1:
+            matched.append({**row, "id": hits[0]["id"], "matched": hits[0].get("name"), "how": "exact"})
+            continue
+        want = set(w for w in key.split() if w not in STOP and len(w) > 2)
+        scored = []
+        for k, rs in by_norm.items():
+            if not k or k.endswith(" ct"):
+                continue
+            have = set(k.split())
+            shared = len(want & have)
+            if shared:
+                scored.append((shared / max(1, len(want | have)), rs[0].get("id"), rs[0].get("name")))
+        scored.sort(reverse=True)
+        unmatched.append({**row,
+                          "candidates": [f"{i}  {n}" for _, i, n in scored[:8]],
+                          "why": "two recipes share this name" if len(hits) > 1 else "no exact match"})
     return matched, unmatched
 
 
@@ -138,6 +172,8 @@ def main():
     ap.add_argument("--demand", required=True)
     ap.add_argument("--outlet", default="NRW")
     ap.add_argument("--prices", action="store_true")
+    ap.add_argument("--recipes", action="store_true",
+                    help="also read each matched recipe, to show what is inside it")
     ap.add_argument("--firebase", action="store_true",
                     help="also write the order into Firebase for the planner to show")
     args = ap.parse_args()
@@ -158,7 +194,15 @@ def main():
     recipes = pages("/products/recipes/")
     print(f"recipes in library: {len(recipes)}")
     matched, unmatched = resolve(demand, recipes)
-    print(f"matched {len(matched)} of {len(demand)} dishes\n")
+    print(f"matched {len(matched)} of {len(demand)} dishes "
+          f"({sum(1 for m in matched if m['how'] == 'mapped')} from data/dish-map.json, "
+          f"{sum(1 for m in matched if m['how'] == 'exact')} by exact name)\n")
+    print("WHAT EACH DISH WAS TIED TO - check this before ordering")
+    print("-" * 72)
+    for m in matched:
+        flag = "" if norm(m["dish"]) == norm(m["matched"]) else "   <- different name"
+        print(f"  {m['dish'][:40]:<40} {m['servings']:>4} -> {str(m['matched'])[:30]:<30}{flag}")
+    print()
 
     if unmatched:
         print("=" * 72)
@@ -171,6 +215,32 @@ def main():
 
     if not matched:
         sys.exit("Nothing matched, so there is nothing to order.")
+
+    detail = {}
+    if args.recipes:
+        print("reading each matched recipe from Apicbase…")
+        for m in matched:
+            try:
+                r = api(f"/products/recipes/{m['id']}/")
+            except RuntimeError as e:
+                print(f"  !! {m['matched']}: {e}")
+                continue
+            lines = r.get("ingredients") or r.get("recipe_lines") or r.get("lines") or []
+            rows_ = []
+            for ln in lines:
+                ing = ln.get("ingredient") or ln.get("stock_item") or {}
+                sub = ln.get("recipe") or ln.get("sub_recipe") or {}
+                q = ln.get("quantity") or ln.get("amount") or {}
+                rows_.append({
+                    "name": ing.get("name") or sub.get("name") or ln.get("name") or "?",
+                    "qty": q.get("value") if isinstance(q, dict) else q,
+                    "unit": (q.get("unit") if isinstance(q, dict) else ln.get("unit")) or "",
+                    "sub": bool(sub and not ing.get("name")),
+                })
+            detail[str(m["id"])] = {"name": r.get("name"), "servings": r.get("servings")
+                                    or r.get("portions"), "lines": rows_}
+            print(f"  {str(r.get('name'))[:46]:<46} {len(rows_)} lines")
+        print()
 
     bom = api("/bom/recipes/", body={
         "outlet_id": outlet["id"],
@@ -248,7 +318,7 @@ def main():
             "dishes": len(demand), "portions": sum(d["servings"] for d in demand),
             "matched": [{"dish": m["dish"], "servings": m["servings"],
                          "apicbase": m["matched"], "how": m["how"]} for m in matched],
-            "unmatched": unmatched, "rows": rows,
+            "unmatched": unmatched, "rows": rows, "recipes": detail,
             "prepare": [{"name": (p.get("ingredient") or {}).get("name", ""),
                          "qty": (p.get("needed_quantity") or {}).get("value"),
                          "unit": (p.get("needed_quantity") or {}).get("unit")} for p in prep],
