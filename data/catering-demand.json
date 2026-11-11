@@ -1,0 +1,125 @@
+{
+  "week": "2026-W47",
+  "range": "2026-11-16 to 2026-11-20",
+  "kitchen": "Remscheid",
+  "note": "Catering demand only. Customer details deliberately left out: this repository is public.",
+  "events": 5,
+  "demand": [
+    {
+      "dish": "Funky Falafel Skewers",
+      "servings": 80
+    },
+    {
+      "dish": "Tricolore Skewers",
+      "servings": 80
+    },
+    {
+      "dish": "Sweet Potato Goat Cheese Salad with Chestnuts & Mango Chilli Dressing",
+      "servings": 40
+    },
+    {
+      "dish": "Veggie Couscous Cup",
+      "servings": 40
+    },
+    {
+      "dish": "Moroccan Couscous Cup",
+      "servings": 40
+    },
+    {
+      "dish": "Chicken Yakitori",
+      "servings": 40
+    },
+    {
+      "dish": "Smoked Salmon Bites",
+      "servings": 40
+    },
+    {
+      "dish": "Greek Grain Lentil Power Bowl",
+      "servings": 30
+    },
+    {
+      "dish": "Buddha Citrus Quinoa Bowl",
+      "servings": 30
+    },
+    {
+      "dish": "Lemon Rice",
+      "servings": 31
+    },
+    {
+      "dish": "Roasted Pepper & Corn with Coriander & Lime",
+      "servings": 31
+    },
+    {
+      "dish": "Shredded Carrot Salad",
+      "servings": 31
+    },
+    {
+      "dish": "Boiled Potatoes with Parsley and Olive Oil",
+      "servings": 28
+    },
+    {
+      "dish": "Roasted Green Beans",
+      "servings": 28
+    },
+    {
+      "dish": "Green Leaves with Cherry Tomatoes and Balsamic Dressing",
+      "servings": 28
+    },
+    {
+      "dish": "Garlic-Herb Stuffed Mushrooms",
+      "servings": 25
+    },
+    {
+      "dish": "Mini Börek",
+      "servings": 25
+    },
+    {
+      "dish": "“South American-style” Beef Stew",
+      "servings": 20
+    },
+    {
+      "dish": "Beef Goulash",
+      "servings": 19
+    },
+    {
+      "dish": "Focaccia Bite - Mortadella",
+      "servings": 15
+    },
+    {
+      "dish": "Mini Raw Cake (Raspberry & Blueberry)",
+      "servings": 15
+    },
+    {
+      "dish": "Mexican-Style Bean and Sweet Potato Chilli",
+      "servings": 6
+    },
+    {
+      "dish": "Cod in Tomato & Olive Sauce",
+      "servings": 5
+    },
+    {
+      "dish": "Zander Fillet with Lemon Butter Sauce",
+      "servings": 5
+    },
+    {
+      "dish": "Caesar Salad with Chicken",
+      "servings": 5
+    },
+    {
+      "dish": "Chilli Sin Carne",
+      "servings": 4
+    },
+    {
+      "dish": "Chicken Club Sandwich - 5 halves",
+      "servings": 3
+    },
+    {
+      "dish": "Panini Sandwich - Eggplant and Red Pesto - 5 halves",
+      "servings": 3
+    },
+    {
+      "dish": "Lentil Club Sandwich 5 halves",
+      "servings": 3
+    }
+  ]
+}
