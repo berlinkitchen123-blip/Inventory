@@ -181,6 +181,14 @@ table.order tbody.item.ordered .name{text-decoration:line-through;color:var(--in
 #calcBody .tag{display:inline-block;font-size:11px;font-weight:600;border-radius:999px;padding:1px 7px;margin-left:6px;background:#3a2f13;color:var(--saffron)}
 #calcBody .tag.warn{background:#3a1f19;color:var(--paprika)}
 @media print{#p-calc .picker,#p-calc .actions,#p-calc #calcTabs{display:none}}
+/* Catering order */
+#p-catering .art{font-variant-numeric:tabular-nums;font-size:13px}
+#p-catering .art a{color:var(--saffron);text-decoration:none}
+#p-catering .art a:hover{text-decoration:underline}
+#p-catering .miss{background:#3a1f19;border:1px solid var(--paprika);border-radius:10px;padding:12px 14px;margin:12px 0}
+#p-catering .miss h3{margin:0 0 6px;font-size:14px;color:var(--paprika)}
+#p-catering .miss li{color:var(--paprika)}
+#p-catering .hint{color:var(--ink-3);font-size:12px}
 </style>
 </head>
 <body>
@@ -227,6 +235,7 @@ table.order tbody.item.ordered .name{text-decoration:line-through;color:var(--in
     <button role="tab" id="t-forecast" data-tab="forecast" aria-controls="p-forecast">Menu &amp; forecast</button>
     <button role="tab" id="t-order" data-tab="order" aria-controls="p-order">Order list</button>
     <button role="tab" id="t-calc" data-tab="calc" aria-controls="p-calc">Order calculator</button>
+    <button role="tab" id="t-catering" data-tab="catering" aria-controls="p-catering">Catering order</button>
     <button role="tab" id="t-yields" data-tab="yields" aria-controls="p-yields">Yields</button>
     <button role="tab" id="t-checks" data-tab="checks" aria-controls="p-checks">Checks</button>
   </nav>
@@ -250,6 +259,7 @@ table.order tbody.item.ordered .name{text-decoration:line-through;color:var(--in
     <section id="p-yields" role="tabpanel" aria-labelledby="t-yields" hidden></section>
     <section id="p-checks" role="tabpanel" aria-labelledby="t-checks" hidden></section>
     <section id="p-calc" role="tabpanel" aria-labelledby="t-calc" hidden></section>
+    <section id="p-catering" role="tabpanel" aria-labelledby="t-catering" hidden></section>
   </main>
   </div>
 </div>
@@ -464,7 +474,7 @@ const day = d => d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric
 const dm = d => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 const stamp = s => new Date(s).toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 const weekNo = d => { const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())); t.setUTCDate(t.getUTCDate() + 4 - (t.getUTCDay() || 7)); return Math.ceil(((t - Date.UTC(t.getUTCFullYear(), 0, 1)) / 864e5 + 1) / 7); };
-const VIEWS = ['forecast', 'order', 'calc', 'yields', 'checks'];
+const VIEWS = ['forecast', 'order', 'calc', 'catering', 'yields', 'checks'];
 const view = () => VIEWS.includes(ST.view) ? ST.view : 'forecast';
 const showDishes = () => ST.showDishes !== false;
 
@@ -520,8 +530,8 @@ function render() {
   const b = $('#sBuffer'); if (document.activeElement !== b) b.value = Math.round(PLAN.buf * 100);
   $('#showDishes').checked = showDishes();
   for (const t of document.querySelectorAll('[data-tab]')) t.setAttribute('aria-selected', String(t.dataset.tab === view()));
-  for (const id of ['forecast', 'order', 'calc', 'yields', 'checks']) $('#p-' + id).hidden = id !== view();
-  ({ forecast: renderForecast, order: renderOrder, calc: renderCalc, yields: renderYields, checks: renderChecks })[view()]();
+  for (const id of ['forecast', 'order', 'calc', 'catering', 'yields', 'checks']) $('#p-' + id).hidden = id !== view();
+  ({ forecast: renderForecast, order: renderOrder, calc: renderCalc, catering: renderCatering, yields: renderYields, checks: renderChecks })[view()]();
 }
 
 function renderWeek() {
@@ -657,6 +667,87 @@ function renderOrder() {
 }
 
 const SRC = { estimate: ['est', 'Estimate, please confirm'], input: ['est', 'No yield in DB, using input weight'], confirmed: ['ok', 'Confirmed'], db: ['db', 'From DB'] };
+let CATER = { state: 'idle', data: null, error: '' };
+
+// The catering order the BOM workflow wrote into Firebase. Read once, when the tab opens.
+async function loadCatering() {
+  if (CATER.state !== 'idle' || !STORE || !USER) return;
+  CATER.state = 'loading'; renderCatering();
+  try {
+    const key = await STORE.read('apicbase/orders/latest');
+    if (!key) throw new Error('no order has been calculated yet');
+    const data = await STORE.read('apicbase/orders/' + key);
+    if (!data) throw new Error('order ' + key + ' is empty');
+    CATER.data = data; CATER.state = 'ok';
+  } catch (e) {
+    CATER.error = e.message || String(e); CATER.state = 'error';
+  }
+  renderCatering();
+}
+
+function supLink(supplier, article, name) {
+  const f = SUP_SEARCH[supplier];
+  const q = encodeURIComponent(article || name || '');
+  return f ? f(article || name) : `https://www.google.com/search?q=${encodeURIComponent(supplier)}+${q}`;
+}
+
+function renderCatering() {
+  const host = $('#p-catering');
+  loadCatering();
+  if (CATER.state === 'loading' || CATER.state === 'idle') {
+    host.innerHTML = '<p class="cempty">Loading the catering order…</p>'; return;
+  }
+  if (CATER.state === 'error') {
+    host.innerHTML = `<div class="miss"><h3>No catering order to show</h3><p>${esc(CATER.error)}.</p>
+      <p class="hint">Run <b>Actions → Catering order (BOM)</b> in GitHub, then reload this page.
+      If it says permission denied, the <code>apicbase</code> rule is not published in Firebase yet.</p></div>`;
+    return;
+  }
+  const d = CATER.data, rows = d.rows || [], un = d.unmatched || [], prep = d.prepare || [];
+  const bySup = {};
+  for (const r of rows) (bySup[r.supplier] = bySup[r.supplier] || []).push(r);
+  const sups = Object.keys(bySup).sort();
+
+  host.innerHTML = `
+    <div class="toolbar">
+      <div class="chips">
+        <span class="chip">${esc(d.week || '')} ${esc(d.range || '')}</span>
+        <span class="chip">${d.events || '?'} events</span>
+        <span class="chip">${nf(d.portions || 0, 0)} portions</span>
+        <span class="chip">${rows.length} ingredients</span>
+        <span class="chip">${sups.length} suppliers</span>
+        <span class="chip">stock <b>not</b> subtracted</span>
+        ${un.length ? `<span class="chip" style="color:var(--paprika)">${un.length} dishes not ordered</span>` : ''}
+      </div>
+      <div class="actions"><button class="btn" id="printBtn">Print</button></div>
+    </div>
+    ${un.length ? `<div class="miss"><h3>Not in this order — ${un.length} dish(es), ${nf(un.reduce((a, u) => a + (u.servings || 0), 0), 0)} portions</h3>
+      <ul>${un.map(u => `<li><b>${esc(u.dish)}</b> · ${u.servings} portions · ${esc(u.why || '')}${
+        (u.candidates || []).length ? ` — closest: ${esc((u.candidates || []).join(', '))}` : ''}</li>`).join('')}</ul>
+      <p class="hint">Fix the dish name in the BEO, or add the recipe in Apicbase, then run the order again.</p></div>` : ''}
+    ${sups.map(s => `<section class="sup${s.startsWith('-') ? ' none' : ''}">
+      <h2>${esc(s)} <span class="count">${bySup[s].length} item${bySup[s].length === 1 ? '' : 's'}</span></h2>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Ingredient</th><th class="num">Need</th><th>Unit</th><th>Article no.</th><th>Order</th></tr></thead>
+        <tbody>${bySup[s].map(r => `<tr>
+          <td><b>${esc(r.name)}</b>${r.orderable ? '' : '<span class="tag warn">not orderable</span>'}
+            ${r.packProduct ? `<span class="sub2">${esc(r.packProduct)}</span>` : ''}</td>
+          <td class="num qty">${nf(+r.qty || 0, (+r.qty || 0) < 10 ? 2 : 0)}</td>
+          <td>${esc(r.unit || '')}</td>
+          <td class="art">${r.article
+            ? `<a href="${esc(supLink(s, r.article, r.name))}" target="_blank" rel="noopener">${esc(r.article)}</a>`
+            : '<span class="muted">—</span>'}</td>
+          <td>${esc(r.order || '')}</td></tr>`).join('')}</tbody>
+      </table></div></section>`).join('')}
+    ${prep.length ? `<section class="sup"><h2>Prepare in the kitchen <span class="count">${prep.length}</span></h2>
+      <div class="tablewrap"><table><thead><tr><th>Sub-recipe</th><th class="num">Needed</th><th>Unit</th></tr></thead>
+      <tbody>${prep.map(x => `<tr><td><b>${esc(x.name)}</b></td>
+        <td class="num qty">${nf(+x.qty || 0, 0)}</td><td>${esc(x.unit || '')}</td></tr>`).join('')}</tbody>
+      </table></div></section>` : ''}
+    <p class="hint" style="margin-top:18px">Calculated ${esc((d.generated || '').replace('T', ' ').slice(0, 16))} UTC
+      from the Apicbase BOM for ${esc(d.outlet || '')}. Quantities are the full requirement.</p>`;
+}
+
 function renderYields() {
   const rank = { estimate: 0, input: 1, db: 2, confirmed: 3 };
   const subs = [...PLAN.subs].sort((a, b) => rank[a.source] - rank[b.source] || b.cooked - a.cooked);
@@ -1139,6 +1230,7 @@ async function firebaseStore(config) {
     refresh: async () => { await auth.currentUser.reload(); await auth.currentUser.getIdToken(true); return auth.currentUser; },
     signOut: () => A.signOut(auth),
     listen: (cb, onErr) => D.onValue(D.ref(db, FB_ROOT), snap => cb(snap.val() || {}), onErr),
+    read: path => D.get(D.ref(db, path)).then(s => s.val()),
     connected: cb => D.onValue(D.ref(db, '.info/connected'), snap => cb(!!snap.val())),
     update: changes => D.update(D.ref(db, FB_ROOT), changes),
     now: () => D.serverTimestamp(),
