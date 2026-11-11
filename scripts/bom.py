@@ -179,6 +179,18 @@ def main():
         "consider_outstanding_orders": False,
     })
 
+    # The BOM's supplier_packages carry no article number - that lives on the
+    # supplier_packages endpoint. Pull it once and join on the package id.
+    print("fetching supplier article numbers…")
+    art = {}
+    for sp in pages("/products/supplier_packages/"):
+        art[str(sp.get("id"))] = {
+            "article": sp.get("supplier_article_number") or "",
+            "product": sp.get("supplier_product_name") or "",
+            "stockItem": (sp.get("stock_item") or {}).get("name") or "",
+        }
+    print(f"  {sum(1 for v in art.values() if v['article'])} of {len(art)} packages have an article number")
+
     rows = []
     for ing in bom.get("ingredients") or []:
         need = (ing.get("needed_quantity") or {})
@@ -186,21 +198,23 @@ def main():
                      if str(p.get("id")) == str(ing.get("cheapest_package_id"))),
                     (ing.get("supplier_packages") or [None])[0])
         sup = (pack or {}).get("supplier") or {}
+        extra = art.get(str((pack or {}).get("id")), {})
         rows.append({
             "name": ing.get("name") or "", "cat": ing.get("category") or "",
             "qty": need.get("value"), "unit": need.get("unit") or "",
             "supplier": sup.get("name") or "- no supplier -",
-            "article": (pack or {}).get("supplier_article_number") or "",
+            "article": extra.get("article") or "",
             "supplierEmail": sup.get("email") or "",
             "order": (pack or {}).get("order_description") or (pack or {}).get("order_quantity") or "",
             "pack": (pack or {}).get("name") or "",
-            "packProduct": (pack or {}).get("supplier_product_name") or "",
+            "packProduct": extra.get("product") or extra.get("stockItem") or (pack or {}).get("name") or "",
             "price": (pack or {}).get("order_total_price"),
             "orderable": bool(ing.get("is_orderable")),
         })
     rows.sort(key=lambda r: (r["supplier"], r["name"]))
 
-    print(f"ORDER - {len(rows)} ingredients, stock NOT subtracted")
+    print(f"ORDER - {len(rows)} ingredients, "
+          f"{sum(1 for r in rows if r['article'])} with an article number, stock NOT subtracted")
     print("-" * 72)
     sup = None
     for r in rows:
