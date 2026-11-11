@@ -1,0 +1,43 @@
+name: Sync Apicbase to Firebase
+
+# Recipes, ingredients, supplier packs and menus -> stock-f24, under apicbase/.
+# Nothing is committed to this repository: supplier prices stay behind the login.
+on:
+  schedule:
+    - cron: "12 5 * * *"   # every morning, before the Thursday order check
+  workflow_dispatch:
+    inputs:
+      full:
+        description: "Re-pull everything instead of only what changed"
+        type: boolean
+        default: false
+      max_recipes:
+        description: "Stop after this many recipe details (0 = all)"
+        type: string
+        default: "0"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: apicbase-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install "google-auth==2.35.0"
+      - name: Sync
+        run: |
+          python scripts/sync_apicbase.py \
+            ${{ inputs.full && '--full' || '' }} \
+            --max-recipes "${{ inputs.max_recipes || 0 }}"
+        env:
+          APICBASE_TOKEN: ${{ secrets.APICBASE_TOKEN }}
+          FIREBASE_SA: ${{ secrets.FIREBASE_SA }}
