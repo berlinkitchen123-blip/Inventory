@@ -157,6 +157,30 @@ table.order tbody.item.ordered .name{text-decoration:line-through;color:var(--in
   .chip{border-color:#bbb;background:none}
   input,select{border:0!important;background:none!important;color:#000!important;padding:0;appearance:none}
 }
+/* Order calculator */
+.picker{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;margin-bottom:4px}
+.picker h3{margin:0 0 9px;font-size:14px;font-weight:800}
+.picker input[type=search]{width:100%}
+.cresults{position:absolute;z-index:30;left:16px;right:16px;top:72px;max-height:320px;overflow:auto;background:var(--panel-2);border:1px solid var(--saffron);border-radius:10px}
+.cresults button{display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:9px 12px;font-size:14px;color:var(--ink)}
+.cresults button:hover,.cresults button.on{background:#27382f}
+.cresults .t{color:var(--ink-3);font-size:12px;margin-left:8px}
+.cresults .none{padding:12px;color:var(--ink-3);font-size:13px}
+.cpicked{margin-top:12px;display:flex;flex-direction:column;gap:6px}
+.cpicked .crow{display:flex;align-items:center;gap:10px;background:var(--panel-2);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.cpicked .crow .nm{flex:1;min-width:0;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cpicked .crow .pt{font-size:12px;color:var(--ink-3)}
+.cpicked .crow input[type=number]{width:88px}
+.cpicked .crow .x{background:none;border:0;color:var(--ink-3);font-size:19px;line-height:1;padding:0 4px}
+.cpicked .crow .x:hover{color:var(--paprika)}
+.cempty{color:var(--ink-3);font-size:14px;padding:10px 2px}
+#calcTabs{margin:14px 0 10px}
+#calcBody td.qty{font-weight:800;font-size:16px;white-space:nowrap}
+#calcBody td.packs{font-weight:800;color:var(--saffron)}
+#calcBody .sub2{display:block;font-size:12px;color:var(--ink-3);margin-top:2px}
+#calcBody .tag{display:inline-block;font-size:11px;font-weight:600;border-radius:999px;padding:1px 7px;margin-left:6px;background:#3a2f13;color:var(--saffron)}
+#calcBody .tag.warn{background:#3a1f19;color:var(--paprika)}
+@media print{#p-calc .picker,#p-calc .actions,#p-calc #calcTabs{display:none}}
 </style>
 </head>
 <body>
@@ -202,6 +226,7 @@ table.order tbody.item.ordered .name{text-decoration:line-through;color:var(--in
   <nav class="tabs" role="tablist" aria-label="Sections">
     <button role="tab" id="t-forecast" data-tab="forecast" aria-controls="p-forecast">Menu &amp; forecast</button>
     <button role="tab" id="t-order" data-tab="order" aria-controls="p-order">Order list</button>
+    <button role="tab" id="t-calc" data-tab="calc" aria-controls="p-calc">Order calculator</button>
     <button role="tab" id="t-yields" data-tab="yields" aria-controls="p-yields">Yields</button>
     <button role="tab" id="t-checks" data-tab="checks" aria-controls="p-checks">Checks</button>
   </nav>
@@ -224,6 +249,7 @@ table.order tbody.item.ordered .name{text-decoration:line-through;color:var(--in
     </section>
     <section id="p-yields" role="tabpanel" aria-labelledby="t-yields" hidden></section>
     <section id="p-checks" role="tabpanel" aria-labelledby="t-checks" hidden></section>
+    <section id="p-calc" role="tabpanel" aria-labelledby="t-calc" hidden></section>
   </main>
   </div>
 </div>
@@ -349,6 +375,54 @@ function computePlan(db, set, st, week) {
   });
   return { menus: wm.menus, onDay: wm.onDay, dishes, rows, subs, buf, portionsSum: dishes.reduce((a, d) => a + d.portions, 0) };
 }
+
+// Ad-hoc order: the dishes and portions you choose. No stock, no outstanding orders - the need IS the order.
+function buildOrder(db, set, st, picks, bufferPct) {
+  const buf = pick(bufferPct) / 100;
+  const chosen = (picks || []).filter(p => db.dishes[p.id] && pick(p.portions) > 0);
+  const byDish = {}, units = {}, cooked = {}, est = {}, perPortion = {};
+  const add = (dish, name, q, unit, flag) => {
+    const key = unit === 'pcs' ? name + ' (pcs)' : name;
+    const m = byDish[key] = byDish[key] || {};
+    m[dish] = (m[dish] || 0) + q;
+    (units[key] = units[key] || {})[unit] = true;
+    if (flag) est[key] = true;
+  };
+  const explode = (dish, sub, q, depth, flag) => {
+    cooked[sub] = (cooked[sub] || 0) + q;
+    const s = (db.subs || {})[sub], y = yieldInfo(sub, db, set, st);
+    if (!s || depth > 6 || !(y.value > 0)) return;
+    const f = flag || y.source === 'estimate' || y.source === 'input', batches = q / y.value;
+    for (const [n, qq, u, k] of s.lines) k === 'S' ? explode(dish, n, qq * batches, depth + 1, f) : add(dish, n, qq * batches, u, f);
+  };
+  for (const p of chosen) {
+    const n = pick(p.portions);
+    perPortion[p.id] = (db.lines[p.id] || []).map(([nm, k, q, u]) => ({ name: nm, kind: k, each: q, unit: u, total: q * n }));
+    for (const [nm, k, q, u] of (db.lines[p.id] || [])) k === 'S' ? explode(p.id, nm, q * n, 1, false) : add(p.id, nm, q * n, u, false);
+  }
+  const portionsById = Object.fromEntries(chosen.map(p => [p.id, pick(p.portions)]));
+  const rows = Object.keys(byDish).filter(k => !WATER.test(k)).map(key => {
+    const pcs = key.endsWith(' (pcs)'), name = pcs ? key.slice(0, -6) : key;
+    const custom = (set.units || {})[name];
+    const allMl = Object.keys(units[key]).every(u => u === 'ml');
+    const [unit, factor] = pcs ? ['pcs', 1] : custom ? custom : allMl ? ['L', 1000] : ['kg', 1000];
+    const parts = Object.entries(byDish[key]).map(([id, q]) => ({ id, name: db.dishes[id].name, portions: portionsById[id], need: q / factor * (1 + buf) }))
+      .sort((a, b) => b.need - a.need);
+    const need = parts.reduce((a, x) => a + x.need, 0);
+    const pack = pick((st.packs || {})[name], (set.packs || {})[name]);
+    const mine = (st.suppliers || {})[name];
+    const supplier = mine !== undefined && mine !== null ? mine : ((set.suppliers || {})[name] || '');
+    return { key, name, unit, need, pack, packs: pack > 0 ? Math.ceil(need / pack - 1e-9) : null,
+      supplier: supplier || NO_SUPPLIER, dishes: parts,
+      group: (set.groups || {})[name] || ruleGroup((db.ingredients || {})[name]), estimate: !!est[key],
+      note: (set.notes || {})[name] || '', packInfo: (set.packInfo || {})[name] || '' };
+  }).sort((a, b) => a.name.localeCompare(b.name));
+  const subs = Object.keys(cooked).map(name => {
+    const y = yieldInfo(name, db, set, st);
+    return { name, cooked: cooked[name], yield: y.value, source: y.source, why: y.why, batches: y.value > 0 ? cooked[name] / y.value : 0 };
+  }).sort((a, b) => b.cooked - a.cooked);
+  return { rows, subs, chosen, perPortion, buf, portionsSum: chosen.reduce((a, x) => a + pick(x.portions), 0) };
+}
 /*CORE-END*/
 
 const $ = s => document.querySelector(s);
@@ -374,7 +448,7 @@ const ST = {}; // team data (fc, stock, suppliers, packs, yields, buffer) from F
     if (old.length) OLD = Object.fromEntries(old.map(k => [k, s[k]]));
   } catch (e) { /* nothing saved */ }
 })();
-const save = () => { try { localStorage.setItem(KEY, JSON.stringify({ view: ST.view, showDishes: ST.showDishes })); } catch (e) { /* storage blocked */ } };
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify({ view: ST.view, showDishes: ST.showDishes, calc: (typeof CALC === 'object' && CALC) ? CALC.picks : undefined })); } catch (e) { /* storage blocked */ } };
 
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const nf = (v, d) => Number(v).toLocaleString('en-GB', { minimumFractionDigits: d, maximumFractionDigits: d });
@@ -390,7 +464,7 @@ const day = d => d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric
 const dm = d => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 const stamp = s => new Date(s).toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 const weekNo = d => { const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())); t.setUTCDate(t.getUTCDate() + 4 - (t.getUTCDay() || 7)); return Math.ceil(((t - Date.UTC(t.getUTCFullYear(), 0, 1)) / 864e5 + 1) / 7); };
-const VIEWS = ['forecast', 'order', 'yields', 'checks'];
+const VIEWS = ['forecast', 'order', 'calc', 'yields', 'checks'];
 const view = () => VIEWS.includes(ST.view) ? ST.view : 'forecast';
 const showDishes = () => ST.showDishes !== false;
 
@@ -446,8 +520,8 @@ function render() {
   const b = $('#sBuffer'); if (document.activeElement !== b) b.value = Math.round(PLAN.buf * 100);
   $('#showDishes').checked = showDishes();
   for (const t of document.querySelectorAll('[data-tab]')) t.setAttribute('aria-selected', String(t.dataset.tab === view()));
-  for (const id of ['forecast', 'order', 'yields', 'checks']) $('#p-' + id).hidden = id !== view();
-  ({ forecast: renderForecast, order: renderOrder, yields: renderYields, checks: renderChecks })[view()]();
+  for (const id of ['forecast', 'order', 'calc', 'yields', 'checks']) $('#p-' + id).hidden = id !== view();
+  ({ forecast: renderForecast, order: renderOrder, calc: renderCalc, yields: renderYields, checks: renderChecks })[view()]();
 }
 
 function renderWeek() {
@@ -695,6 +769,195 @@ async function refreshDB() {
     showError('DB refresh failed: ' + e.message);
     setTimeout(() => showError(''), 4000);
   }
+}
+
+
+/* ---------- Order calculator: pick dishes, type portions, see what to buy. Stock is not subtracted. ---------- */
+const CALC = { picks: [], tab: 'order', q: '', hilite: -1, buffer: null, plan: null };
+(() => { try { const s = JSON.parse(localStorage.getItem(KEY) || '{}'); if (Array.isArray(s.calc)) CALC.picks = s.calc; } catch (e) { /* nothing saved */ } })();
+let CATALOG = 'idle'; // idle | loading | ok | none - the wider dish list, loaded the first time this tab opens
+
+async function loadCatalog() {
+  if (CATALOG !== 'idle') return;
+  CATALOG = 'loading'; paintCalcPicker();
+  try {
+    const r = await fetch('data/dish-catalog.json', { cache: 'no-store' });
+    if (!r.ok) throw new Error(String(r.status));
+    const c = await r.json();
+    DB.dishes = Object.assign({}, c.dishes, DB.dishes);   // the NRW snapshot wins where both have a dish
+    DB.lines = Object.assign({}, c.lines, DB.lines);
+    DB.subs = Object.assign({}, c.subs, DB.subs);
+    DB.ingredients = Object.assign({}, c.ingredients, DB.ingredients);
+    CATALOG = 'ok';
+  } catch (e) { CATALOG = 'none'; }
+  paintCalcPicker(); paintCalcBody();
+}
+
+function calcBuffer() { return CALC.buffer === null || CALC.buffer === '' ? Math.round(pick(PLAN && PLAN.buf) * 100) : CALC.buffer; }
+
+function calcHits() {
+  const q = String(CALC.q || '').trim().toLowerCase();
+  if (!q) return [];
+  const words = q.split(/\s+/), taken = new Set(CALC.picks.map(p => p.id));
+  return Object.entries(DB.dishes)
+    .filter(([id, d]) => !taken.has(id) && d && d.name && words.every(w => d.name.toLowerCase().includes(w)))
+    .sort((a, b) => a[1].name.length - b[1].name.length || a[1].name.localeCompare(b[1].name))
+    .slice(0, 40);
+}
+
+function renderCalc() {
+  const host = $('#p-calc');
+  if (!host.dataset.built) {
+    host.dataset.built = '1';
+    host.innerHTML = `
+      <div class="picker">
+        <h3>Dishes</h3>
+        <input type="search" id="calcSearch" placeholder="Search a dish, e.g. Butter Chicken" autocomplete="off" aria-label="Search dishes">
+        <div class="cresults" id="calcResults" hidden></div>
+        <div class="cpicked" id="calcPicked"></div>
+      </div>
+      <div class="toolbar">
+        <div class="chips" id="calcChips"></div>
+        <div class="actions">
+          <label class="toggle">Buffer <input type="number" id="calcBuffer" min="0" max="100" step="1"> %</label>
+          <button class="btn" id="calcClear">Clear</button>
+          <button class="btn" id="calcPrint">Print</button>
+          <button class="btn primary" id="calcXlsx">Download Excel</button>
+        </div>
+      </div>
+      <nav class="tabs" id="calcTabs" role="tablist">
+        <button role="tab" data-ctab="order" aria-selected="true">Order list</button>
+        <button role="tab" data-ctab="dish" aria-selected="false">Per dish</button>
+        <button role="tab" data-ctab="prep" aria-selected="false">Prep list</button>
+      </nav>
+      <div id="calcBody"></div>`;
+  }
+  loadCatalog();
+  const b = $('#calcBuffer'); if (document.activeElement !== b) b.value = calcBuffer();
+  paintCalcPicker(); paintCalcBody();
+}
+
+function paintCalcPicker() {
+  const box = $('#calcResults'); if (!box) return;
+  const hits = calcHits();
+  if (!String(CALC.q || '').trim()) { box.hidden = true; box.innerHTML = ''; }
+  else {
+    box.hidden = false;
+    box.innerHTML = hits.length ? hits.map(([id, d], i) => {
+      const n = (DB.lines[id] || []).length;
+      return `<button data-add="${esc(id)}" class="${i === CALC.hilite ? 'on' : ''}">${esc(d.name)}<span class="t">${esc(d.type || '')} &middot; ${d.portion ? d.portion + ' g' : '?'} &middot; ${n} ingredient${n === 1 ? '' : 's'}</span>${n ? '' : ' <span class="tag warn">no recipe</span>'}</button>`;
+    }).join('') : '<div class="none">No dish with that name.</div>';
+  }
+  const picked = $('#calcPicked');
+  const note = CATALOG === 'loading' ? '<div class="cempty">Loading the full dish list&hellip;</div>'
+    : CATALOG === 'none' ? '<div class="cempty">Only this week’s NRW dishes are searchable. Run <b>scripts/export_dishes.py</b> once to get every dish.</div>' : '';
+  picked.innerHTML = CALC.picks.length ? CALC.picks.map(p => {
+    const d = DB.dishes[p.id] || { name: p.id };
+    const n = (DB.lines[p.id] || []).length;
+    return `<div class="crow"><span class="nm">${esc(d.name)}</span>
+      <span class="pt">${n ? n + ' ingredients' : '<span class="tag warn">no recipe</span>'}</span>
+      <input type="number" min="0" step="1" value="${pick(p.portions)}" data-portions="${esc(p.id)}" inputmode="numeric" aria-label="Portions of ${esc(d.name)}">
+      <span class="pt">portions</span>
+      <button class="x" data-drop="${esc(p.id)}" title="Remove" aria-label="Remove ${esc(d.name)}">&times;</button></div>`;
+  }).join('') : '<div class="cempty">No dishes yet. Search above and pick one.</div>';
+  if (note) picked.insertAdjacentHTML('beforeend', note);
+}
+
+function paintCalcBody() {
+  if (!$('#calcBody')) return;
+  const P = CALC.plan = buildOrder(DB, SET, ST, CALC.picks, calcBuffer());
+  const sups = new Set(P.rows.map(r => r.supplier)).size;
+  $('#calcChips').innerHTML = [
+    `<span class="chip">${P.chosen.length} dish${P.chosen.length === 1 ? '' : 'es'}</span>`,
+    `<span class="chip">${nf(P.portionsSum, 0)} portions</span>`,
+    `<span class="chip">${P.rows.length} ingredients</span>`,
+    `<span class="chip">${sups} supplier${sups === 1 ? '' : 's'}</span>`,
+    P.buf ? `<span class="chip">buffer +${Math.round(P.buf * 100)}%</span>` : '',
+    '<span class="chip">stock <b>not</b> subtracted</span>'
+  ].join('');
+  for (const b of document.querySelectorAll('#calcTabs button')) b.setAttribute('aria-selected', String(b.dataset.ctab === CALC.tab));
+  $('#calcBody').innerHTML = CALC.tab === 'order' ? calcOrderHtml(P) : CALC.tab === 'dish' ? calcDishHtml(P) : calcPrepHtml(P);
+}
+
+function calcOrderHtml(P) {
+  if (!P.rows.length) return '<p class="cempty">Pick at least one dish and type the portions.</p>';
+  return bySupplier(P.rows).map(([sup, rows]) => `
+    <section class="sup${sup === NO_SUPPLIER ? ' none' : ''}">
+      <h2>${esc(sup)} <span class="count">${rows.length} item${rows.length === 1 ? '' : 's'}</span></h2>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Ingredient</th><th class="num">To order</th><th>Unit</th><th class="num">Pack size</th><th class="num">Packs</th><th>Group</th></tr></thead>
+        <tbody>${rows.map(r => `<tr>
+          <td><b>${esc(r.name)}</b>${r.estimate ? '<span class="tag">yield estimate</span>' : ''}${r.packInfo ? `<span class="sub2">${esc(r.packInfo)}</span>` : ''}${r.note ? `<span class="sub2">${esc(r.note)}</span>` : ''}</td>
+          <td class="num qty">${qty(r.need, r.unit)}</td>
+          <td>${esc(r.unit)}</td>
+          <td class="num">${r.pack ? nf(r.pack, r.pack < 1 ? 2 : 1) : '&mdash;'}</td>
+          <td class="num packs">${r.packs == null ? '&mdash;' : r.packs}</td>
+          <td class="small">${esc(r.group)}</td></tr>`).join('')}</tbody>
+      </table></div>
+    </section>`).join('');
+}
+
+function calcDishHtml(P) {
+  if (!P.chosen.length) return '<p class="cempty">Pick at least one dish and type the portions.</p>';
+  return P.chosen.map(p => {
+    const d = DB.dishes[p.id], lines = P.perPortion[p.id] || [], n = pick(p.portions);
+    return `<section class="sup"><h2>${esc(d.name)} <span class="count">${nf(n, 0)} portions</span></h2>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Line</th><th class="num">Per portion</th><th class="num">&times; ${nf(n, 0)}</th><th>Unit</th></tr></thead>
+        <tbody>${lines.length ? lines.map(l => `<tr>
+          <td><b>${esc(l.name)}</b>${l.kind === 'S' ? '<span class="tag">sub-recipe</span>' : ''}</td>
+          <td class="num">${nf(l.each, l.each < 10 ? 2 : 0)}</td><td class="num qty">${nf(l.total, 0)}</td><td>${esc(l.unit)}</td></tr>`).join('')
+        : '<tr><td colspan="4">This dish has no recipe lines in the database.</td></tr>'}</tbody>
+      </table></div></section>`;
+  }).join('');
+}
+
+function calcPrepHtml(P) {
+  if (!P.subs.length) return '<p class="cempty">None of these dishes uses a sub-recipe.</p>';
+  return `<section class="sup"><h2>Make in the kitchen <span class="count">${P.subs.length}</span></h2>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Sub-recipe</th><th class="num">Needed</th><th class="num">Batch yield</th><th class="num">Batches</th><th>Yield from</th></tr></thead>
+      <tbody>${P.subs.map(s => `<tr>
+        <td><b>${esc(s.name)}</b>${s.why ? `<span class="sub2">${esc(s.why)}</span>` : ''}</td>
+        <td class="num qty">${nf(s.cooked / 1000, 2)} kg</td>
+        <td class="num">${s.yield ? nf(s.yield, 0) + ' g' : '&mdash;'}</td>
+        <td class="num packs">${s.yield ? nf(s.batches, 2) : '&mdash;'}</td>
+        <td class="small">${esc(s.source)}${s.source === 'estimate' || s.source === 'input' ? '<span class="tag">check</span>' : ''}</td>
+      </tr>`).join('')}</tbody></table></div></section>`;
+}
+
+function calcAdd(id) {
+  if (!CALC.picks.some(p => p.id === id)) CALC.picks.push({ id, portions: 50 });
+  CALC.q = ''; CALC.hilite = -1;
+  const s = $('#calcSearch'); if (s) s.value = '';
+  save(); paintCalcPicker(); paintCalcBody();
+  const last = document.querySelector('#calcPicked .crow:last-of-type input[data-portions]');
+  if (last) { last.focus(); last.select(); }
+}
+
+async function exportCalcExcel() {
+  let X;
+  try { X = await loadXLSX(); } catch (e) { alert('Excel library could not load. Check internet connection.'); return; }
+  const P = CALC.plan;
+  if (!P || !P.rows.length) { alert('Pick some dishes first.'); return; }
+  const wb = X.utils.book_new();
+  const order = [['Ingredient', 'To order', 'Unit', 'Pack size', 'Packs', 'Supplier', 'Group', 'Pack info']];
+  for (const [sup, rows] of bySupplier(P.rows))
+    for (const r of rows) order.push([r.name, q2(r.need, r.unit), r.unit, r.pack || '', r.packs == null ? '' : r.packs, sup, r.group, r.packInfo]);
+  X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet(order), 'Order');
+  const byd = [['Ingredient', 'Unit', 'Dish', 'Portions', 'Need']];
+  for (const r of P.rows) for (const d of r.dishes) byd.push([r.name, r.unit, d.name, d.portions, q2(d.need, r.unit)]);
+  X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet(byd), 'By dish');
+  const per = [['Dish', 'Portions', 'Line', 'Kind', 'Per portion', 'Total', 'Unit']];
+  for (const p of P.chosen) for (const l of (P.perPortion[p.id] || []))
+    per.push([DB.dishes[p.id].name, pick(p.portions), l.name, l.kind === 'S' ? 'sub-recipe' : 'ingredient', l.each, Math.round(l.total * 100) / 100, l.unit]);
+  X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet(per), 'Per dish');
+  if (P.subs.length) {
+    const pr = [['Sub-recipe', 'Needed (kg)', 'Batch yield (g)', 'Batches', 'Yield from']];
+    for (const s of P.subs) pr.push([s.name, Math.round(s.cooked / 10) / 100, s.yield || '', Math.round(s.batches * 100) / 100, s.source]);
+    X.utils.book_append_sheet(wb, X.utils.aoa_to_sheet(pr), 'Prep list');
+  }
+  X.writeFile(wb, `order-calculator-${new Date().toISOString().slice(0, 10)}.xlsx`);
 }
 
 function loadXLSX() { // ponytail: Excel library loads only when someone downloads
@@ -991,6 +1254,7 @@ document.addEventListener('change', e => {
   if (!el.closest('#app')) return;
   const val = el.value === '' || !Number.isFinite(+el.value) || +el.value < 0 ? null : +el.value;
   const wk = PLAN.week.key;
+  if (el.id === 'calcSearch' || el.id === 'calcBuffer' || 'portions' in d) return; // the calculator saves its own fields as you type
   if ('fc' in d) { const [dayIso, id] = d.fc.split('|'); put({ [`forecast/${dayIso}/${id}`]: val }, 'forecast'); }
   else if ('fill' in d) {
     const x = PLAN.dishes.find(t => t.id === d.fill), ch = {};
@@ -1023,6 +1287,12 @@ document.addEventListener('click', e => {
   else if (b.id === 'clearWeek' && confirm(`Clear the forecast for ${PLAN.week.label}? This clears it for the whole team.`)) {
     const ch = {}; for (const d of PLAN.week.days) ch[`forecast/${d}`] = null; put(ch, 'forecast cleared'); rerenderSoon();
   }
+  else if (b.dataset.add) calcAdd(b.dataset.add);
+  else if (b.dataset.drop) { CALC.picks = CALC.picks.filter(x => x.id !== b.dataset.drop); save(); paintCalcPicker(); paintCalcBody(); }
+  else if (b.dataset.ctab) { CALC.tab = b.dataset.ctab; paintCalcBody(); }
+  else if (b.id === 'calcClear') { CALC.picks = []; save(); paintCalcPicker(); paintCalcBody(); }
+  else if (b.id === 'calcPrint') window.print();
+  else if (b.id === 'calcXlsx') exportCalcExcel();
   else if (b.id === 'signOut') STORE.signOut();
   else if (b.id === 'aSignup') {
     const c = creds(); if (!c) return;
@@ -1051,6 +1321,23 @@ $('#authForm').addEventListener('submit', e => {
   STORE.signIn(c.email, c.pass).then(() => authMsg('')).catch(err => authMsg(friendly(err), true));
 });
 $('#search').addEventListener('input', e => { SEARCH = e.target.value; renderOrder(); });
+document.addEventListener('input', e => { // the calculator updates while you type; the rest of the page saves on blur
+  const el = e.target;
+  if (el.id === 'calcSearch') { CALC.q = el.value; CALC.hilite = -1; paintCalcPicker(); }
+  else if (el.id === 'calcBuffer') { CALC.buffer = el.value; paintCalcBody(); }
+  else if (el.dataset && 'portions' in el.dataset) {
+    const x = CALC.picks.find(y => y.id === el.dataset.portions);
+    if (x) { x.portions = el.value; save(); paintCalcBody(); }
+  }
+});
+document.addEventListener('keydown', e => {
+  if (e.target.id !== 'calcSearch') return;
+  const hits = calcHits();
+  if (e.key === 'ArrowDown') { CALC.hilite = Math.min(CALC.hilite + 1, hits.length - 1); paintCalcPicker(); e.preventDefault(); }
+  else if (e.key === 'ArrowUp') { CALC.hilite = Math.max(CALC.hilite - 1, 0); paintCalcPicker(); e.preventDefault(); }
+  else if (e.key === 'Enter' && hits.length) { calcAdd(hits[Math.max(CALC.hilite, 0)][0]); e.preventDefault(); }
+  else if (e.key === 'Escape') { CALC.q = ''; e.target.value = ''; paintCalcPicker(); }
+});
 document.addEventListener('wheel', e => { const a = document.activeElement; if (a && a.type === 'number' && e.target === a) a.blur(); }, { passive: true }); // scrolling never changes a number
 
 async function loadJSON(path, seedId) {
