@@ -18,27 +18,38 @@ import datetime as dt
 import json
 import os
 import sys
+import threading
 import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor
 
 BASE = (os.getenv("APICBASE_BASE") or "https://api.apicbase.com/api/v2").rstrip("/")
 DB = (os.getenv("FIREBASE_DB_URL")
       or "https://stock-f24-default-rtdb.europe-west1.firebasedatabase.app").rstrip("/")
 ROOT = "apicbase"
 PAGE = 200           # the API caps page_size at 200
-GAP = 0.62           # seconds between requests: ~96/min, under the 100/min limit
+RATE = 90            # requests a minute, under the API's limit of 100
+WORKERS = 3          # parallel recipe detail fetches; the limiter still caps the rate
 CHUNK = 150          # records per Firebase write
+SAVE_EVERY = 300     # write recipes to Firebase this often, so a timeout loses little
 
-_last = [0.0]
+_stamps, _lock = [], threading.Lock()
 
 
 def throttle():
-    wait = GAP - (time.time() - _last[0])
-    if wait > 0:
-        time.sleep(wait)
-    _last[0] = time.time()
+    """Let through at most RATE requests in any rolling minute, across all threads."""
+    while True:
+        with _lock:
+            now = time.time()
+            while _stamps and now - _stamps[0] > 60:
+                _stamps.pop(0)
+            if len(_stamps) < RATE:
+                _stamps.append(now)
+                return
+            sleep = 60 - (now - _stamps[0]) + 0.05
+        time.sleep(max(sleep, 0.05))
 
 
 def api(path, params=None, tries=4):
@@ -238,19 +249,34 @@ def main():
     print(f"  menus          {len(menus)}")
 
     todo = recipes[:args.max_recipes] if args.max_recipes else recipes
-    print(f"  fetching {len(todo)} recipe details "
-          f"(~{len(todo) * GAP / 60:.0f} min)…")
-    recipe_rows, failed = {}, 0
-    for i, r in enumerate(todo, 1):
+    print(f"  fetching {len(todo)} recipe details with {WORKERS} workers "
+          f"(~{len(todo) / RATE:.0f} min at {RATE}/min)…")
+    if not since and not args.dry_run:
+        fb("DELETE", f"{ROOT}/recipes", None, token)   # clear before a full rebuild
+    recipe_rows, failed, done, pending = {}, 0, 0, {}
+
+    def one(r):
         try:
-            detail = api(f"/products/recipes/{r['id']}/")
+            return str(r["id"]), recipe_row(r, api(f"/products/recipes/{r['id']}/"))
         except RuntimeError as e:
-            failed += 1
             print(f"    skipped recipe {r['id']}: {e}"[:160])
-            continue
-        recipe_rows[str(r["id"])] = recipe_row(r, detail)
-        if i % 200 == 0:
-            print(f"    {i}/{len(todo)}")
+            return str(r["id"]), None
+
+    with ThreadPoolExecutor(max_workers=WORKERS) as pool:
+        for rid, row in pool.map(one, todo):
+            done += 1
+            if row is None:
+                failed += 1
+            else:
+                recipe_rows[rid] = row
+                pending[rid] = row
+            if len(pending) >= SAVE_EVERY and not args.dry_run:
+                fb_write(f"{ROOT}/recipes", pending, token, f"recipes ({done}/{len(todo)})")
+                pending = {}
+            elif done % 200 == 0:
+                print(f"    {done}/{len(todo)}")
+    if pending and not args.dry_run:
+        fb_write(f"{ROOT}/recipes", pending, token, f"recipes ({done}/{len(todo)})")
 
     ing_rows = {str(i["id"]): {"name": i.get("name") or "",
                                "category": i.get("category") or "",
@@ -272,9 +298,6 @@ def main():
 
     now = dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
     print()
-    if not since:
-        fb("DELETE", f"{ROOT}/recipes", None, token)
-    fb_write(f"{ROOT}/recipes", recipe_rows, token, "recipes")
     fb_write(f"{ROOT}/ingredients", ing_rows, token, "ingredients")
     fb_write(f"{ROOT}/packs", packs, token, "packs")
     fb_write(f"{ROOT}/menus", menu_rows, token, "menus")
