@@ -1,0 +1,185 @@
+"""Turn a list of dishes and portions into a supplier order, using the Apicbase BOM.
+
+    APICBASE_TOKEN=... python scripts/bom.py --demand data/catering-demand.json
+Options:
+    --outlet NAME     outlet to cost against (default NRW)
+    --prices          include prices in the printed list (off by default: the
+                      Actions log of a public repository is public)
+
+Stock is never subtracted. The Apicbase stock figures are not kept up to date,
+so the quantities printed are the full requirement.
+"""
+import argparse
+import json
+import os
+import re
+import sys
+import time
+import unicodedata
+import urllib.error
+import urllib.parse
+import urllib.request
+
+BASE = (os.getenv("APICBASE_BASE") or "https://api.apicbase.com/api/v2").rstrip("/")
+PAGE, GAP = 200, 0.7
+_last = [0.0]
+
+
+def api(path, params=None, body=None, tries=4):
+    url = BASE + path + ("?" + urllib.parse.urlencode(params) if params else "")
+    data = None if body is None else json.dumps(body).encode("utf-8")
+    for attempt in range(tries):
+        wait = GAP - (time.time() - _last[0])
+        if wait > 0:
+            time.sleep(wait)
+        _last[0] = time.time()
+        req = urllib.request.Request(url, data=data, headers={
+            "Authorization": f"Bearer {os.environ['APICBASE_TOKEN']}",
+            "Accept": "application/json", "Content-Type": "application/json",
+            "User-Agent": "bellabona-nrw-planner/1.0"})
+        try:
+            with urllib.request.urlopen(req, timeout=120) as r:
+                return json.loads(r.read().decode("utf-8"))
+        except urllib.error.HTTPError as e:
+            detail = e.read().decode("utf-8", "replace")[:300]
+            if e.code == 429:
+                time.sleep(float((e.headers or {}).get("X-RateLimit-Wait") or 20)); continue
+            if e.code in (500, 502, 503, 504) and attempt < tries - 1:
+                time.sleep(3 * (attempt + 1)); continue
+            raise RuntimeError(f"{path} -> HTTP {e.code}: {detail}")
+        except Exception as e:
+            if attempt < tries - 1:
+                time.sleep(3 * (attempt + 1)); continue
+            raise RuntimeError(f"{path} -> {type(e).__name__}: {e}")
+
+
+def pages(path, params=None):
+    params = dict(params or {}); params["page_size"] = PAGE
+    page, out = 1, []
+    while True:
+        params["page"] = page
+        d = api(path, params)
+        rows = d.get("results") or []
+        out.extend(rows)
+        if not d.get("next") or not rows:
+            return out
+        page += 1
+
+
+def norm(s):
+    """Fold a dish name so small differences stop mattering."""
+    s = unicodedata.normalize("NFKD", str(s or "")).encode("ascii", "ignore").decode()
+    s = s.lower().replace("&", " and ")
+    s = re.sub(r"[^a-z0-9]+", " ", s)
+    return " ".join(s.split())
+
+
+def resolve(demand, recipes):
+    """Dish name -> recipe. Exact fold first, then a contained match. Never a guess."""
+    by_norm, matched, unmatched = {}, [], []
+    for r in recipes:
+        by_norm.setdefault(norm(r.get("name")), []).append(r)
+    for row in demand:
+        key = norm(row["dish"])
+        hits = by_norm.get(key) or []
+        how = "exact"
+        if not hits:                                   # one name contains the other
+            cands = [r for k, rs in by_norm.items() if k and (k in key or key in k) for r in rs]
+            hits, how = cands, "partial"
+        hits = [h for h in hits if not norm(h.get("name")).endswith(" ct")]   # never use "- CT"
+        if len(hits) == 1:
+            matched.append({**row, "id": hits[0]["id"], "matched": hits[0].get("name"), "how": how})
+        else:
+            unmatched.append({**row, "candidates": [h.get("name") for h in hits][:6],
+                              "why": "no match" if not hits else "ambiguous"})
+    return matched, unmatched
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--demand", required=True)
+    ap.add_argument("--outlet", default="NRW")
+    ap.add_argument("--prices", action="store_true")
+    args = ap.parse_args()
+    if not os.getenv("APICBASE_TOKEN"):
+        sys.exit("APICBASE_TOKEN is not set.")
+
+    spec = json.load(open(args.demand, encoding="utf-8"))
+    demand = spec["demand"]
+    print(f"{spec.get('week','?')} · {spec.get('range','')} · "
+          f"{len(demand)} dishes · {sum(d['servings'] for d in demand)} portions\n")
+
+    outlets = pages("/accounts/outlets/")
+    outlet = next((o for o in outlets if args.outlet.lower() in (o.get("name") or "").lower()), None)
+    if not outlet:
+        sys.exit(f"No outlet matching '{args.outlet}'. Found: {[o.get('name') for o in outlets]}")
+    print(f"outlet: {outlet.get('name')} (id {outlet['id']})")
+
+    recipes = pages("/products/recipes/")
+    print(f"recipes in library: {len(recipes)}")
+    matched, unmatched = resolve(demand, recipes)
+    print(f"matched {len(matched)} of {len(demand)} dishes\n")
+
+    if unmatched:
+        print("=" * 72)
+        print("NOT MATCHED - these are NOT in the order below. Fix the name or add the recipe:")
+        for u in unmatched:
+            print(f"  !! {u['dish']}  ({u['servings']} portions) - {u['why']}")
+            for c in u.get("candidates", []):
+                print(f"       did you mean: {c}")
+        print("=" * 72 + "\n")
+
+    if not matched:
+        sys.exit("Nothing matched, so there is nothing to order.")
+
+    bom = api("/bom/recipes/", body={
+        "outlet_id": outlet["id"],
+        "recipes": [{"id": m["id"], "servings": m["servings"]} for m in matched],
+        "consider_stock": False,              # Apicbase stock is not kept current
+        "consider_outstanding_orders": False,
+    })
+
+    rows = []
+    for ing in bom.get("ingredients") or []:
+        need = (ing.get("needed_quantity") or {})
+        pack = next((p for p in (ing.get("supplier_packages") or [])
+                     if str(p.get("id")) == str(ing.get("cheapest_package_id"))),
+                    (ing.get("supplier_packages") or [None])[0])
+        rows.append({
+            "name": ing.get("name") or "", "cat": ing.get("category") or "",
+            "qty": need.get("value"), "unit": need.get("unit") or "",
+            "supplier": ((pack or {}).get("supplier") or {}).get("name") or "- no supplier -",
+            "order": (pack or {}).get("order_description") or (pack or {}).get("order_quantity") or "",
+            "pack": (pack or {}).get("name") or "",
+            "price": (pack or {}).get("order_total_price"),
+            "orderable": bool(ing.get("is_orderable")),
+        })
+    rows.sort(key=lambda r: (r["supplier"], r["name"]))
+
+    print(f"ORDER - {len(rows)} ingredients, stock NOT subtracted")
+    print("-" * 72)
+    sup = None
+    for r in rows:
+        if r["supplier"] != sup:
+            sup = r["supplier"]
+            print(f"\n## {sup}")
+        line = f"  {r['name'][:44]:<44} {str(r['qty'])[:10]:>10} {r['unit']:<6} {r['order']}"
+        if args.prices and r["price"] is not None:
+            line += f"  EUR {r['price']}"
+        if not r["orderable"]:
+            line += "   (not orderable)"
+        print(line)
+
+    prep = bom.get("stockable_recipes") or []
+    if prep:
+        print(f"\n\nPREPARE IN THE KITCHEN - {len(prep)} sub-recipes (not bought)")
+        print("-" * 72)
+        for p in prep:
+            q = (p.get("needed_quantity") or {})
+            print(f"  {(p.get('ingredient') or {}).get('name','')[:50]:<50} "
+                  f"{str(q.get('value'))[:10]:>10} {q.get('unit') or ''}")
+    print(f"\nDone. {len(unmatched)} dish(es) not matched.")
+
+
+if __name__ == "__main__":
+    main()
