@@ -39,5 +39,6 @@ jobs:
             ${{ inputs.full && '--full' || '' }} \
             --max-recipes "${{ inputs.max_recipes || 0 }}"
         env:
+          PYTHONUNBUFFERED: "1"   # so progress shows in the log while it runs
           APICBASE_TOKEN: ${{ secrets.APICBASE_TOKEN }}
           FIREBASE_SA: ${{ secrets.FIREBASE_SA }}
