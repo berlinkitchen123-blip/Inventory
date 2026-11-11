@@ -51,6 +51,11 @@
       "$other": {
         ".validate": false
       }
+    },
+    "apicbase": {
+      ".read": "auth != null && auth.token.email_verified == true && auth.token.email.toLowerCase().endsWith('@bellabona.com')",
+      ".write": false,
+      ".comment": "Written by scripts/sync_apicbase.py via the service account. Holds supplier prices - never make this public."
     }
   }
 }
