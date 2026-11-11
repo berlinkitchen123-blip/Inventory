@@ -26,8 +26,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - run: pip install "google-auth==2.35.0" "requests==2.32.3"
       - name: Calculate the order
-        run: python scripts/bom.py --demand "${{ inputs.demand }}" --outlet "${{ inputs.outlet }}"
+        run: python scripts/bom.py --demand "${{ inputs.demand }}" --outlet "${{ inputs.outlet }}" --firebase
         env:
           PYTHONUNBUFFERED: "1"
           APICBASE_TOKEN: ${{ secrets.APICBASE_TOKEN }}
+          FIREBASE_SA: ${{ secrets.FIREBASE_SA }}
