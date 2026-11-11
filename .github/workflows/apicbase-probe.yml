@@ -1,0 +1,23 @@
+name: Check the Apicbase API
+
+# Run by hand from the Actions tab. Confirms the token and the endpoint paths
+# before the real sync is built. Writes nothing to the repository.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Probe the Apicbase API
+        run: python scripts/apicbase_probe.py
+        env:
+          APICBASE_TOKEN: ${{ secrets.APICBASE_TOKEN }}
