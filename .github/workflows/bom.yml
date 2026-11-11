@@ -1,0 +1,33 @@
+name: Catering order (BOM)
+
+# Run by hand. Turns data/catering-demand.json into a supplier order using the
+# Apicbase BOM endpoint. Stock is never subtracted.
+on:
+  workflow_dispatch:
+    inputs:
+      demand:
+        description: "Demand file"
+        type: string
+        default: "data/catering-demand.json"
+      outlet:
+        description: "Outlet to cost against"
+        type: string
+        default: "NRW"
+
+permissions:
+  contents: read
+
+jobs:
+  bom:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Calculate the order
+        run: python scripts/bom.py --demand "${{ inputs.demand }}" --outlet "${{ inputs.outlet }}"
+        env:
+          PYTHONUNBUFFERED: "1"
+          APICBASE_TOKEN: ${{ secrets.APICBASE_TOKEN }}
