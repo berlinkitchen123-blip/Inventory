@@ -89,9 +89,22 @@ def resolve(demand, recipes):
         hits = [h for h in hits if not norm(h.get("name")).endswith(" ct")]   # never use "- CT"
         if len(hits) == 1:
             matched.append({**row, "id": hits[0]["id"], "matched": hits[0].get("name"), "how": how})
-        else:
-            unmatched.append({**row, "candidates": [h.get("name") for h in hits][:6],
-                              "why": "no match" if not hits else "ambiguous"})
+            continue
+        cands = [h.get("name") for h in hits][:6]
+        if not cands:                                  # nothing contained: offer the nearest by words
+            want = set(key.split())
+            scored = []
+            for k, rs in by_norm.items():
+                if not k or k.endswith(" ct"):
+                    continue
+                have = set(k.split())
+                shared = len(want & have)
+                if shared:
+                    scored.append((shared / len(want | have), rs[0].get("name")))
+            scored.sort(reverse=True)
+            cands = [n for s, n in scored[:4] if s > 0.25]
+        unmatched.append({**row, "candidates": cands,
+                          "why": "no match" if not hits else "ambiguous"})
     return matched, unmatched
 
 
@@ -126,7 +139,7 @@ def main():
         for u in unmatched:
             print(f"  !! {u['dish']}  ({u['servings']} portions) - {u['why']}")
             for c in u.get("candidates", []):
-                print(f"       did you mean: {c}")
+                print(f"       closest in Apicbase: {c}")
         print("=" * 72 + "\n")
 
     if not matched:
