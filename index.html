@@ -931,7 +931,8 @@ function calcAdd(id) {
   CALC.q = ''; CALC.hilite = -1;
   const s = $('#calcSearch'); if (s) s.value = '';
   save(); paintCalcPicker(); paintCalcBody();
-  const last = document.querySelector('#calcPicked .crow:last-of-type input[data-portions]');
+  const fields = document.querySelectorAll('#calcPicked input[data-portions]');
+  const last = fields[fields.length - 1]; // :last-of-type misses it when the catalogue note is the last div
   if (last) { last.focus(); last.select(); }
 }
 
