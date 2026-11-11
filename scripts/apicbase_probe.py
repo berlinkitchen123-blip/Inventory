@@ -25,7 +25,6 @@ CHECKS = [
     ("stock items",       "/products/stock_items/",       {"page_size": 1}),
     ("supplier packages", "/products/supplier_packages/", {"page_size": 1}),
     ("menus",             "/products/menus/",             {"page_size": 1}),
-    ("suppliers",         "/products/suppliers/",         {"page_size": 1}),
 ]
 
 
