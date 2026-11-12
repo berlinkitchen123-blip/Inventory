@@ -1126,22 +1126,42 @@ function apicMatchDish(name, pool) {
       if (inMenu) return inMenu;
     }
   }
-  // Still nothing: the two sides spell the same dish differently ("Zander Fillet
-  // with" vs "& Lemon Butter Sauce", "Green Leaves" vs "Green Leafs"). Compare on
-  // shared words, but only inside this one menu's handful of recipes, and only
-  // when one candidate is clearly ahead. Anything close is reported, not guessed.
-  const want = new Set(words.filter(w => w.length > 2));
-  if (want.size < 2) return null;
+  // Still nothing: the two sides spell the same dish differently, sometimes with a
+  // typo - "Moroccan" against "Morrocan", "Tomatoes" against "Toamatoes", "Green
+  // Leaves" against "Green Leafs". Compare letter pairs, which survives a slip of
+  // a key, but only inside this one menu's handful of recipes and only when one
+  // candidate is clearly ahead. A match found this way is reported, not silent.
+  if (words.length < 2) return null;
   const scored = pool.map(p => {
-    const have = new Set(bare(p.name).split(' ').filter(w => w.length > 2));
-    let shared = 0;
-    for (const w of want) if (have.has(w)) shared++;
-    return { p, s: shared / new Set([...want, ...have]).size };
+    const target = bare(p.name);
+    let best = 0;
+    for (let n = words.length; n >= 2; n--) {       // the BEO line has the category glued on
+      best = Math.max(best, dice(words.slice(0, n).join(' '), target));
+    }
+    return { p, s: best };
   }).sort((a, b) => b.s - a.s);
-  if (scored.length && scored[0].s >= 0.45 && scored[0].s - ((scored[1] || {}).s || 0) >= 0.15) {
+  if (scored.length && scored[0].s >= 0.72 && scored[0].s - ((scored[1] || {}).s || 0) >= 0.12) {
     return { ...scored[0].p, near: true };
   }
   return null;
+}
+
+/* How alike two names are, 0 to 1, by the letter pairs they share. */
+function dice(a, b) {
+  const pairs = t => {
+    const out = new Map();
+    const c = t.replace(/\s+/g, ' ');
+    for (let i = 0; i < c.length - 1; i++) {
+      const k = c.slice(i, i + 2);
+      out.set(k, (out.get(k) || 0) + 1);
+    }
+    return out;
+  };
+  const A = pairs(a), B = pairs(b);
+  let total = 0, shared = 0;
+  for (const n of A.values()) total += n;
+  for (const [k, n] of B) { total += n; shared += Math.min(n, A.get(k) || 0); }
+  return total ? (2 * shared) / total : 0;
 }
 
 /* Which menu in this week the sheet belongs to. */
