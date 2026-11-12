@@ -254,7 +254,17 @@ def main():
     outlets = {str(o["id"]): o.get("name") or "" for o in pages("/accounts/outlets/")}
     print(f"  outlets        {len(outlets)}")
 
-    filt = {"modified_date__gt": since} if since else {}
+    # Apicbase wants a plain date here. A full timestamp is rejected with
+    # "Enter a valid date", which is why every incremental run failed. A day is
+    # taken off so nothing changed later on the same day is missed.
+    filt = {}
+    if since:
+        try:
+            day = dt.datetime.fromisoformat(since).date() - dt.timedelta(days=1)
+            filt = {"modified_date__gt": day.isoformat()}
+            print(f"  filter: modified_date__gt={day.isoformat()}")
+        except ValueError:
+            print(f"  could not read the last sync time ({since}), pulling everything")
     recipes = pages("/products/recipes/", filt)
     ingredients = pages("/products/ingredients/", filt)
     stock_items = pages("/products/stock_items/")
