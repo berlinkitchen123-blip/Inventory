@@ -3,6 +3,7 @@
   "range": "2026-11-16 to 2026-11-20",
   "kitchen": "Remscheid",
   "preferCT": true,
+  "recipeDetail": true,
   "note": "Catering demand only. Customer details deliberately left out: this repository is public.",
   "events": 5,
   "demand": [
