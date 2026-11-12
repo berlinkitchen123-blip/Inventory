@@ -25,6 +25,8 @@ import urllib.parse
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
 BASE = (os.getenv("APICBASE_BASE") or "https://api.apicbase.com/api/v2").rstrip("/")
 DB = (os.getenv("FIREBASE_DB_URL")
       or "https://stock-f24-default-rtdb.europe-west1.firebasedatabase.app").rstrip("/")
@@ -330,6 +332,20 @@ def main():
     fb_write(f"{ROOT}/ingredients", ing_rows, token, "ingredients")
     fb_write(f"{ROOT}/packs", packs, token, "packs")
     fb_write(f"{ROOT}/menus", menu_rows, token, "menus")
+
+    # Confirmed catering events from Notion: the head count that turns a menu
+    # into portions. Skipped silently when NOTION_TOKEN is not set.
+    if os.getenv("NOTION_TOKEN"):
+        try:
+            import notion_events
+            cutoff = (dt.date.today() - dt.timedelta(days=30)).isoformat()
+            evs = notion_events.events(since=cutoff)
+            fb("PUT", f"{ROOT}/events", evs, token)
+            print(f"  wrote {len(evs):>5} catering events from Notion (from {cutoff})")
+        except Exception as e:
+            print(f"  Notion events skipped: {type(e).__name__}: {e}"[:200])
+    else:
+        print("  NOTION_TOKEN not set, catering events not refreshed")
     fb("PUT", f"{ROOT}/outlets", outlets, token)
     fb("PUT", f"{ROOT}/meta", {
         "generated": now, "recipes": len(recipe_rows), "ingredients": len(ing_rows),
