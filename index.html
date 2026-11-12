@@ -189,6 +189,14 @@ table.order tbody.item.ordered .name{text-decoration:line-through;color:var(--in
 #p-catering .miss h3{margin:0 0 6px;font-size:14px;color:var(--paprika)}
 #p-catering .miss li{color:var(--paprika)}
 #p-catering .hint{color:var(--ink-3);font-size:12px}
+
+.chain { border-top: 1px solid var(--line); padding: 8px 0; }
+.chain > summary { cursor: pointer; list-style: none; padding: 6px 2px; }
+.chain > summary::-webkit-details-marker { display: none; }
+.chain > summary::before { content: '\25b8'; display: inline-block; width: 1em; color: var(--muted); }
+.chain[open] > summary::before { transform: rotate(90deg); }
+.chain > summary .sub2 { display: block; margin-left: 1em; }
+.chain .tablewrap { margin: 6px 0 10px 1em; }
 </style>
 </head>
 <body>
@@ -744,8 +752,44 @@ function renderCatering() {
       <tbody>${prep.map(x => `<tr><td><b>${esc(x.name)}</b></td>
         <td class="num qty">${nf(+x.qty || 0, 0)}</td><td>${esc(x.unit || '')}</td></tr>`).join('')}</tbody>
       </table></div></section>` : ''}
+    ${dishChainHtml(d)}
     <p class="hint" style="margin-top:18px">Calculated ${esc((d.generated || '').replace('T', ' ').slice(0, 16))} UTC
       from the Apicbase BOM for ${esc(d.outlet || '')}. Quantities are the full requirement.</p>`;
+}
+
+// Every ordered dish, the Apicbase recipe behind it and that recipe's own
+// ingredient lines, so the chain offer -> recipe -> order can be checked by eye.
+function dishChainHtml(d) {
+  const matched = d.matched || [], recipes = d.recipes || {};
+  if (!matched.length) return '';
+  const HOW = { mapped: ['ok', 'chosen by hand'], 'exact CT': ['ok', 'catering recipe'], exact: ['ok', 'same name'] };
+  return `<section class="sup"><h2>What each dish is made of
+      <span class="count">${matched.length} dishes</span></h2>
+    <p class="hint" style="margin:0 0 10px">The recipe each dish was costed against, straight from Apicbase.
+      Lines are the recipe's own quantities, not multiplied by the portions.</p>
+    ${matched.map(m => {
+      const det = recipes[String(m.id)] || {};
+      const lines = det.lines || [];
+      const [cls, label] = HOW[m.how] || ['warn', m.how || ''];
+      const diff = norm2(m.dish) !== norm2(m.matched || '');
+      return `<details class="chain"${lines.length ? '' : ' open'}>
+        <summary><b>${esc(m.dish)}</b> · ${nf(m.servings || 0, 0)} portions
+          <span class="tag ${cls}">${esc(label)}</span>
+          <span class="sub2">${diff ? 'Apicbase: ' : ''}${esc(m.matched || '')}${
+            det.servings ? ` · recipe makes ${nf(+det.servings, 0)}` : ''}</span></summary>
+        ${lines.length ? `<div class="tablewrap"><table><thead><tr>
+            <th>Ingredient</th><th class="num">Qty</th><th>Unit</th><th>Type</th></tr></thead>
+          <tbody>${lines.map(l => `<tr><td>${esc(l.name)}</td>
+            <td class="num qty">${nf(+l.qty || 0, (+l.qty || 0) < 10 ? 2 : 0)}</td>
+            <td>${esc(l.unit || '')}</td>
+            <td>${l.sub ? '<span class="tag">sub-recipe</span>' : 'ingredient'}</td></tr>`).join('')}</tbody>
+        </table></div>` : '<p class="hint">No ingredient lines came back for this recipe.</p>'}
+      </details>`;
+    }).join('')}</section>`;
+}
+
+function norm2(x) {
+  return String(x || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 }
 
 function renderYields() {
