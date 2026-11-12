@@ -232,7 +232,7 @@ def main():
         sys.exit("Nothing matched, so there is nothing to order.")
 
     detail = {}
-    if args.recipes:
+    if args.recipes or spec.get("recipeDetail"):
         print("reading each matched recipe from Apicbase…")
         for m in matched:
             try:
