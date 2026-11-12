@@ -197,6 +197,34 @@ table.order tbody.item.ordered .name{text-decoration:line-through;color:var(--in
 .chain[open] > summary::before { transform: rotate(90deg); }
 .chain > summary .sub2 { display: block; margin-left: 1em; }
 .chain .tablewrap { margin: 6px 0 10px 1em; }
+
+/* Apicbase tab */
+.apicIntro{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;max-width:620px}
+.apicIntro h3{margin:0 0 8px;font-size:16px}
+.apicIntro p{margin:0 0 12px;color:var(--ink-2)}
+.apicIntro .bad{color:var(--paprika)}
+.apicPick{display:flex;gap:14px;flex-wrap:wrap;margin:12px 0 14px;align-items:flex-end}
+.apicPick .fld{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--ink-3)}
+.apicPick .fld.grow{flex:1;min-width:220px}
+.apicPick input{background:var(--card);border:1px solid var(--line);border-radius:8px;color:var(--ink);padding:8px 10px;font:inherit;width:100%}
+.apicList{border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:16px}
+.arow{display:flex;align-items:center;gap:12px;padding:8px 12px;border-top:1px solid var(--line)}
+.apicList>.arow:first-child{border-top:0}
+.arow .an{font-weight:600;flex:1;min-width:0}
+.arow .am{color:var(--ink-3);font-size:12px;white-space:nowrap}
+.amenu{background:rgba(255,255,255,.02)}
+.amenuBody{padding-left:18px;background:rgba(255,255,255,.01)}
+.apicDish{border-top:1px solid var(--line);padding:4px 0}
+.apicDish .tablewrap{margin:4px 0 12px 18px}
+.pfld{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink-3)}
+.pfld input{width:78px;background:var(--card);border:1px solid var(--line);border-radius:8px;color:var(--ink);padding:5px 8px;font:inherit;text-align:right}
+.apicH{margin:22px 0 8px;font-size:15px}
+.apicH .count{color:var(--ink-3);font-weight:400;font-size:12px;margin-left:8px}
+#p-apic .art a{color:var(--saffron);text-decoration:none}
+#p-apic .art a:hover{text-decoration:underline}
+#p-apic .miss{background:#3a2a19;border:1px solid var(--saffron);border-radius:10px;padding:12px 14px;margin:14px 0}
+#p-apic .miss h3{margin:0 0 6px;font-size:14px;color:var(--saffron)}
+#p-apic .hint{color:var(--ink-3);font-size:12px}
 </style>
 </head>
 <body>
@@ -244,6 +272,7 @@ table.order tbody.item.ordered .name{text-decoration:line-through;color:var(--in
     <button role="tab" id="t-order" data-tab="order" aria-controls="p-order">Order list</button>
     <button role="tab" id="t-calc" data-tab="calc" aria-controls="p-calc">Order calculator</button>
     <button role="tab" id="t-catering" data-tab="catering" aria-controls="p-catering">Catering order</button>
+    <button role="tab" id="t-apic" data-tab="apic" aria-controls="p-apic">Apicbase</button>
     <button role="tab" id="t-yields" data-tab="yields" aria-controls="p-yields">Yields</button>
     <button role="tab" id="t-checks" data-tab="checks" aria-controls="p-checks">Checks</button>
   </nav>
@@ -268,6 +297,7 @@ table.order tbody.item.ordered .name{text-decoration:line-through;color:var(--in
     <section id="p-checks" role="tabpanel" aria-labelledby="t-checks" hidden></section>
     <section id="p-calc" role="tabpanel" aria-labelledby="t-calc" hidden></section>
     <section id="p-catering" role="tabpanel" aria-labelledby="t-catering" hidden></section>
+    <section id="p-apic" role="tabpanel" aria-labelledby="t-apic" hidden></section>
   </main>
   </div>
 </div>
@@ -482,7 +512,7 @@ const day = d => d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric
 const dm = d => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 const stamp = s => new Date(s).toLocaleString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 const weekNo = d => { const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())); t.setUTCDate(t.getUTCDate() + 4 - (t.getUTCDay() || 7)); return Math.ceil(((t - Date.UTC(t.getUTCFullYear(), 0, 1)) / 864e5 + 1) / 7); };
-const VIEWS = ['forecast', 'order', 'calc', 'catering', 'yields', 'checks'];
+const VIEWS = ['forecast', 'order', 'calc', 'catering', 'apic', 'yields', 'checks'];
 const view = () => VIEWS.includes(ST.view) ? ST.view : 'forecast';
 const showDishes = () => ST.showDishes !== false;
 
@@ -538,8 +568,8 @@ function render() {
   const b = $('#sBuffer'); if (document.activeElement !== b) b.value = Math.round(PLAN.buf * 100);
   $('#showDishes').checked = showDishes();
   for (const t of document.querySelectorAll('[data-tab]')) t.setAttribute('aria-selected', String(t.dataset.tab === view()));
-  for (const id of ['forecast', 'order', 'calc', 'catering', 'yields', 'checks']) $('#p-' + id).hidden = id !== view();
-  ({ forecast: renderForecast, order: renderOrder, calc: renderCalc, catering: renderCatering, yields: renderYields, checks: renderChecks })[view()]();
+  for (const id of ['forecast', 'order', 'calc', 'catering', 'apic', 'yields', 'checks']) $('#p-' + id).hidden = id !== view();
+  ({ forecast: renderForecast, order: renderOrder, calc: renderCalc, catering: renderCatering, apic: renderApic, yields: renderYields, checks: renderChecks })[view()]();
 }
 
 function renderWeek() {
@@ -795,6 +825,344 @@ function dishChainHtml(d) {
 function norm2(x) {
   return String(x || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 }
+
+/* ---------- Apicbase: pick a menu by date, pick dishes, see every ingredient and who sells it.
+
+   The page cannot call Apicbase: the API token cannot live in a browser. It reads
+   the copy the nightly sync leaves in Firebase, which is the same data one day old.
+   Quantities here are worked out from those recipes. The Catering order tab is
+   Apicbase's own BOM; use that one as the final word on an order.
+---------- */
+let APIC = { state: 'idle', error: '', data: null, date: '', q: '', menu: '', picked: {}, open: {} };
+
+try {
+  const saved = JSON.parse(localStorage.getItem('nrw-apic-picks') || '{}');
+  if (saved && typeof saved === 'object') { APIC.picked = saved.picked || {}; APIC.date = saved.date || ''; }
+} catch (e) { /* a blocked or empty store is fine */ }
+
+function apicSave() {
+  try { localStorage.setItem('nrw-apic-picks', JSON.stringify({ picked: APIC.picked, date: APIC.date })); }
+  catch (e) { /* nothing to do if the browser refuses */ }
+}
+
+async function apicFetch() {
+  if (APIC.state === 'loading' || !STORE || !USER) return;
+  APIC.state = 'loading'; APIC.error = ''; renderApic();
+  try {
+    const [menus, recipes, ingredients, packs, meta] = await Promise.all(
+      ['menus', 'recipes', 'ingredients', 'packs', 'meta'].map(n => STORE.read('apicbase/' + n)));
+    if (!recipes) throw new Error('No Apicbase data in Firebase yet. Run the daily sync once.');
+    APIC.data = { menus: menus || {}, recipes: recipes || {}, ingredients: ingredients || {},
+                  packs: packs || {}, meta: meta || {} };
+    APIC.state = 'ok';
+  } catch (e) {
+    APIC.error = e.message || String(e); APIC.state = 'error';
+  }
+  renderApic();
+}
+
+/* ----- units ----- */
+const BASE_UNIT = { g: ['g', 1], kg: ['g', 1000], mg: ['g', 0.001], ml: ['ml', 1], l: ['ml', 1000],
+                    cl: ['ml', 10], pc: ['pc', 1], piece: ['pc', 1], pcs: ['pc', 1], stk: ['pc', 1] };
+function toBase(qty, unit) {
+  const u = BASE_UNIT[String(unit || '').trim().toLowerCase()];
+  return u ? { v: (+qty || 0) * u[1], base: u[0] } : { v: +qty || 0, base: String(unit || '').trim().toLowerCase() };
+}
+function fromBase(v, base) {
+  if (base === 'g' && v >= 1000) return [v / 1000, 'kg'];
+  if (base === 'ml' && v >= 1000) return [v / 1000, 'l'];
+  return [v, base || ''];
+}
+
+/* ----- one dish into ingredients -----
+   mult scales a recipe's own line quantities: portions / persons for a dish,
+   grams wanted / batch weight for a sub-recipe. */
+function apicExplode(id, mult, A, out, prep, notes, seen) {
+  const r = A.recipes[String(id)];
+  if (!r || !(mult > 0)) return;
+  if (seen.has(String(id))) { notes.push(`${r.name || id} contains itself, stopped there`); return; }
+  const next = new Set(seen); next.add(String(id));
+  for (const ln of r.lines || []) {
+    const qty = (+ln.qty || 0) * mult * (1 + (+ln.waste || 0) / 100);
+    if (!(qty > 0)) continue;
+    if (ln.ing) { apicAdd(out, String(ln.ing), qty, ln.unit, ln.name); continue; }
+    const sub = A.recipes[String(ln.sub)];
+    if (!sub) { apicAdd(out, 'x' + ln.sub, qty, ln.unit, ln.name || 'unknown sub-recipe'); continue; }
+    if (sub.stockable) { apicAdd(prep, String(ln.sub), qty, ln.unit, sub.name); continue; }
+    const want = toBase(qty, ln.unit), batch = toBase(sub.netWeight, sub.netWeightUnit);
+    if (!(batch.v > 0) || want.base !== batch.base) {
+      apicAdd(prep, String(ln.sub), qty, ln.unit, sub.name);
+      notes.push(`${sub.name} has no usable batch weight, so it is listed to prepare, not broken down`);
+      continue;
+    }
+    apicExplode(ln.sub, want.v / batch.v, A, out, prep, notes, next);
+  }
+}
+
+function apicAdd(bag, key, qty, unit, name) {
+  const b = toBase(qty, unit);
+  const row = bag[key] || (bag[key] = { name: name || '', base: b.base, v: 0, units: new Set() });
+  row.units.add(b.base);
+  if (row.base !== b.base) { row.mixed = true; return; }   // never add litres to kilos
+  row.v += b.v;
+  if (!row.name) row.name = name || '';
+}
+
+/* ----- the whole selection ----- */
+function apicTotals() {
+  const A = APIC.data, out = {}, prep = {}, notes = [], dishes = [];
+  for (const [id, portions] of Object.entries(APIC.picked)) {
+    const r = A.recipes[id];
+    if (!r || !(+portions > 0)) continue;
+    const per = {}, pprep = {};
+    apicExplode(id, (+portions) / (+r.persons || 1), A, per, pprep, notes, new Set());
+    dishes.push({ id, name: r.name, portions: +portions, persons: +r.persons || 1, per, prep: pprep });
+    for (const [k, v] of Object.entries(per)) apicMerge(out, k, v);
+    for (const [k, v] of Object.entries(pprep)) apicMerge(prep, k, v);
+  }
+  dishes.sort((a, b) => b.portions - a.portions || a.name.localeCompare(b.name));
+  return { dishes, out, prep, notes: [...new Set(notes)] };
+}
+
+function apicMerge(bag, key, row) {
+  const cur = bag[key] || (bag[key] = { name: row.name, base: row.base, v: 0 });
+  if (cur.base !== row.base) { cur.mixed = true; return; }
+  cur.v += row.v;
+}
+
+function apicLine(ingId, row) {
+  const A = APIC.data;
+  const ing = A.ingredients[ingId] || {};
+  const pack = A.packs[ingId] || {};
+  const [v, u] = fromBase(row.v, row.base);
+  const packed = toBase(pack.packQty, pack.packUnit);
+  const packs = packed.v > 0 && packed.base === row.base ? Math.ceil(row.v / packed.v) : null;
+  return {
+    id: ingId, name: ing.name || row.name || ingId, cat: ing.category || '',
+    qty: v, unit: u, mixed: !!row.mixed,
+    supplier: pack.supplier || '- no supplier -', article: pack.article || '',
+    stockItem: pack.stockItem || '', packs,
+    packText: packed.v > 0 ? `${nf(pack.packQty, 2)} ${pack.packUnit}` : '',
+  };
+}
+
+/* ----- rendering ----- */
+function apicMenusFor(date) {
+  const A = APIC.data, rows = [];
+  for (const [id, m] of Object.entries(A.menus || {})) {
+    if (date && m.from && m.to && (date < m.from || date > m.to)) continue;
+    if (date && (!m.from || !m.to)) continue;
+    rows.push({ id, ...m });
+  }
+  rows.sort((a, b) => (b.from || '').localeCompare(a.from || '') || a.name.localeCompare(b.name));
+  return rows;
+}
+
+function apicSearch(q, limit = 40) {
+  const A = APIC.data, k = String(q || '').trim().toLowerCase();
+  if (k.length < 2) return [];
+  const hits = [];
+  for (const [id, r] of Object.entries(A.recipes || {})) {
+    const n = (r.name || '').toLowerCase();
+    if (!n.includes(k)) continue;
+    hits.push({ id, name: r.name, persons: r.persons, ct: n.endsWith(' - ct'), lines: (r.lines || []).length });
+    if (hits.length > 400) break;
+  }
+  hits.sort((a, b) => (b.ct - a.ct) || a.name.length - b.name.length || a.name.localeCompare(b.name));
+  return hits.slice(0, limit);
+}
+
+function renderApic() {
+  const host = $('#p-apic');
+  if (APIC.state === 'loading') { host.innerHTML = '<p class="cempty">Reading the Apicbase copy…</p>'; return; }
+  if (APIC.state === 'idle' || APIC.state === 'error') {
+    host.innerHTML = `<div class="apicIntro">
+      <h3>Build a catering order from Apicbase</h3>
+      <p>Pick a date, open the menu, type the portions. You get every recipe, every ingredient,
+         who sells it and its article number, and one combined list to order from.</p>
+      ${APIC.error ? `<p class="bad">${esc(APIC.error)}</p>` : ''}
+      <button class="btn primary" id="apicFetch">Fetch from Apicbase</button>
+      <p class="hint">Reads the copy the nightly sync leaves in Firebase. The page cannot call
+        Apicbase itself: an API token cannot be kept safe in a browser.</p></div>`;
+    return;
+  }
+  const A = APIC.data, gen = ((A.meta && A.meta.generated) || '').replace('T', ' ').slice(0, 16);
+  host.innerHTML = `
+    <div class="toolbar">
+      <div class="chips">
+        <span class="chip">${nf(Object.keys(A.recipes).length, 0)} recipes</span>
+        <span class="chip">${nf(Object.keys(A.menus).length, 0)} menus</span>
+        <span class="chip">synced ${esc(gen)} UTC</span>
+        <span class="chip" id="apicCount"></span>
+      </div>
+      <div class="actions">
+        <button class="btn" id="apicFetch">Refresh</button>
+        <button class="btn" id="apicClear">Clear</button>
+        <button class="btn" id="apicPrint">Print</button>
+      </div>
+    </div>
+    <div class="apicPick">
+      <label class="fld"><span>Date</span><input type="date" id="apicDate" value="${esc(APIC.date)}"></label>
+      <label class="fld grow"><span>Or search any recipe</span>
+        <input type="search" id="apicQ" value="${esc(APIC.q)}" placeholder="falafel, couscous, goulash…"></label>
+    </div>
+    <div id="apicResults"></div>
+    <div id="apicPicked"></div>
+    <div id="apicTotals"></div>`;
+  paintApicResults(); paintApicPicked(); paintApicTotals();
+}
+
+function paintApicResults() {
+  const el = $('#apicResults'); if (!el) return;
+  el.innerHTML = APIC.q.trim().length >= 2
+    ? `<div class="apicList">${apicSearch(APIC.q).map(h => `<div class="arow">
+        <span class="an">${esc(h.name)}</span>
+        <span class="am">${h.persons || 1} portion recipe · ${h.lines} lines</span>
+        <button class="btn tiny" data-apicadd="${esc(h.id)}">Add</button></div>`).join('')
+        || '<p class="cempty">Nothing with that name.</p>'}</div>`
+    : apicMenuListHtml();
+}
+
+function paintApicPicked() {
+  const el = $('#apicPicked'); if (!el) return;
+  const n = Object.keys(APIC.picked).length;
+  const c = $('#apicCount'); if (c) c.textContent = n ? `${n} dish${n === 1 ? '' : 'es'} picked` : 'nothing picked';
+  el.innerHTML = n ? apicPickedHtml(apicTotals())
+    : '<p class="cempty">Nothing picked yet. Choose a menu above, or search for a recipe.</p>';
+}
+
+function paintApicTotals() {
+  const el = $('#apicTotals'); if (!el) return;
+  if (!Object.keys(APIC.picked).length) { el.innerHTML = ''; return; }
+  const T = apicTotals();
+  const lines = Object.entries(T.out).map(([k, v]) => apicLine(k, v))
+    .sort((a, b) => a.supplier.localeCompare(b.supplier) || a.name.localeCompare(b.name));
+  const bySup = {};
+  for (const l of lines) (bySup[l.supplier] = bySup[l.supplier] || []).push(l);
+  // a pack sold in ml against a recipe line in g needs a density to convert, which
+  // the sync does not carry, so the pack count is left blank rather than guessed
+  const odd = lines.filter(l => l.packs === null && l.packText).map(l => l.name);
+  if (odd.length) T.notes.push('Pack size and recipe unit do not match, so no pack count is shown for: '
+    + odd.slice(0, 8).join(', ') + (odd.length > 8 ? ` and ${odd.length - 8} more` : ''));
+  el.innerHTML = `
+    ${lines.length ? `<h2 class="apicH">Everything to order
+      <span class="count">${lines.length} ingredients · ${Object.keys(bySup).length} suppliers</span></h2>
+      ${Object.keys(bySup).sort().map(s => `<section class="sup${s.startsWith('-') ? ' none' : ''}">
+        <h2>${esc(s)} <span class="count">${bySup[s].length}</span></h2>
+        <div class="tablewrap"><table>
+          <thead><tr><th>Ingredient</th><th class="num">Need</th><th>Unit</th><th>Article no.</th><th class="num">Packs</th><th>Pack size</th></tr></thead>
+          <tbody>${bySup[s].map(l => `<tr>
+            <td><b>${esc(l.name)}</b>${l.mixed ? '<span class="tag warn">mixed units</span>' : ''}
+              ${l.stockItem ? `<span class="sub2">${esc(l.stockItem)}</span>` : ''}</td>
+            <td class="num qty">${nf(l.qty, l.qty < 10 ? 2 : 0)}</td>
+            <td>${esc(l.unit)}</td>
+            <td class="art">${l.article
+              ? `<a href="${esc(supLink(l.supplier, l.article, l.name))}" target="_blank" rel="noopener">${esc(l.article)}</a>`
+              : '<span class="muted">—</span>'}</td>
+            <td class="num qty">${l.packs === null ? '<span class="muted">—</span>' : nf(l.packs, 0)}</td>
+            <td>${esc(l.packText)}</td></tr>`).join('')}</tbody>
+        </table></div></section>`).join('')}` : ''}
+    ${Object.keys(T.prep).length ? `<section class="sup"><h2>Prepare in the kitchen
+        <span class="count">${Object.keys(T.prep).length}</span></h2>
+      <div class="tablewrap"><table><thead><tr><th>Sub-recipe</th><th class="num">Needed</th><th>Unit</th></tr></thead>
+        <tbody>${Object.entries(T.prep).map(([k, v]) => { const [q, u] = fromBase(v.v, v.base);
+          return `<tr><td><b>${esc(v.name || k)}</b></td><td class="num qty">${nf(q, 0)}</td><td>${esc(u)}</td></tr>`;
+        }).join('')}</tbody></table></div></section>` : ''}
+    ${T.notes.length ? `<div class="miss"><h3>Worth knowing</h3>
+      <ul>${T.notes.map(n => `<li>${esc(n)}</li>`).join('')}</ul></div>` : ''}
+    <p class="hint" style="margin-top:18px">Worked out here from the synced Apicbase recipes: portions
+      divided by each recipe's own portion count, waste included, stock not subtracted. The
+      <b>Catering order</b> tab is Apicbase's own calculation — check against it before a large order.</p>`;
+}
+
+function apicMenuListHtml() {
+  const rows = apicMenusFor(APIC.date);
+  if (!rows.length) return `<p class="cempty">${APIC.date
+    ? 'No Apicbase menu covers that date. Clear the date to see them all, or search for a recipe.'
+    : 'No menus in the synced copy.'}</p>`;
+  return `<div class="apicList">${rows.slice(0, 25).map(m => {
+    const open = APIC.menu === m.id;
+    return `<div class="arow amenu">
+      <span class="an">${esc(m.name)}</span>
+      <span class="am">${esc(m.from || '?')} → ${esc(m.to || '?')} · ${(m.recipes || []).length} dishes</span>
+      <button class="btn tiny" data-apicmenu="${esc(m.id)}">${open ? 'Hide' : 'Open'}</button>
+    </div>${open ? `<div class="amenuBody">${(m.recipes || []).map(rid => {
+        const r = APIC.data.recipes[String(rid)];
+        if (!r) return '';
+        return `<div class="arow">
+          <span class="an">${esc(r.name)}</span>
+          <span class="am">${r.persons || 1} portion recipe · ${(r.lines || []).length} lines</span>
+          <button class="btn tiny" data-apicadd="${esc(rid)}">Add</button></div>`;
+      }).join('') || '<p class="cempty">This menu has no dishes in the synced copy.</p>'}</div>` : ''}`;
+  }).join('')}</div>`;
+}
+
+function apicPickedHtml(T) {
+  return `<h2 class="apicH">Picked <span class="count">${T.dishes.length}</span></h2>
+    ${T.dishes.map(d => {
+      const open = !!APIC.open[d.id];
+      const rows = Object.entries(d.per).map(([k, v]) => apicLine(k, v))
+        .sort((a, b) => a.name.localeCompare(b.name));
+      return `<div class="apicDish">
+        <div class="arow">
+          <span class="an">${esc(d.name)}</span>
+          <label class="pfld">portions
+            <input type="number" min="0" step="1" inputmode="numeric"
+              data-aportions="${esc(d.id)}" value="${d.portions}"></label>
+          <span class="am">recipe makes ${d.persons}</span>
+          <button class="btn tiny" data-apicopen="${esc(d.id)}">${open ? 'Hide' : 'Ingredients'}</button>
+          <button class="btn tiny" data-apicdrop="${esc(d.id)}">Remove</button>
+        </div>
+        ${open ? `<div class="tablewrap"><table>
+          <thead><tr><th>Ingredient</th><th class="num">Need</th><th>Unit</th><th>Supplier</th><th>Article no.</th></tr></thead>
+          <tbody>${rows.map(l => `<tr><td>${esc(l.name)}</td>
+            <td class="num qty">${nf(l.qty, l.qty < 10 ? 2 : 0)}</td><td>${esc(l.unit)}</td>
+            <td>${esc(l.supplier)}</td>
+            <td class="art">${l.article
+              ? `<a href="${esc(supLink(l.supplier, l.article, l.name))}" target="_blank" rel="noopener">${esc(l.article)}</a>`
+              : '<span class="muted">—</span>'}</td></tr>`).join('')}
+          ${Object.keys(d.prep).length ? Object.entries(d.prep).map(([k, v]) => { const [q, u] = fromBase(v.v, v.base);
+            return `<tr><td>${esc(v.name || k)} <span class="tag">prepare</span></td>
+              <td class="num qty">${nf(q, 0)}</td><td>${esc(u)}</td><td colspan="2" class="muted">made in the kitchen</td></tr>`;
+          }).join('') : ''}</tbody></table></div>` : ''}
+      </div>`;
+    }).join('')}`;
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b || !b.closest('#p-apic')) return;
+  const d = b.dataset;
+  if (b.id === 'apicFetch') apicFetch();
+  else if (b.id === 'apicClear') { APIC.picked = {}; APIC.open = {}; apicSave(); renderApic(); }
+  else if (b.id === 'apicPrint') window.print();
+  else if (d.apicadd) {
+    if (!APIC.picked[d.apicadd]) APIC.picked[d.apicadd] = 10;
+    apicSave(); paintApicPicked(); paintApicTotals();
+    const f = document.querySelector(`#p-apic input[data-aportions="${CSS.escape(d.apicadd)}"]`);
+    if (f) { f.focus(); f.select(); }
+  }
+  else if (d.apicdrop) { delete APIC.picked[d.apicdrop]; delete APIC.open[d.apicdrop]; apicSave(); paintApicPicked(); paintApicTotals(); }
+  else if (d.apicopen) { APIC.open[d.apicopen] = !APIC.open[d.apicopen]; paintApicPicked(); }
+  else if (d.apicmenu) { APIC.menu = APIC.menu === d.apicmenu ? '' : d.apicmenu; paintApicResults(); }
+});
+
+document.addEventListener('input', e => {
+  const el = e.target; if (!el.closest || !el.closest('#p-apic')) return;
+  if (el.id === 'apicQ') { APIC.q = el.value; paintApicResults(); }
+  else if (el.id === 'apicDate') { APIC.date = el.value; APIC.menu = ''; apicSave(); paintApicResults(); }
+  else if (el.dataset && 'aportions' in el.dataset) {
+    const v = el.value === '' ? 0 : Math.max(0, Math.round(+el.value) || 0);
+    APIC.picked[el.dataset.aportions] = v;
+    apicSave(); paintApicTotals();                 // the row keeps focus; totals follow along
+  }
+});
+
+document.addEventListener('change', e => {
+  const el = e.target;
+  if (el.closest && el.closest('#p-apic') && el.dataset && 'aportions' in el.dataset) {
+    if (!APIC.picked[el.dataset.aportions]) { delete APIC.picked[el.dataset.aportions]; apicSave(); }
+    paintApicPicked(); paintApicTotals();
+  }
+}, true);
 
 function renderYields() {
   const rank = { estimate: 0, input: 1, db: 2, confirmed: 3 };
@@ -1396,6 +1764,7 @@ document.addEventListener('change', e => {
   const val = el.value === '' || !Number.isFinite(+el.value) || +el.value < 0 ? null : +el.value;
   const wk = PLAN.week.key;
   if (el.id === 'calcSearch' || el.id === 'calcBuffer' || 'portions' in d) return; // the calculator saves its own fields as you type
+  if (el.closest('#p-apic')) return;                                   // so does the Apicbase tab
   if ('fc' in d) { const [dayIso, id] = d.fc.split('|'); put({ [`forecast/${dayIso}/${id}`]: val }, 'forecast'); }
   else if ('fill' in d) {
     const x = PLAN.dishes.find(t => t.id === d.fill), ch = {};
