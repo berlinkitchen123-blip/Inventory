@@ -1,16 +1,59 @@
 {
   "note": "A dish name as it is written on the offer, tied by hand to the Apicbase recipe id it really means. bom.py reads this first; anything not in here must match an Apicbase recipe name exactly (the '- CT' version first, for catering) or it is left out of the order. Confirmed by Harsh, 12 Nov 2026.",
   "map": {
-    "Tricolore Skewers": { "id": "249869946170007", "name": "Tricolore Skewers - CT" },
-    "Veggie Couscous Cup": { "id": "849869839690007", "name": "Veggie Couscous Cup - CT" },
-    "Moroccan Couscous Cup": { "id": "649279770570007", "name": "Morrocan Couscous Cup - CT" },
-    "Sweet Potato Goat Cheese Salad with Chestnuts & Mango Chilli Dressing": { "id": "449869755130006", "name": "Sweet Potato and Goat Cheese Salad - CT" },
-    "Beef Goulash": { "id": "349289273670008", "name": "Beef Goulash - CT" },
-    "Mini Raw Cake (Raspberry & Blueberry)": { "id": "449869565240002", "name": "Mini Raw Cake (Raspberry & Blueberry)" },
-    "Chilli Sin Carne": { "id": "449659736750006", "name": "Chilli sin carne - CT" },
-    "Chicken Club Sandwich - 5 halves": { "id": "749669521170002", "name": "Chicken Club Sandwich - CT" }
+    "Tricolore Skewers": {
+      "id": "249869946170007",
+      "name": "Tricolore Skewers - CT"
+    },
+    "Veggie Couscous Cup": {
+      "id": "849869839690007",
+      "name": "Veggie Couscous Cup - CT"
+    },
+    "Moroccan Couscous Cup": {
+      "id": "649279770570007",
+      "name": "Morrocan Couscous Cup - CT"
+    },
+    "Sweet Potato Goat Cheese Salad with Chestnuts & Mango Chilli Dressing": {
+      "id": "449869755130006",
+      "name": "Sweet Potato and Goat Cheese Salad - CT"
+    },
+    "Beef Goulash": {
+      "id": "349289273670008",
+      "name": "Beef Goulash - CT"
+    },
+    "Mini Raw Cake (Raspberry & Blueberry)": {
+      "id": "449869565240002",
+      "name": "Mini Raw Cake (Raspberry & Blueberry)"
+    },
+    "Chilli Sin Carne": {
+      "id": "449659736750006",
+      "name": "Chilli sin carne - CT"
+    },
+    "Chicken Club Sandwich - 5 halves": {
+      "id": "749669521170002",
+      "name": "Chicken Club Sandwich - CT"
+    },
+    "Green Leaves with Cherry Tomatoes and Balsamic Dressing": {
+      "id": "849059684920006",
+      "name": "Green Leafs, Cherry Toamatoes and Balsamico Dressing - CT"
+    },
+    "Lentil Club Sandwich 5 halves": {
+      "id": "949489361320006",
+      "name": "Lentil Club Sandwich - CT"
+    },
+    "Panini Sandwich - Eggplant and Red Pesto - 5 halves": {
+      "id": "149959372610004",
+      "name": "Panini Sandwich - Eggplant and Red Pesto - CT"
+    },
+    "“South American-style” Beef Stew": {
+      "id": "749159593100007",
+      "name": "“South American-style” Beef Stew With Red Rice & Roasted Broccoli - CT"
+    }
   },
   "alsoAvailable": {
     "Chicken Club Sandwich (1/2 portion) - CT": "149769618850002"
+  },
+  "stillOpen": {
+    "Zander Fillet with Lemon Butter Sauce": "No - CT version exists. The plain recipe is 849489479200001 'Zander Fillet & Lemon Butter Sauce'. Waiting on Harsh: use that, or create the CT recipe."
   }
 }
