@@ -242,6 +242,14 @@ table.order tbody.item.ordered .name{text-decoration:line-through;color:var(--in
 
 .tag.people{background:rgba(255,186,73,.14);border:1px solid var(--saffron);color:var(--saffron);
   border-radius:999px;padding:1px 9px;font-size:11px;white-space:nowrap}
+
+.beoBox{border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:0 0 14px;background:var(--card)}
+.beoBox>summary{cursor:pointer;font-weight:600;font-size:14px}
+.beoBox textarea{width:100%;background:var(--bg,#111);border:1px solid var(--line);border-radius:8px;
+  color:var(--ink);padding:8px 10px;font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;resize:vertical}
+.beoActions{display:flex;align-items:center;gap:12px;margin-top:8px;flex-wrap:wrap}
+.hint.ok{color:var(--basil,#8fbf6a)}
+.hint.bad{color:var(--paprika)}
 </style>
 </head>
 <body>
@@ -842,7 +850,7 @@ function norm2(x) {
    Quantities are worked out here from those recipes; the Catering order tab is
    Apicbase's own BOM.
 ---------- */
-let APIC = { state: 'idle', error: '', data: null, q: '', saveErr: '', open: '', breakdown: true };
+let APIC = { state: 'idle', error: '', data: null, q: '', saveErr: '', open: '', breakdown: true, beo: null };
 try { APIC.breakdown = localStorage.getItem('nrw-apic-breakdown') !== 'off'; } catch (e) { /* storage blocked */ }
 let CATERPICK = {};                       // catering/ from Firebase: {week: {menus:{}, qty:{}}}
 
@@ -997,7 +1005,7 @@ function apicWeekMenus() {
 /* The head count comes from Notion, the portion size from Apicbase, so tying an
    Apicbase menu to its Notion event gives the portions for every dish on it.
    Matched on the event date plus the client's words appearing in the menu name:
-   "DMRZ 19.11 (NRW)" to DMRZ on 19 Nov, "UFA 16.11" to UFA Lunch. */
+   a menu named "<client> 19.11 (NRW)" to that client's event on 19 Nov. */
 function apicEventFor(m) {
   if (!m.from || m.from !== m.to) return null;        // week menus are not events
   const name = norm2(m.name);
@@ -1041,6 +1049,103 @@ function apicSearch(q, limit = 30) {
 }
 
 /* ----- rendering ----- */
+/* ---------- Reading a BEO sheet.
+
+   BEO holds the real per-dish numbers and they are not the head count: one
+   sheet can say 25 skewers, 10 of one bowl and 20 of another. BEO has no API
+   we can call from here, so the sheet is pasted in and read.
+---------- */
+const BEO_TEMP = /\b(?:COLD|HOT|WARM|AMBIENT|FROZEN|RT)\b/i;
+
+function apicParseBeo(text) {
+  const lines = String(text || '').split(/\r?\n/);
+  const rows = [];
+  let event = '', guests = null, header = false;
+  for (const raw of lines) {
+    const line = raw.replace(/ /g, ' ').trim();
+    if (!line) continue;
+
+    if (!event) {                                   // "Client 17.11 (NRW) — Tuesday 17/11/2026"
+      const m = line.match(/^(.+?)\s+[—–-]\s+\w+day\s+\d{1,2}[./]\d{1,2}/);
+      if (m) { event = m[1].trim(); continue; }
+    }
+    if (guests === null) {
+      const g = line.match(/(\d{1,4})\s+guests\b/i) || line.match(/\bNumber of Guests\s+(\d{1,4})/i);
+      if (g) { guests = +g[1]; continue; }
+    }
+    if (/^dish\s*\/?\s*item\b/i.test(line)) { header = true; continue; }
+    if (/^(equipment list|schedule|general information|items to produce)\b/i.test(line)) {
+      if (header && rows.length) break;             // the dish table is over
+      continue;
+    }
+
+    if (line.includes('\t')) {                      // copied straight out of the table
+      const c = line.split('\t').map(s => s.trim()).filter(Boolean);
+      const i = c.slice(1).findIndex(x => /^\d{1,4}$/.test(x));
+      if (c.length >= 2 && i >= 0) { rows.push({ dish: c[0], qty: +c[i + 1] }); continue; }
+    }
+    let m = line.match(new RegExp('^(.+?)\\s+' + BEO_TEMP.source + '\\s+(\\d{1,4})\\b', 'i'));
+    if (m && Number.isFinite(+m[2])) { rows.push({ dish: m[1], qty: +m[2] }); continue; }
+    m = line.match(/^(.+?)\s{2,}(\d{1,4})$/);       // name, then the number at the end
+    if (m && !/^\d/.test(m[1]) && Number.isFinite(+m[2])) rows.push({ dish: m[1], qty: +m[2] });
+  }
+  return { event, guests, rows };
+}
+
+/* A BEO line carries the category glued to the dish name ("Funky Falafel
+   Skewers Finger Food"), so drop trailing words until a recipe matches. */
+function apicMatchDish(name, pool) {
+  const bare = s => norm2(s).replace(/\s+ct$/, '');
+  const key = bare(name), words = key.split(' ');
+  for (let n = words.length; n >= 1; n--) {
+    const k = words.slice(0, n).join(' ');
+    if (!k) continue;
+    const hit = pool.find(p => bare(p.name) === k);
+    if (hit) return hit;
+  }
+  return null;
+}
+
+/* Which menu in this week the sheet belongs to. */
+function apicMenuForBeo(eventName) {
+  const rows = apicWeekMenus();
+  if (!eventName) return null;
+  const key = norm2(eventName);
+  let best = null, score = 0;
+  for (const m of rows) {
+    const n = norm2(m.name);
+    if (n === key) return m;
+    const words = key.split(' ').filter(w => w.length > 2);
+    const hit = words.length ? words.filter(w => n.includes(w)).length / words.length : 0;
+    if (hit > score) { score = hit; best = m; }
+  }
+  return score >= 0.6 ? best : null;
+}
+
+function apicApplyBeo(text) {
+  const { event, guests, rows } = apicParseBeo(text);
+  if (!rows.length) return { ok: false, msg: 'No dish lines found in that. Copy the "Items to Produce" table, or the whole BEO page.' };
+  const menu = apicMenuForBeo(event);
+  if (!menu) {
+    return { ok: false, msg: event
+      ? `Read ${rows.length} dishes for "${event}", but no Apicbase menu in this week matches that name. Move to the right week, or check the menu exists in Apicbase.`
+      : `Read ${rows.length} dishes but could not see which event the sheet is for. Include the heading line with the client name and date.` };
+  }
+  const pool = (menu.recipes || []).map(id => ({ id: String(id), name: (APIC.data.recipes[String(id)] || {}).name || '' }))
+    .filter(p => p.name);
+  const ch = { [`menus/${menu.id}`]: true }, done = [], missed = [];
+  if (guests) ch[`people/${menu.id}`] = guests;
+  for (const r of rows) {
+    const hit = apicMatchDish(r.dish, pool);
+    if (hit && Number.isFinite(r.qty)) { ch[`qty/${menu.id}/${hit.id}`] = r.qty; done.push(`${hit.name} ${r.qty}`); }
+    else missed.push(`${r.dish} (${r.qty})`);
+  }
+  apicPut(ch, `catering portions from the ${menu.name} BEO`);
+  return { ok: true, menu: menu.name, done, missed,
+           msg: `${menu.name}: ${done.length} of ${rows.length} dishes filled` +
+                (guests ? `, ${guests} guests` : '') + '.' };
+}
+
 function renderApic() {
   const host = $('#p-apic');
   const a = document.activeElement;
@@ -1080,6 +1185,15 @@ function renderApic() {
     <p class="hint" style="margin:0 0 10px">Use the week strip at the top of the page to move between weeks.
       Portions are saved for the whole team as you type.</p>
     <div id="apicSaveErr"></div>
+    <details class="beoBox" id="apicBeoBox"${APIC.beo ? ' open' : ''}>
+      <summary>Paste a BEO sheet</summary>
+      <p class="hint">Open the event in BEO, select the page (or just the <b>Items to Produce</b> table),
+        copy, and paste it here. The real per-dish numbers go straight onto the matching menu.</p>
+      <textarea id="apicBeo" rows="6" placeholder="Client name 17.11 (NRW) — Tuesday 17/11/2026&#10;…&#10;Dish name  Finger Food  COLD  25  Buffet  Platter"></textarea>
+      <div class="beoActions"><button class="btn primary" id="apicBeoGo">Read the sheet</button>
+        <span id="apicBeoMsg" class="hint ${APIC.beo ? (APIC.beo.ok ? 'ok' : 'bad') : ''}">${
+          APIC.beo ? esc(APIC.beo.text) : ''}</span></div>
+    </details>
     <div id="apicResults"></div>
     <label class="fld grow" style="display:block;max-width:420px;margin:18px 0 8px">
       <span class="hint">Add a dish that is not on a menu</span>
@@ -1223,6 +1337,14 @@ function paintApicTotals() {
 document.addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b || !b.closest('#p-apic')) return;
   const d = b.dataset;
+  if (b.id === 'apicBeoGo') {
+    const r = apicApplyBeo($('#apicBeo').value);
+    APIC.beo = { ok: r.ok, text: r.msg + (r.missed && r.missed.length
+      ? ' Not on this menu: ' + r.missed.join(', ') : '') };
+    if (r.ok) $('#apicBeo').value = '';
+    renderApic();
+    return;
+  }
   if (b.id === 'apicFetch') apicFetch();
   else if (b.id === 'apicPrint') window.print();
   else if (b.id === 'apicClear') {
