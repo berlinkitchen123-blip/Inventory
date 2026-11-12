@@ -151,6 +151,24 @@ def num(v):
     return int(f) if f.is_integer() else round(f, 4)
 
 
+def course_recipes(m):
+    """A menu's recipe ids.
+
+    `courses` is a list of {index, name, recipes:[url]} - not a list of recipe
+    links. Reading the course object as a link produced ids that match nothing,
+    which is why menus showed up with no dishes.
+    """
+    out, seen = [], set()
+    for c in (m.get("courses") or []):
+        links = (c.get("recipes") or []) if isinstance(c, dict) else [c]
+        for r in links:
+            i = ident(r)
+            if i and i not in seen:
+                seen.add(i)
+                out.append(i)
+    return out
+
+
 def recipe_row(r, detail):
     """One recipe as the planner needs it."""
     lines = []
@@ -241,7 +259,7 @@ def main():
     ingredients = pages("/products/ingredients/", filt)
     stock_items = pages("/products/stock_items/")
     packages = pages("/products/supplier_packages/")
-    menus = pages("/products/menus/", filt)
+    menus = pages("/products/menus/")      # only ~800, and always worth re-reading whole
     print(f"  recipes        {len(recipes)} to refresh")
     print(f"  ingredients    {len(ingredients)}")
     print(f"  stock items    {len(stock_items)}")
@@ -284,7 +302,8 @@ def main():
     menu_rows = {str(m["id"]): {
         "name": m.get("name") or "", "from": (m.get("starting_date") or "")[:10],
         "to": (m.get("ending_date") or "")[:10],
-        "recipes": [str(ident(c)) for c in (m.get("courses") or []) if ident(c)],
+        "recipes": course_recipes(m),
+        "courses": [c.get("name") or "" for c in (m.get("courses") or []) if isinstance(c, dict)],
     } for m in menus}
     packs = build_packs(ingredients, stock_items, packages)
 
