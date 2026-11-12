@@ -48,12 +48,14 @@
     "“South American-style” Beef Stew": {
       "id": "749159593100007",
       "name": "“South American-style” Beef Stew With Red Rice & Roasted Broccoli - CT"
+    },
+    "Zander Fillet with Lemon Butter Sauce": {
+      "id": "849489479200001",
+      "name": "Zander Fillet & Lemon Butter Sauce",
+      "why": "the DMRZ 19.11 (NRW) menu in Apicbase uses this exact recipe; there is no CT version"
     }
   },
   "alsoAvailable": {
     "Chicken Club Sandwich (1/2 portion) - CT": "149769618850002"
-  },
-  "stillOpen": {
-    "Zander Fillet with Lemon Butter Sauce": "No - CT version exists. The plain recipe is 849489479200001 'Zander Fillet & Lemon Butter Sauce'. Waiting on Harsh: use that, or create the CT recipe."
   }
 }
