@@ -225,6 +225,20 @@ table.order tbody.item.ordered .name{text-decoration:line-through;color:var(--in
 #p-apic .miss{background:#3a2a19;border:1px solid var(--saffron);border-radius:10px;padding:12px 14px;margin:14px 0}
 #p-apic .miss h3{margin:0 0 6px;font-size:14px;color:var(--saffron)}
 #p-apic .hint{color:var(--ink-3);font-size:12px}
+
+/* Apicbase tab */
+.apicIntro{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;max-width:620px}
+.apicIntro h3{margin:0 0 8px;font-size:16px}
+.apicIntro p{margin:0 0 12px;color:var(--ink-2)}
+.apicIntro .bad{color:var(--paprika)}
+#p-apic .fld input{background:var(--card);border:1px solid var(--line);border-radius:8px;color:var(--ink);padding:8px 10px;font:inherit;width:100%}
+.mchk{display:flex;align-items:center;gap:10px;flex:1;min-width:0;cursor:pointer}
+.mchk input{width:16px;height:16px;accent-color:var(--saffron);flex:0 0 auto}
+.artbtn{background:none;border:0;padding:0;font:inherit;color:var(--saffron);cursor:pointer;font-variant-numeric:tabular-nums}
+.artbtn:hover{text-decoration:underline}
+.artbtn.ok{color:var(--basil,#8fbf6a)}
+#p-apic .art a,#p-catering .art a{color:var(--ink-3);text-decoration:none;margin-left:4px}
+#p-apic .art a:hover,#p-catering .art a:hover{color:var(--saffron)}
 </style>
 </head>
 <body>
@@ -307,17 +321,15 @@ table.order tbody.item.ordered .name{text-decoration:line-through;color:var(--in
 /*CORE-START*/
 const WATER = /^(\[i\]\s*)?water$/i;
 const FRESH = 'Fresh veg, fruit & herbs';
-const SUP_SEARCH = {
-  "Chefs Culinar":    a => `https://www.chefscuinar.de/suche?q=${a||''}`,
-  "Metro shop":       a => `https://www.metro.de/search?searchTerm=${a||''}`,
-  "Hamberger":        a => `https://www.hamberger.de/`,
-  "Kreyenhop+Kluge":  a => `https://www.google.com/search?q=Kreyenhop+Kluge+${a||'Lieferant'}`,
-  "Pier 7":           a => `https://www.google.com/search?q=Pier7+Feinkost+NRW+${a||''}`,
-  "Surgital":         a => `https://www.surgital.it`,
-  "Trend Meal":       a => `https://www.google.com/search?q=Trendmeal+${a||''}`,
-  "Münchner Suppenküche": a => `https://www.google.com/search?q=Münchner+Suppenküche+${a||''}`,
-  "Wendland":         a => `https://www.wendland-olivenoel.de`,
-  "Menu":             a => `https://www.menu.ch/de/produkte`,
+// Only the suppliers whose own site we are sure of. The article number is what
+// matters, so it is copied on click; the arrow just opens the supplier. Guessed
+// search paths sent people to the wrong page, so there are none here.
+const SUP_HOME = {
+  "Chefs Culinar": "https://www.chefsculinar.de/",
+  "Metro shop":    "https://www.metro.de/",
+  "Metro":         "https://www.metro.de/",
+  "Hamberger":     "https://www.hamberger.de/",
+  "Surgital":      "https://www.surgital.it/",
 };
 const NRW_UIDS = {"Bacon raw":"17972918","Bulgur":"60021056","Caesar Dressing":"13286385","Carrots":"17043236","Champignons":"14846519","Cherry Tomatoes":"60063961","Coconut Curry Soup":"17114479","Couscous Dry":"60021055","Dr. Oetker Professional Vegetable Gold Seasoning":"14155628","Honey-Mustard dressing":"14897214","Iceberg Lettuce":"14761683","Mint - fresh":"14760884","Mushroom Sauce":"17379243","Phanaeng Curry":"60105126","Red Bell Pepper":"14758041","Red cabbage":"14758799","Sesame Seeds":"14953446","Small Potatoes":"14759918","Sunflower Oil":"17268363","Zucchini":"14758737","Apple":"278281","Baby Spinach":"287190","Balsamic Dressing":"951488","Bandnudeln":"951968","Basil":"A001041","Black Pepper":"962969","Broccoli":"905267","Brown Sugar":"491160","Butter":"931441","Canola Oil (rapsöl)":"208622","Cheddar Cheese":"805952","Chicken Breast":"339263","Chicken Kebab":"9521","Chickpeas":"912663","Cooking Cream":"928957","Cream Cheese":"64817","Cucumber":"A002139","Edamame":"921813","Feta Cheese":"393263","Fusilli":"901600","Green Asparagus":"905266","Green Beans":"905283","Green Peas":"905429","Guacamole":"21140","Hard cheese - regular (instead of emmental, parmesan, grana padano)":"674516","Jalapeños":"902268","Kale":"10410","Lentils - Green":"973691","Mango - always frozen":"912408","Meatballs":"447797","Milk":"466469","Olive Oil":"905198","Paprika powder":"962968","Parsley":"126792","Pita Bread":"5075","Pomegranite Seeds":"A001070","Potatoes Puree":"393980","Quinoa":"983765","Radish":"297160","Salt":"197051","Sandwich Whole grain bread":"466249","Smoked Salmon":"938613","Spatzle":"33117","Spinach leaves":"905435","Strawberry Jam":"393070","Tofu Firm":"303153","Tomato - Sun Dried":"909132","Vegan Gyros":"361","Vegan Mayo":"526435","Vinegar":"64747","WallNuts":"19986","Water":"551216","Wraps 30\"":"29769","Yogurt Dressing":"109139","Cucumber Pickled":"100156","Erbs Croutons":"175908","Olives Black":"225180","Red pesto":"176329","Rice - White Basmati":"60313","Fried Onions":"22223","Glass Noodles":"7383","Soy Sauce":"8652","Vegetable gyoza":"980","Chocolate Mouse Powder":"00DH1X","Tomato Sauce":"00CAX","Lemon Dressing":"1422059","Orange vinegrette":"1143059","Peanut dressing":"2161059","Goat Cheese":"00013723","Parmigiana":"V111","Beef Goulash":"8810007","White Balsamic":"1641553"};
 const NO_SUPPLIER = 'No supplier yet';
@@ -723,12 +735,6 @@ async function loadCatering() {
   renderCatering();
 }
 
-function supLink(supplier, article, name) {
-  const f = SUP_SEARCH[supplier];
-  const q = encodeURIComponent(article || name || '');
-  return f ? f(article || name) : `https://www.google.com/search?q=${encodeURIComponent(supplier)}+${q}`;
-}
-
 function renderCatering() {
   const host = $('#p-catering');
   loadCatering();
@@ -772,9 +778,7 @@ function renderCatering() {
             ${r.packProduct ? `<span class="sub2">${esc(r.packProduct)}</span>` : ''}</td>
           <td class="num qty">${nf(+r.qty || 0, (+r.qty || 0) < 10 ? 2 : 0)}</td>
           <td>${esc(r.unit || '')}</td>
-          <td class="art">${r.article
-            ? `<a href="${esc(supLink(s, r.article, r.name))}" target="_blank" rel="noopener">${esc(r.article)}</a>`
-            : '<span class="muted">—</span>'}</td>
+          ${artCell({ article: r.article, supplier: s })}
           <td>${esc(r.order || '')}</td></tr>`).join('')}</tbody>
       </table></div></section>`).join('')}
     ${prep.length ? `<section class="sup"><h2>Prepare in the kitchen <span class="count">${prep.length}</span></h2>
@@ -826,23 +830,37 @@ function norm2(x) {
   return String(x || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 }
 
-/* ---------- Apicbase: pick a menu by date, pick dishes, see every ingredient and who sells it.
+/* ---------- Apicbase: the week's menus, the dishes in them, and what to order.
 
-   The page cannot call Apicbase: the API token cannot live in a browser. It reads
-   the copy the nightly sync leaves in Firebase, which is the same data one day old.
-   Quantities here are worked out from those recipes. The Catering order tab is
-   Apicbase's own BOM; use that one as the final word on an order.
+   The page cannot call Apicbase: an API token cannot be kept safe in a browser.
+   It reads the copy the nightly sync leaves in Firebase, one day old at most.
+   The portions typed here are saved in our own database under catering/, keyed by
+   menu and recipe, so they survive a reload and a fresh Apicbase fetch alike.
+   Quantities are worked out here from those recipes; the Catering order tab is
+   Apicbase's own BOM.
 ---------- */
-let APIC = { state: 'idle', error: '', data: null, date: '', q: '', menu: '', picked: {}, open: {} };
+let APIC = { state: 'idle', error: '', data: null, q: '', saveErr: '' };
+let CATERPICK = {};                       // catering/ from Firebase: {week: {menus:{}, qty:{}}}
 
-try {
-  const saved = JSON.parse(localStorage.getItem('nrw-apic-picks') || '{}');
-  if (saved && typeof saved === 'object') { APIC.picked = saved.picked || {}; APIC.date = saved.date || ''; }
-} catch (e) { /* a blocked or empty store is fine */ }
+const apicWeek = () => (PLAN && PLAN.week && PLAN.week.key) || iso(WEEK);
+const apicSel = () => ((CATERPICK[apicWeek()] || {}).menus) || {};
+const apicQty = () => ((CATERPICK[apicWeek()] || {}).qty) || {};
 
-function apicSave() {
-  try { localStorage.setItem('nrw-apic-picks', JSON.stringify({ picked: APIC.picked, date: APIC.date })); }
-  catch (e) { /* nothing to do if the browser refuses */ }
+function apicPut(changes, what) {
+  if (!STORE || !USER) { APIC.saveErr = 'Sign in first — nothing was saved.'; return; }
+  const wk = apicWeek();
+  const ch = {};
+  for (const [k, v] of Object.entries(changes)) ch[`catering/${wk}/${k}`] = v;
+  // keep the screen right away; the live listener confirms it a moment later
+  const w = CATERPICK[wk] = CATERPICK[wk] || {};
+  for (const [k, v] of Object.entries(changes)) {
+    const parts = k.split('/'), leaf = parts.pop();
+    let node = w;
+    for (const step of parts) node = node[step] = node[step] || {};
+    if (v === null) delete node[leaf]; else node[leaf] = v;
+  }
+  APIC.saveErr = '';
+  put(ch, what);
 }
 
 async function apicFetch() {
@@ -901,26 +919,31 @@ function apicExplode(id, mult, A, out, prep, notes, seen) {
 
 function apicAdd(bag, key, qty, unit, name) {
   const b = toBase(qty, unit);
-  const row = bag[key] || (bag[key] = { name: name || '', base: b.base, v: 0, units: new Set() });
-  row.units.add(b.base);
+  const row = bag[key] || (bag[key] = { name: name || '', base: b.base, v: 0 });
   if (row.base !== b.base) { row.mixed = true; return; }   // never add litres to kilos
   row.v += b.v;
   if (!row.name) row.name = name || '';
 }
 
-/* ----- the whole selection ----- */
+/* ----- everything selected this week ----- */
 function apicTotals() {
   const A = APIC.data, out = {}, prep = {}, notes = [], dishes = [];
-  for (const [id, portions] of Object.entries(APIC.picked)) {
-    const r = A.recipes[id];
-    if (!r || !(+portions > 0)) continue;
-    const per = {}, pprep = {};
-    apicExplode(id, (+portions) / (+r.persons || 1), A, per, pprep, notes, new Set());
-    dishes.push({ id, name: r.name, portions: +portions, persons: +r.persons || 1, per, prep: pprep });
-    for (const [k, v] of Object.entries(per)) apicMerge(out, k, v);
-    for (const [k, v] of Object.entries(pprep)) apicMerge(prep, k, v);
+  const qty = apicQty();
+  for (const [menuId, rows] of Object.entries(qty)) {
+    if (menuId !== 'extra' && !apicSel()[menuId]) continue;      // menu switched off
+    const menu = A.menus[menuId] || { name: menuId === 'extra' ? 'Added by hand' : menuId };
+    for (const [rid, portions] of Object.entries(rows || {})) {
+      const r = A.recipes[rid];
+      if (!r || !(+portions > 0)) continue;
+      const per = {}, pprep = {};
+      apicExplode(rid, (+portions) / (+r.persons || 1), A, per, pprep, notes, new Set());
+      dishes.push({ id: rid, menuId, menu: menu.name, name: r.name, portions: +portions,
+                    persons: +r.persons || 1, per, prep: pprep });
+      for (const [k, v] of Object.entries(per)) apicMerge(out, k, v);
+      for (const [k, v] of Object.entries(pprep)) apicMerge(prep, k, v);
+    }
   }
-  dishes.sort((a, b) => b.portions - a.portions || a.name.localeCompare(b.name));
+  dishes.sort((a, b) => a.menu.localeCompare(b.menu) || b.portions - a.portions);
   return { dishes, out, prep, notes: [...new Set(notes)] };
 }
 
@@ -946,40 +969,48 @@ function apicLine(ingId, row) {
   };
 }
 
-/* ----- rendering ----- */
-function apicMenusFor(date) {
-  const A = APIC.data, rows = [];
-  for (const [id, m] of Object.entries(A.menus || {})) {
-    if (date && m.from && m.to && (date < m.from || date > m.to)) continue;
-    if (date && (!m.from || !m.to)) continue;
+/* ----- the week's menus ----- */
+function apicWeekMenus() {
+  const days = (PLAN && PLAN.week && PLAN.week.days) || [];
+  const from = days[0], to = days[days.length - 1];
+  const rows = [];
+  for (const [id, m] of Object.entries(APIC.data.menus || {})) {
+    if (!m.from || !m.to) continue;
+    if (from && to && (m.to < from || m.from > to)) continue;    // no overlap with this week
     rows.push({ id, ...m });
   }
-  rows.sort((a, b) => (b.from || '').localeCompare(a.from || '') || a.name.localeCompare(b.name));
+  rows.sort((a, b) => (a.from || '').localeCompare(b.from || '') || a.name.localeCompare(b.name));
   return rows;
 }
 
-function apicSearch(q, limit = 40) {
-  const A = APIC.data, k = String(q || '').trim().toLowerCase();
+function apicSearch(q, limit = 30) {
+  const k = String(q || '').trim().toLowerCase();
   if (k.length < 2) return [];
   const hits = [];
-  for (const [id, r] of Object.entries(A.recipes || {})) {
+  for (const [id, r] of Object.entries(APIC.data.recipes || {})) {
     const n = (r.name || '').toLowerCase();
-    if (!n.includes(k)) continue;
-    hits.push({ id, name: r.name, persons: r.persons, ct: n.endsWith(' - ct'), lines: (r.lines || []).length });
+    if (n.includes(k)) hits.push({ id, name: r.name, persons: r.persons, ct: n.endsWith(' - ct'),
+                                   lines: (r.lines || []).length });
     if (hits.length > 400) break;
   }
   hits.sort((a, b) => (b.ct - a.ct) || a.name.length - b.name.length || a.name.localeCompare(b.name));
   return hits.slice(0, limit);
 }
 
+/* ----- rendering ----- */
 function renderApic() {
   const host = $('#p-apic');
+  const a = document.activeElement;
+  if (APIC.state === 'ok' && a && a.tagName === 'INPUT' && a.closest && a.closest('#p-apic')) {
+    paintApicTotals();        // somebody is typing: never rebuild the list under their cursor
+    return;
+  }
   if (APIC.state === 'loading') { host.innerHTML = '<p class="cempty">Reading the Apicbase copy…</p>'; return; }
   if (APIC.state === 'idle' || APIC.state === 'error') {
     host.innerHTML = `<div class="apicIntro">
       <h3>Build a catering order from Apicbase</h3>
-      <p>Pick a date, open the menu, type the portions. You get every recipe, every ingredient,
-         who sells it and its article number, and one combined list to order from.</p>
+      <p>Fetch once, then every week shows its own menus. Tick the menus you are cooking,
+         type the portions, and you get every ingredient, who sells it and its article number.</p>
       ${APIC.error ? `<p class="bad">${esc(APIC.error)}</p>` : ''}
       <button class="btn primary" id="apicFetch">Fetch from Apicbase</button>
       <p class="hint">Reads the copy the nightly sync leaves in Firebase. The page cannot call
@@ -990,78 +1021,140 @@ function renderApic() {
   host.innerHTML = `
     <div class="toolbar">
       <div class="chips">
-        <span class="chip">${nf(Object.keys(A.recipes).length, 0)} recipes</span>
-        <span class="chip">${nf(Object.keys(A.menus).length, 0)} menus</span>
-        <span class="chip">synced ${esc(gen)} UTC</span>
+        <span class="chip">${esc((PLAN.week && PLAN.week.label) || '')}</span>
         <span class="chip" id="apicCount"></span>
+        <span class="chip">${nf(Object.keys(A.recipes).length, 0)} recipes</span>
+        <span class="chip">synced ${esc(gen)} UTC</span>
       </div>
       <div class="actions">
         <button class="btn" id="apicFetch">Refresh</button>
-        <button class="btn" id="apicClear">Clear</button>
+        <button class="btn" id="apicClear">Clear week</button>
         <button class="btn" id="apicPrint">Print</button>
       </div>
     </div>
-    <div class="apicPick">
-      <label class="fld"><span>Date</span><input type="date" id="apicDate" value="${esc(APIC.date)}"></label>
-      <label class="fld grow"><span>Or search any recipe</span>
-        <input type="search" id="apicQ" value="${esc(APIC.q)}" placeholder="falafel, couscous, goulash…"></label>
-    </div>
+    <p class="hint" style="margin:0 0 10px">Use the week strip at the top of the page to move between weeks.
+      Portions are saved for the whole team as you type.</p>
+    <div id="apicSaveErr"></div>
     <div id="apicResults"></div>
-    <div id="apicPicked"></div>
+    <label class="fld grow" style="display:block;max-width:420px;margin:18px 0 8px">
+      <span class="hint">Add a dish that is not on a menu</span>
+      <input type="search" id="apicQ" value="${esc(APIC.q)}" placeholder="falafel, couscous, goulash…"></label>
+    <div id="apicExtra"></div>
     <div id="apicTotals"></div>`;
-  paintApicResults(); paintApicPicked(); paintApicTotals();
+  paintApicAll();
 }
+
+function paintApicAll() { paintApicResults(); paintApicExtra(); paintApicTotals(); }
 
 function paintApicResults() {
   const el = $('#apicResults'); if (!el) return;
-  el.innerHTML = APIC.q.trim().length >= 2
-    ? `<div class="apicList">${apicSearch(APIC.q).map(h => `<div class="arow">
-        <span class="an">${esc(h.name)}</span>
-        <span class="am">${h.persons || 1} portion recipe · ${h.lines} lines</span>
-        <button class="btn tiny" data-apicadd="${esc(h.id)}">Add</button></div>`).join('')
-        || '<p class="cempty">Nothing with that name.</p>'}</div>`
-    : apicMenuListHtml();
+  const rows = apicWeekMenus(), sel = apicSel(), qty = apicQty();
+  const on = rows.filter(m => sel[m.id]).length;
+  const c = $('#apicCount');
+  if (c) c.textContent = `${rows.length} menu${rows.length === 1 ? '' : 's'} this week, ${on} selected`;
+  const e = $('#apicSaveErr');
+  if (e) e.innerHTML = APIC.saveErr ? `<div class="miss"><h3>Not saved</h3><p>${esc(APIC.saveErr)}</p></div>` : '';
+  if (!rows.length) { el.innerHTML = '<p class="cempty">No Apicbase menu falls in this week.</p>'; return; }
+  el.innerHTML = `<div class="apicList">${rows.map(m => {
+    const chosen = !!sel[m.id], mine = qty[m.id] || {};
+    const typed = Object.values(mine).filter(v => +v > 0).length;
+    return `<div class="arow amenu">
+      <label class="mchk"><input type="checkbox" data-apicmenu="${esc(m.id)}"${chosen ? ' checked' : ''}>
+        <span class="an">${esc(m.name)}</span></label>
+      <span class="am">${esc(m.from || '?')}${m.to !== m.from ? ' → ' + esc(m.to || '?') : ''}
+        · ${(m.recipes || []).length} dishes${typed ? ` · ${typed} with portions` : ''}</span>
+    </div>${chosen ? `<div class="amenuBody">${(m.recipes || []).map(rid => {
+        const r = APIC.data.recipes[String(rid)];
+        if (!r) return `<div class="arow"><span class="an muted">recipe ${esc(rid)} is not in the synced copy</span></div>`;
+        const v = (mine[String(rid)] ?? '');
+        return `<div class="arow">
+          <span class="an">${esc(r.name)}</span>
+          <span class="am">recipe makes ${r.persons || 1}</span>
+          <label class="pfld">portions
+            <input type="number" min="0" step="1" inputmode="numeric"
+              data-amenu="${esc(m.id)}" data-arecipe="${esc(rid)}" value="${v}"></label>
+          <button class="btn tiny" data-apicopen="${esc(m.id)}|${esc(rid)}">Ingredients</button>
+        </div>${APIC.open === m.id + '|' + rid ? apicDishTable(String(rid), +v || 0) : ''}`;
+      }).join('') || '<p class="cempty">This menu has no dishes in the synced copy.</p>'}</div>` : ''}`;
+  }).join('')}</div>`;
 }
 
-function paintApicPicked() {
-  const el = $('#apicPicked'); if (!el) return;
-  const n = Object.keys(APIC.picked).length;
-  const c = $('#apicCount'); if (c) c.textContent = n ? `${n} dish${n === 1 ? '' : 'es'} picked` : 'nothing picked';
-  el.innerHTML = n ? apicPickedHtml(apicTotals())
-    : '<p class="cempty">Nothing picked yet. Choose a menu above, or search for a recipe.</p>';
+function paintApicExtra() {
+  const el = $('#apicExtra'); if (!el) return;
+  const extra = apicQty().extra || {};
+  const found = APIC.q.trim().length >= 2 ? apicSearch(APIC.q) : [];
+  el.innerHTML = `
+    ${found.length ? `<div class="apicList">${found.map(h => `<div class="arow">
+        <span class="an">${esc(h.name)}</span>
+        <span class="am">recipe makes ${h.persons || 1} · ${h.lines} lines</span>
+        <button class="btn tiny" data-apicadd="${esc(h.id)}">Add</button></div>`).join('')}</div>` : ''}
+    ${Object.keys(extra).length ? `<div class="apicList">${Object.entries(extra).map(([rid, v]) => {
+      const r = APIC.data.recipes[rid] || { name: rid, persons: 1 };
+      return `<div class="arow">
+        <span class="an">${esc(r.name)}</span>
+        <span class="am">added by hand · recipe makes ${r.persons || 1}</span>
+        <label class="pfld">portions
+          <input type="number" min="0" step="1" inputmode="numeric"
+            data-amenu="extra" data-arecipe="${esc(rid)}" value="${v ?? ''}"></label>
+        <button class="btn tiny" data-apicdrop="${esc(rid)}">Remove</button></div>`;
+    }).join('')}</div>` : ''}`;
+}
+
+function apicDishTable(rid, portions) {
+  const r = APIC.data.recipes[rid];
+  if (!r || !(portions > 0)) return '<p class="cempty" style="margin-left:18px">Type the portions to see the ingredients.</p>';
+  const per = {}, prep = {}, notes = [];
+  apicExplode(rid, portions / (+r.persons || 1), APIC.data, per, prep, notes, new Set());
+  const rows = Object.entries(per).map(([k, v]) => apicLine(k, v)).sort((a, b) => a.name.localeCompare(b.name));
+  return `<div class="tablewrap" style="margin:4px 0 12px 18px"><table>
+    <thead><tr><th>Ingredient</th><th class="num">Need</th><th>Unit</th><th>Supplier</th><th>Article no.</th></tr></thead>
+    <tbody>${rows.map(l => `<tr><td>${esc(l.name)}</td>
+      <td class="num qty">${nf(l.qty, l.qty < 10 ? 2 : 0)}</td><td>${esc(l.unit)}</td>
+      <td>${esc(l.supplier)}</td>${artCell(l)}</tr>`).join('')}
+    ${Object.entries(prep).map(([k, v]) => { const [q, u] = fromBase(v.v, v.base);
+      return `<tr><td>${esc(v.name || k)} <span class="tag">prepare</span></td>
+        <td class="num qty">${nf(q, 0)}</td><td>${esc(u)}</td>
+        <td colspan="2" class="muted">made in the kitchen</td></tr>`; }).join('')}</tbody></table></div>`;
+}
+
+/* The article number is the thing worth having, so clicking copies it. The
+   small link only opens the supplier's own site - no invented search path. */
+function artCell(l) {
+  if (!l.article) return '<td class="art"><span class="muted">—</span></td>';
+  const home = SUP_HOME[l.supplier];
+  return `<td class="art"><button class="artbtn" data-copy="${esc(l.article)}"
+      title="Copy the article number">${esc(l.article)}</button>${
+    home ? ` <a href="${esc(home)}" target="_blank" rel="noopener" title="Open ${esc(l.supplier)}">↗</a>` : ''}</td>`;
 }
 
 function paintApicTotals() {
   const el = $('#apicTotals'); if (!el) return;
-  if (!Object.keys(APIC.picked).length) { el.innerHTML = ''; return; }
   const T = apicTotals();
+  if (!T.dishes.length) { el.innerHTML = '<p class="cempty">Tick a menu and type portions to build the order.</p>'; return; }
   const lines = Object.entries(T.out).map(([k, v]) => apicLine(k, v))
     .sort((a, b) => a.supplier.localeCompare(b.supplier) || a.name.localeCompare(b.name));
   const bySup = {};
   for (const l of lines) (bySup[l.supplier] = bySup[l.supplier] || []).push(l);
-  // a pack sold in ml against a recipe line in g needs a density to convert, which
-  // the sync does not carry, so the pack count is left blank rather than guessed
   const odd = lines.filter(l => l.packs === null && l.packText).map(l => l.name);
   if (odd.length) T.notes.push('Pack size and recipe unit do not match, so no pack count is shown for: '
     + odd.slice(0, 8).join(', ') + (odd.length > 8 ? ` and ${odd.length - 8} more` : ''));
+  const portions = T.dishes.reduce((a, d) => a + d.portions, 0);
   el.innerHTML = `
-    ${lines.length ? `<h2 class="apicH">Everything to order
-      <span class="count">${lines.length} ingredients · ${Object.keys(bySup).length} suppliers</span></h2>
-      ${Object.keys(bySup).sort().map(s => `<section class="sup${s.startsWith('-') ? ' none' : ''}">
-        <h2>${esc(s)} <span class="count">${bySup[s].length}</span></h2>
-        <div class="tablewrap"><table>
-          <thead><tr><th>Ingredient</th><th class="num">Need</th><th>Unit</th><th>Article no.</th><th class="num">Packs</th><th>Pack size</th></tr></thead>
-          <tbody>${bySup[s].map(l => `<tr>
-            <td><b>${esc(l.name)}</b>${l.mixed ? '<span class="tag warn">mixed units</span>' : ''}
-              ${l.stockItem ? `<span class="sub2">${esc(l.stockItem)}</span>` : ''}</td>
-            <td class="num qty">${nf(l.qty, l.qty < 10 ? 2 : 0)}</td>
-            <td>${esc(l.unit)}</td>
-            <td class="art">${l.article
-              ? `<a href="${esc(supLink(l.supplier, l.article, l.name))}" target="_blank" rel="noopener">${esc(l.article)}</a>`
-              : '<span class="muted">—</span>'}</td>
-            <td class="num qty">${l.packs === null ? '<span class="muted">—</span>' : nf(l.packs, 0)}</td>
-            <td>${esc(l.packText)}</td></tr>`).join('')}</tbody>
-        </table></div></section>`).join('')}` : ''}
+    <h2 class="apicH">Everything to order
+      <span class="count">${T.dishes.length} dishes · ${nf(portions, 0)} portions ·
+        ${lines.length} ingredients · ${Object.keys(bySup).length} suppliers</span></h2>
+    ${Object.keys(bySup).sort().map(s => `<section class="sup${s.startsWith('-') ? ' none' : ''}">
+      <h2>${esc(s)} <span class="count">${bySup[s].length}</span></h2>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Ingredient</th><th class="num">Need</th><th>Unit</th><th>Article no.</th><th class="num">Packs</th><th>Pack size</th></tr></thead>
+        <tbody>${bySup[s].map(l => `<tr>
+          <td><b>${esc(l.name)}</b>${l.mixed ? '<span class="tag warn">mixed units</span>' : ''}
+            ${l.stockItem ? `<span class="sub2">${esc(l.stockItem)}</span>` : ''}</td>
+          <td class="num qty">${nf(l.qty, l.qty < 10 ? 2 : 0)}</td>
+          <td>${esc(l.unit)}</td>${artCell(l)}
+          <td class="num qty">${l.packs === null ? '<span class="muted">—</span>' : nf(l.packs, 0)}</td>
+          <td>${esc(l.packText)}</td></tr>`).join('')}</tbody>
+      </table></div></section>`).join('')}
     ${Object.keys(T.prep).length ? `<section class="sup"><h2>Prepare in the kitchen
         <span class="count">${Object.keys(T.prep).length}</span></h2>
       <div class="tablewrap"><table><thead><tr><th>Sub-recipe</th><th class="num">Needed</th><th>Unit</th></tr></thead>
@@ -1075,94 +1168,52 @@ function paintApicTotals() {
       <b>Catering order</b> tab is Apicbase's own calculation — check against it before a large order.</p>`;
 }
 
-function apicMenuListHtml() {
-  const rows = apicMenusFor(APIC.date);
-  if (!rows.length) return `<p class="cempty">${APIC.date
-    ? 'No Apicbase menu covers that date. Clear the date to see them all, or search for a recipe.'
-    : 'No menus in the synced copy.'}</p>`;
-  return `<div class="apicList">${rows.slice(0, 25).map(m => {
-    const open = APIC.menu === m.id;
-    return `<div class="arow amenu">
-      <span class="an">${esc(m.name)}</span>
-      <span class="am">${esc(m.from || '?')} → ${esc(m.to || '?')} · ${(m.recipes || []).length} dishes</span>
-      <button class="btn tiny" data-apicmenu="${esc(m.id)}">${open ? 'Hide' : 'Open'}</button>
-    </div>${open ? `<div class="amenuBody">${(m.recipes || []).map(rid => {
-        const r = APIC.data.recipes[String(rid)];
-        if (!r) return '';
-        return `<div class="arow">
-          <span class="an">${esc(r.name)}</span>
-          <span class="am">${r.persons || 1} portion recipe · ${(r.lines || []).length} lines</span>
-          <button class="btn tiny" data-apicadd="${esc(rid)}">Add</button></div>`;
-      }).join('') || '<p class="cempty">This menu has no dishes in the synced copy.</p>'}</div>` : ''}`;
-  }).join('')}</div>`;
-}
-
-function apicPickedHtml(T) {
-  return `<h2 class="apicH">Picked <span class="count">${T.dishes.length}</span></h2>
-    ${T.dishes.map(d => {
-      const open = !!APIC.open[d.id];
-      const rows = Object.entries(d.per).map(([k, v]) => apicLine(k, v))
-        .sort((a, b) => a.name.localeCompare(b.name));
-      return `<div class="apicDish">
-        <div class="arow">
-          <span class="an">${esc(d.name)}</span>
-          <label class="pfld">portions
-            <input type="number" min="0" step="1" inputmode="numeric"
-              data-aportions="${esc(d.id)}" value="${d.portions}"></label>
-          <span class="am">recipe makes ${d.persons}</span>
-          <button class="btn tiny" data-apicopen="${esc(d.id)}">${open ? 'Hide' : 'Ingredients'}</button>
-          <button class="btn tiny" data-apicdrop="${esc(d.id)}">Remove</button>
-        </div>
-        ${open ? `<div class="tablewrap"><table>
-          <thead><tr><th>Ingredient</th><th class="num">Need</th><th>Unit</th><th>Supplier</th><th>Article no.</th></tr></thead>
-          <tbody>${rows.map(l => `<tr><td>${esc(l.name)}</td>
-            <td class="num qty">${nf(l.qty, l.qty < 10 ? 2 : 0)}</td><td>${esc(l.unit)}</td>
-            <td>${esc(l.supplier)}</td>
-            <td class="art">${l.article
-              ? `<a href="${esc(supLink(l.supplier, l.article, l.name))}" target="_blank" rel="noopener">${esc(l.article)}</a>`
-              : '<span class="muted">—</span>'}</td></tr>`).join('')}
-          ${Object.keys(d.prep).length ? Object.entries(d.prep).map(([k, v]) => { const [q, u] = fromBase(v.v, v.base);
-            return `<tr><td>${esc(v.name || k)} <span class="tag">prepare</span></td>
-              <td class="num qty">${nf(q, 0)}</td><td>${esc(u)}</td><td colspan="2" class="muted">made in the kitchen</td></tr>`;
-          }).join('') : ''}</tbody></table></div>` : ''}
-      </div>`;
-    }).join('')}`;
-}
+/* ----- events ----- */
 document.addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b || !b.closest('#p-apic')) return;
   const d = b.dataset;
   if (b.id === 'apicFetch') apicFetch();
-  else if (b.id === 'apicClear') { APIC.picked = {}; APIC.open = {}; apicSave(); renderApic(); }
   else if (b.id === 'apicPrint') window.print();
-  else if (d.apicadd) {
-    if (!APIC.picked[d.apicadd]) APIC.picked[d.apicadd] = 10;
-    apicSave(); paintApicPicked(); paintApicTotals();
-    const f = document.querySelector(`#p-apic input[data-aportions="${CSS.escape(d.apicadd)}"]`);
-    if (f) { f.focus(); f.select(); }
+  else if (b.id === 'apicClear') {
+    if (!confirm(`Clear every menu and portion for ${PLAN.week.label}? This clears it for the whole team.`)) return;
+    CATERPICK[apicWeek()] = {};
+    put({ [`catering/${apicWeek()}`]: null }, 'catering week cleared');
+    paintApicAll();
   }
-  else if (d.apicdrop) { delete APIC.picked[d.apicdrop]; delete APIC.open[d.apicdrop]; apicSave(); paintApicPicked(); paintApicTotals(); }
-  else if (d.apicopen) { APIC.open[d.apicopen] = !APIC.open[d.apicopen]; paintApicPicked(); }
-  else if (d.apicmenu) { APIC.menu = APIC.menu === d.apicmenu ? '' : d.apicmenu; paintApicResults(); }
-});
-
-document.addEventListener('input', e => {
-  const el = e.target; if (!el.closest || !el.closest('#p-apic')) return;
-  if (el.id === 'apicQ') { APIC.q = el.value; paintApicResults(); }
-  else if (el.id === 'apicDate') { APIC.date = el.value; APIC.menu = ''; apicSave(); paintApicResults(); }
-  else if (el.dataset && 'aportions' in el.dataset) {
-    const v = el.value === '' ? 0 : Math.max(0, Math.round(+el.value) || 0);
-    APIC.picked[el.dataset.aportions] = v;
-    apicSave(); paintApicTotals();                 // the row keeps focus; totals follow along
+  else if (d.copy) {
+    navigator.clipboard?.writeText(d.copy).then(() => {
+      const was = b.textContent; b.textContent = 'copied'; b.classList.add('ok');
+      setTimeout(() => { b.textContent = was; b.classList.remove('ok'); }, 1200);
+    }).catch(() => { /* a browser that refuses the clipboard still shows the number */ });
   }
+  else if (d.apicadd) { apicPut({ [`qty/extra/${d.apicadd}`]: 10 }, 'catering dish added'); APIC.q = ''; renderApic(); }
+  else if (d.apicdrop) { apicPut({ [`qty/extra/${d.apicdrop}`]: null }, 'catering dish removed'); paintApicExtra(); paintApicTotals(); }
+  else if (d.apicopen) { APIC.open = APIC.open === d.apicopen ? '' : d.apicopen; paintApicResults(); }
 });
 
 document.addEventListener('change', e => {
   const el = e.target;
-  if (el.closest && el.closest('#p-apic') && el.dataset && 'aportions' in el.dataset) {
-    if (!APIC.picked[el.dataset.aportions]) { delete APIC.picked[el.dataset.aportions]; apicSave(); }
-    paintApicPicked(); paintApicTotals();
+  if (!el.closest || !el.closest('#p-apic')) return;
+  if (el.dataset && el.dataset.apicmenu) {
+    apicPut({ [`menus/${el.dataset.apicmenu}`]: el.checked ? true : null },
+            el.checked ? 'catering menu selected' : 'catering menu unselected');
+    paintApicResults(); paintApicTotals();
   }
 }, true);
+
+document.addEventListener('input', e => {
+  const el = e.target; if (!el.closest || !el.closest('#p-apic')) return;
+  if (el.id === 'apicQ') { APIC.q = el.value; paintApicExtra(); return; }
+  const d = el.dataset;
+  if (d && d.arecipe) {
+    const v = el.value === '' ? null : Math.max(0, Math.round(+el.value) || 0);
+    apicPut({ [`qty/${d.amenu}/${d.arecipe}`]: v }, 'catering portions');
+    paintApicTotals();                       // the field keeps focus; totals follow along
+    const c = $('#apicCount');
+    if (c) { const rows = apicWeekMenus(), sel = apicSel();
+      c.textContent = `${rows.length} menu${rows.length === 1 ? '' : 's'} this week, ${rows.filter(m => sel[m.id]).length} selected`; }
+  }
+});
 
 function renderYields() {
   const rank = { estimate: 0, input: 1, db: 2, confirmed: 3 };
@@ -1659,6 +1710,7 @@ function applyRemote(data) {
   ST.stock = Object.fromEntries(Object.entries(data.stock || {}).map(([w, m]) => [w, decode(m)]));
   ST.suppliers = decode(data.suppliers); ST.packs = decode(data.packs); ST.yields = decode(data.yields);
     ORDERED = data.ordered || {};
+  CATERPICK = data.catering || {};
   ST.buffer = data.settings && Number.isFinite(+data.settings.buffer) ? +data.settings.buffer : null;
   LAST = (data.meta && data.meta.lastChange) || null;
 }
