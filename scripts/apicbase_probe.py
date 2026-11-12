@@ -88,6 +88,37 @@ def main():
     else:
         print(f"  ?    bom scope        /bom/recipes/   HTTP {status}")
 
+    # How a menu points at its dishes. The sync reads menu -> recipe ids from this,
+    # and the planner showed menus with no dishes, so the shape has to be checked.
+    print()
+    status, payload, _ = get("/products/menus/", {"page_size": 10})
+    if status == 200:
+        rows = payload.get("results") or []
+        print(f"  menu fields = {sorted(rows[0]) if rows else 'none'}")
+        for m in rows:
+            c = m.get("courses")
+            if isinstance(c, list) and c:
+                first = c[0]
+                if isinstance(first, dict):
+                    print(f"  courses = list of objects, keys = {sorted(first)}")
+                    for k, v in first.items():          # shape only, never a value
+                        kind = type(v).__name__
+                        if isinstance(v, str):
+                            kind += " url" if v.startswith("http") else " text"
+                        elif isinstance(v, list) and v:
+                            kind += f" of {type(v[0]).__name__}"
+                            if isinstance(v[0], dict):
+                                kind += f" keys={sorted(v[0])}"
+                            elif isinstance(v[0], str):
+                                kind += " url" if v[0].startswith("http") else " text"
+                        print(f"      {k:22} {kind}")
+                else:
+                    print(f"  courses = list of {type(first).__name__}, "
+                          f"url={str(first).startswith('http')}")
+                break
+        else:
+            print("  none of the first 10 menus has any courses")
+
     print(f"\n{ok}/{len(CHECKS)} endpoints reachable.")
     if failed:
         print("Failed: " + ", ".join(f"{l} ({s})" for l, _, s in failed))
