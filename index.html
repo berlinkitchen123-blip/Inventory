@@ -850,7 +850,7 @@ function norm2(x) {
    Quantities are worked out here from those recipes; the Catering order tab is
    Apicbase's own BOM.
 ---------- */
-let APIC = { state: 'idle', error: '', data: null, q: '', saveErr: '', open: '', breakdown: true, beo: null };
+let APIC = { state: 'idle', error: '', data: null, q: '', saveErr: '', open: '', breakdown: true, beo: null, dishmap: {} };
 try { APIC.breakdown = localStorage.getItem('nrw-apic-breakdown') !== 'off'; } catch (e) { /* storage blocked */ }
 let CATERPICK = {};                       // catering/ from Firebase: {week: {menus:{}, qty:{}}}
 
@@ -882,6 +882,7 @@ async function apicFetch() {
   try {
     const [menus, recipes, ingredients, packs, meta, events] = await Promise.all(
       ['menus', 'recipes', 'ingredients', 'packs', 'meta', 'events'].map(n => STORE.read('apicbase/' + n)));
+    APIC.dishmap = await apicDishMap();
     if (!recipes) throw new Error('No Apicbase data in Firebase yet. Run the daily sync once.');
     APIC.data = { menus: menus || {}, recipes: recipes || {}, ingredients: ingredients || {},
                   packs: packs || {}, meta: meta || {}, events: events || {} };
@@ -1092,16 +1093,53 @@ function apicParseBeo(text) {
   return { event, guests, rows };
 }
 
+/* data/dish-map.json: dish names already tied to a recipe id by hand, the same
+   file the order script uses. Names BEO and Apicbase spell differently live here. */
+async function apicDishMap() {
+  try {
+    const r = await fetch('data/dish-map.json', { cache: 'no-cache' });
+    if (!r.ok) return {};
+    const raw = await r.json();
+    const out = {};
+    for (const [dish, v] of Object.entries((raw && raw.map) || {})) {
+      const id = v && typeof v === 'object' ? v.id : v;
+      if (id) out[norm2(dish)] = String(id);
+    }
+    return out;
+  } catch (e) { return {}; }           // the map is a convenience, never required
+}
+
 /* A BEO line carries the category glued to the dish name ("Funky Falafel
    Skewers Finger Food"), so drop trailing words until a recipe matches. */
 function apicMatchDish(name, pool) {
   const bare = s => norm2(s).replace(/\s+ct$/, '');
   const key = bare(name), words = key.split(' ');
+  const map = APIC.dishmap || {};
   for (let n = words.length; n >= 1; n--) {
     const k = words.slice(0, n).join(' ');
     if (!k) continue;
     const hit = pool.find(p => bare(p.name) === k);
     if (hit) return hit;
+    const mapped = map[k] || map[words.slice(0, n).join(' ')];
+    if (mapped) {
+      const inMenu = pool.find(p => String(p.id) === mapped);
+      if (inMenu) return inMenu;
+    }
+  }
+  // Still nothing: the two sides spell the same dish differently ("Zander Fillet
+  // with" vs "& Lemon Butter Sauce", "Green Leaves" vs "Green Leafs"). Compare on
+  // shared words, but only inside this one menu's handful of recipes, and only
+  // when one candidate is clearly ahead. Anything close is reported, not guessed.
+  const want = new Set(words.filter(w => w.length > 2));
+  if (want.size < 2) return null;
+  const scored = pool.map(p => {
+    const have = new Set(bare(p.name).split(' ').filter(w => w.length > 2));
+    let shared = 0;
+    for (const w of want) if (have.has(w)) shared++;
+    return { p, s: shared / new Set([...want, ...have]).size };
+  }).sort((a, b) => b.s - a.s);
+  if (scored.length && scored[0].s >= 0.45 && scored[0].s - ((scored[1] || {}).s || 0) >= 0.15) {
+    return { ...scored[0].p, near: true };
   }
   return null;
 }
@@ -1133,15 +1171,18 @@ function apicApplyBeo(text) {
   }
   const pool = (menu.recipes || []).map(id => ({ id: String(id), name: (APIC.data.recipes[String(id)] || {}).name || '' }))
     .filter(p => p.name);
-  const ch = { [`menus/${menu.id}`]: true }, done = [], missed = [];
+  const ch = { [`menus/${menu.id}`]: true }, done = [], missed = [], near = [];
   if (guests) ch[`people/${menu.id}`] = guests;
   for (const r of rows) {
     const hit = apicMatchDish(r.dish, pool);
-    if (hit && Number.isFinite(r.qty)) { ch[`qty/${menu.id}/${hit.id}`] = r.qty; done.push(`${hit.name} ${r.qty}`); }
-    else missed.push(`${r.dish} (${r.qty})`);
+    if (hit && Number.isFinite(r.qty)) {
+      ch[`qty/${menu.id}/${hit.id}`] = r.qty;
+      done.push(`${hit.name} ${r.qty}`);
+      if (hit.near) near.push(`${r.dish.trim()} → ${hit.name}`);
+    } else missed.push(`${r.dish} (${r.qty})`);
   }
   apicPut(ch, `catering portions from the ${menu.name} BEO`);
-  return { ok: true, menu: menu.name, done, missed,
+  return { ok: true, menu: menu.name, done, missed, near,
            msg: `${menu.name}: ${done.length} of ${rows.length} dishes filled` +
                 (guests ? `, ${guests} guests` : '') + '.' };
 }
@@ -1339,8 +1380,9 @@ document.addEventListener('click', e => {
   const d = b.dataset;
   if (b.id === 'apicBeoGo') {
     const r = apicApplyBeo($('#apicBeo').value);
-    APIC.beo = { ok: r.ok, text: r.msg + (r.missed && r.missed.length
-      ? ' Not on this menu: ' + r.missed.join(', ') : '') };
+    APIC.beo = { ok: r.ok, text: r.msg
+      + (r.near && r.near.length ? ' Matched by a near name, worth a look: ' + r.near.join('; ') + '.' : '')
+      + (r.missed && r.missed.length ? ' Not on this menu: ' + r.missed.join(', ') : '') };
     if (r.ok) $('#apicBeo').value = '';
     renderApic();
     return;
