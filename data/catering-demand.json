@@ -2,6 +2,7 @@
   "week": "2026-W47",
   "range": "2026-11-16 to 2026-11-20",
   "kitchen": "Remscheid",
+  "preferCT": true,
   "note": "Catering demand only. Customer details deliberately left out: this repository is public.",
   "events": 5,
   "demand": [
