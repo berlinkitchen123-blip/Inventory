@@ -105,6 +105,24 @@ def norm(s):
     return " ".join(s.split())
 
 
+def pick(line, *keys):
+    """A nested object on a recipe line, whatever shape the API returns it in."""
+    for k in keys:
+        v = line.get(k)
+        if v:
+            return v
+    return None
+
+
+def name_of(v):
+    """The name of a nested object, which may arrive as a dict, a string or an id."""
+    if isinstance(v, dict):
+        return str(v.get("name") or v.get("title") or "")
+    if isinstance(v, str):
+        return v
+    return ""
+
+
 def load_map():
     """data/dish-map.json: a dish name a human has already tied to a recipe id."""
     try:
@@ -243,14 +261,17 @@ def main():
             lines = r.get("ingredients") or r.get("recipe_lines") or r.get("lines") or []
             rows_ = []
             for ln in lines:
-                ing = ln.get("ingredient") or ln.get("stock_item") or {}
-                sub = ln.get("recipe") or ln.get("sub_recipe") or {}
+                if not isinstance(ln, dict):          # some lines come back as a bare name
+                    rows_.append({"name": str(ln), "qty": None, "unit": "", "sub": False})
+                    continue
+                ing = pick(ln, "ingredient", "stock_item")
+                sub = pick(ln, "recipe", "sub_recipe")
                 q = ln.get("quantity") or ln.get("amount") or {}
                 rows_.append({
-                    "name": ing.get("name") or sub.get("name") or ln.get("name") or "?",
+                    "name": name_of(ing) or name_of(sub) or str(ln.get("name") or "?"),
                     "qty": q.get("value") if isinstance(q, dict) else q,
                     "unit": (q.get("unit") if isinstance(q, dict) else ln.get("unit")) or "",
-                    "sub": bool(sub and not ing.get("name")),
+                    "sub": bool(name_of(sub) and not name_of(ing)),
                 })
             detail[str(m["id"])] = {"name": r.get("name"), "servings": r.get("servings")
                                     or r.get("portions"), "lines": rows_}
