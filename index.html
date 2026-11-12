@@ -239,6 +239,9 @@ table.order tbody.item.ordered .name{text-decoration:line-through;color:var(--in
 .artbtn.ok{color:var(--basil,#8fbf6a)}
 #p-apic .art a,#p-catering .art a{color:var(--ink-3);text-decoration:none;margin-left:4px}
 #p-apic .art a:hover,#p-catering .art a:hover{color:var(--saffron)}
+
+.tag.people{background:rgba(255,186,73,.14);border:1px solid var(--saffron);color:var(--saffron);
+  border-radius:999px;padding:1px 9px;font-size:11px;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -868,11 +871,11 @@ async function apicFetch() {
   if (APIC.state === 'loading' || !STORE || !USER) return;
   APIC.state = 'loading'; APIC.error = ''; renderApic();
   try {
-    const [menus, recipes, ingredients, packs, meta] = await Promise.all(
-      ['menus', 'recipes', 'ingredients', 'packs', 'meta'].map(n => STORE.read('apicbase/' + n)));
+    const [menus, recipes, ingredients, packs, meta, events] = await Promise.all(
+      ['menus', 'recipes', 'ingredients', 'packs', 'meta', 'events'].map(n => STORE.read('apicbase/' + n)));
     if (!recipes) throw new Error('No Apicbase data in Firebase yet. Run the daily sync once.');
     APIC.data = { menus: menus || {}, recipes: recipes || {}, ingredients: ingredients || {},
-                  packs: packs || {}, meta: meta || {} };
+                  packs: packs || {}, meta: meta || {}, events: events || {} };
     APIC.state = 'ok';
   } catch (e) {
     APIC.error = e.message || String(e); APIC.state = 'error';
@@ -990,6 +993,38 @@ function apicWeekMenus() {
   return rows;
 }
 
+/* The head count comes from Notion, the portion size from Apicbase, so tying an
+   Apicbase menu to its Notion event gives the portions for every dish on it.
+   Matched on the event date plus the client's words appearing in the menu name:
+   "DMRZ 19.11 (NRW)" to DMRZ on 19 Nov, "UFA 16.11" to UFA Lunch. */
+function apicEventFor(m) {
+  if (!m.from || m.from !== m.to) return null;        // week menus are not events
+  const name = norm2(m.name);
+  let best = null, score = 0;
+  for (const [id, e] of Object.entries(APIC.data.events || {})) {
+    if (e.date !== m.from) continue;
+    const words = norm2(e.client).split(' ').filter(w => w.length > 2);
+    if (!words.length) continue;
+    const hit = words.filter(w => name.includes(w)).length / words.length;
+    if (hit > score) { score = hit; best = { id, ...e }; }
+  }
+  return score >= 0.5 ? best : null;
+}
+
+/* Put the head count on every dish of a menu that has no number yet. */
+function apicFill(menuId, people, over) {
+  const m = APIC.data.menus[menuId];
+  if (!m || !(+people > 0)) return 0;
+  const mine = apicQty()[menuId] || {}, ch = {};
+  for (const rid of m.recipes || []) {
+    if (!APIC.data.recipes[String(rid)]) continue;
+    if (!over && +mine[String(rid)] > 0) continue;
+    ch[`qty/${menuId}/${rid}`] = +people;
+  }
+  if (Object.keys(ch).length) apicPut(ch, 'catering portions from the head count');
+  return Object.keys(ch).length;
+}
+
 function apicSearch(q, limit = 30) {
   const k = String(q || '').trim().toLowerCase();
   if (k.length < 2) return [];
@@ -1067,11 +1102,16 @@ function paintApicResults() {
   el.innerHTML = `<div class="apicList">${rows.map(m => {
     const chosen = !!sel[m.id], mine = qty[m.id] || {};
     const typed = Object.values(mine).filter(v => +v > 0).length;
+    const ev = apicEventFor(m);
     return `<div class="arow amenu">
       <label class="mchk"><input type="checkbox" data-apicmenu="${esc(m.id)}"${chosen ? ' checked' : ''}>
         <span class="an">${esc(m.name)}</span></label>
+      ${ev && ev.people ? `<span class="tag people" title="${esc(ev.client)}${
+        ev.city ? ', ' + esc(ev.city) : ''}">${nf(ev.people, 0)} people</span>` : ''}
       <span class="am">${esc(m.from || '?')}${m.to !== m.from ? ' → ' + esc(m.to || '?') : ''}
         · ${(m.recipes || []).length} dishes${typed ? ` · ${typed} with portions` : ''}</span>
+      ${chosen && ev && ev.people ? `<button class="btn tiny" data-apicfill="${esc(m.id)}|${ev.people}"
+        title="Put ${nf(ev.people, 0)} on every dish, replacing what is there">Set all to ${nf(ev.people, 0)}</button>` : ''}
     </div>${chosen ? `<div class="amenuBody">${(m.recipes || []).map(rid => {
         const r = APIC.data.recipes[String(rid)];
         if (!r) return `<div class="arow"><span class="an muted">recipe ${esc(rid)} is not in the synced copy</span></div>`;
@@ -1197,6 +1237,11 @@ document.addEventListener('click', e => {
   }
   else if (d.apicadd) { apicPut({ [`qty/extra/${d.apicadd}`]: 10 }, 'catering dish added'); APIC.q = ''; renderApic(); }
   else if (d.apicdrop) { apicPut({ [`qty/extra/${d.apicdrop}`]: null }, 'catering dish removed'); paintApicExtra(); paintApicTotals(); }
+  else if (d.apicfill) {
+    const [id, n] = d.apicfill.split('|');
+    apicFill(id, +n, true);
+    paintApicResults(); paintApicTotals();
+  }
   else if (d.apicopen) { APIC.open = APIC.open === d.apicopen ? '' : d.apicopen; paintApicResults(); }
 });
 
@@ -1210,8 +1255,13 @@ document.addEventListener('change', e => {
     return;
   }
   if (el.dataset && el.dataset.apicmenu) {
-    apicPut({ [`menus/${el.dataset.apicmenu}`]: el.checked ? true : null },
+    const id = el.dataset.apicmenu;
+    apicPut({ [`menus/${id}`]: el.checked ? true : null },
             el.checked ? 'catering menu selected' : 'catering menu unselected');
+    if (el.checked) {                       // the head count from Notion, where there is one
+      const ev = apicEventFor(APIC.data.menus[id] || {});
+      if (ev && ev.people) apicFill(id, ev.people, false);
+    }
     paintApicResults(); paintApicTotals();
   }
 }, true);
