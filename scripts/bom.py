@@ -352,7 +352,7 @@ def main():
             "kitchen": spec.get("kitchen"), "outlet": outlet.get("name"),
             "events": spec.get("events"),
             "dishes": len(demand), "portions": sum(d["servings"] for d in demand),
-            "matched": [{"dish": m["dish"], "servings": m["servings"],
+            "matched": [{"dish": m["dish"], "servings": m["servings"], "id": str(m["id"]),
                          "apicbase": m["matched"], "how": m["how"]} for m in matched],
             "unmatched": unmatched, "rows": rows, "recipes": detail,
             "prepare": [{"name": (p.get("ingredient") or {}).get("name", ""),
