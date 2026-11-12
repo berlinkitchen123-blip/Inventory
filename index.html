@@ -839,7 +839,8 @@ function norm2(x) {
    Quantities are worked out here from those recipes; the Catering order tab is
    Apicbase's own BOM.
 ---------- */
-let APIC = { state: 'idle', error: '', data: null, q: '', saveErr: '' };
+let APIC = { state: 'idle', error: '', data: null, q: '', saveErr: '', open: '', breakdown: true };
+try { APIC.breakdown = localStorage.getItem('nrw-apic-breakdown') !== 'off'; } catch (e) { /* storage blocked */ }
 let CATERPICK = {};                       // catering/ from Firebase: {week: {menus:{}, qty:{}}}
 
 const apicWeek = () => (PLAN && PLAN.week && PLAN.week.key) || iso(WEEK);
@@ -906,10 +907,16 @@ function apicExplode(id, mult, A, out, prep, notes, seen) {
     if (ln.ing) { apicAdd(out, String(ln.ing), qty, ln.unit, ln.name); continue; }
     const sub = A.recipes[String(ln.sub)];
     if (!sub) { apicAdd(out, 'x' + ln.sub, qty, ln.unit, ln.name || 'unknown sub-recipe'); continue; }
-    if (sub.stockable) { apicAdd(prep, String(ln.sub), qty, ln.unit, sub.name); continue; }
+    // A sub-recipe Apicbase calls stockable is something the kitchen makes. It is
+    // always listed to prepare; with the breakdown on it is also taken apart, so
+    // the raw ingredients land in the order instead of a line nobody can buy.
+    if (sub.stockable) {
+      apicAdd(prep, String(ln.sub), qty, ln.unit, sub.name);
+      if (!APIC.breakdown) continue;
+    }
     const want = toBase(qty, ln.unit), batch = toBase(sub.netWeight, sub.netWeightUnit);
     if (!(batch.v > 0) || want.base !== batch.base) {
-      apicAdd(prep, String(ln.sub), qty, ln.unit, sub.name);
+      if (!sub.stockable) apicAdd(prep, String(ln.sub), qty, ln.unit, sub.name);
       notes.push(`${sub.name} has no usable batch weight, so it is listed to prepare, not broken down`);
       continue;
     }
@@ -1027,6 +1034,8 @@ function renderApic() {
         <span class="chip">synced ${esc(gen)} UTC</span>
       </div>
       <div class="actions">
+        <label class="mchk" style="margin-right:10px"><input type="checkbox" id="apicBreak"${APIC.breakdown ? ' checked' : ''}>
+          <span class="hint">Break down what the kitchen makes</span></label>
         <button class="btn" id="apicFetch">Refresh</button>
         <button class="btn" id="apicClear">Clear week</button>
         <button class="btn" id="apicPrint">Print</button>
@@ -1194,6 +1203,12 @@ document.addEventListener('click', e => {
 document.addEventListener('change', e => {
   const el = e.target;
   if (!el.closest || !el.closest('#p-apic')) return;
+  if (el.id === 'apicBreak') {
+    APIC.breakdown = el.checked;
+    try { localStorage.setItem('nrw-apic-breakdown', el.checked ? 'on' : 'off'); } catch (e) { /* storage blocked */ }
+    paintApicResults(); paintApicTotals();
+    return;
+  }
   if (el.dataset && el.dataset.apicmenu) {
     apicPut({ [`menus/${el.dataset.apicmenu}`]: el.checked ? true : null },
             el.checked ? 'catering menu selected' : 'catering menu unselected');
