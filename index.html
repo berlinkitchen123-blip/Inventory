@@ -762,20 +762,24 @@ function renderCatering() {
 function dishChainHtml(d) {
   const matched = d.matched || [], recipes = d.recipes || {};
   if (!matched.length) return '';
+  // older orders stored the recipe name but no id, so fall back to the name
+  const byName = {};
+  for (const k in recipes) byName[norm2(recipes[k] && recipes[k].name)] = recipes[k];
   const HOW = { mapped: ['ok', 'chosen by hand'], 'exact CT': ['ok', 'catering recipe'], exact: ['ok', 'same name'] };
   return `<section class="sup"><h2>What each dish is made of
       <span class="count">${matched.length} dishes</span></h2>
     <p class="hint" style="margin:0 0 10px">The recipe each dish was costed against, straight from Apicbase.
       Lines are the recipe's own quantities, not multiplied by the portions.</p>
     ${matched.map(m => {
-      const det = recipes[String(m.id)] || {};
+      const used = m.apicbase || m.matched || '';
+      const det = recipes[String(m.id)] || byName[norm2(used)] || {};
       const lines = det.lines || [];
       const [cls, label] = HOW[m.how] || ['warn', m.how || ''];
-      const diff = norm2(m.dish) !== norm2(m.matched || '');
+      const diff = norm2(m.dish) !== norm2(used);
       return `<details class="chain"${lines.length ? '' : ' open'}>
         <summary><b>${esc(m.dish)}</b> · ${nf(m.servings || 0, 0)} portions
           <span class="tag ${cls}">${esc(label)}</span>
-          <span class="sub2">${diff ? 'Apicbase: ' : ''}${esc(m.matched || '')}${
+          <span class="sub2">${diff ? 'Apicbase: ' : ''}${esc(used)}${
             det.servings ? ` · recipe makes ${nf(+det.servings, 0)}` : ''}</span></summary>
         ${lines.length ? `<div class="tablewrap"><table><thead><tr>
             <th>Ingredient</th><th class="num">Qty</th><th>Unit</th><th>Type</th></tr></thead>
