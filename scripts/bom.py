@@ -122,8 +122,13 @@ def load_map():
     return out
 
 
-def resolve(demand, recipes):
+def resolve(demand, recipes, prefer_ct=False):
     """Dish name -> recipe. The map first, then an exact name. Never a guess.
+
+    prefer_ct: catering. The catering version of a dish is kept in Apicbase
+    under the same name with " - CT" on the end, and that is the one to cost,
+    so it is tried before the plain name. Outside catering the CT copies are
+    ignored, which is the rule everywhere else in this repository.
 
     There used to be a contained-substring fallback here. It silently tied
     "Caesar Salad with Chicken" to a recipe called "Chicken" and both couscous
@@ -147,14 +152,20 @@ def resolve(demand, recipes):
             unmatched.append({**row, "candidates": [],
                               "why": f"dish-map points at recipe {rid}, which is not in the library"})
             continue
-        hits = [h for h in (by_norm.get(key) or []) if not norm(h.get("name")).endswith(" ct")]
+        hits, how = [], "exact"
+        if prefer_ct:
+            hits = by_norm.get(key + " ct") or []
+            how = "exact CT"
+        if not hits:
+            hits = [h for h in (by_norm.get(key) or []) if not norm(h.get("name")).endswith(" ct")]
+            how = "exact"
         if len(hits) == 1:
-            matched.append({**row, "id": hits[0]["id"], "matched": hits[0].get("name"), "how": "exact"})
+            matched.append({**row, "id": hits[0]["id"], "matched": hits[0].get("name"), "how": how})
             continue
         want = set(w for w in key.split() if w not in STOP and len(w) > 2)
         scored = []
         for k, rs in by_norm.items():
-            if not k or k.endswith(" ct"):
+            if not k or (k.endswith(" ct") and not prefer_ct):
                 continue
             have = set(k.split())
             shared = len(want & have)
@@ -193,15 +204,19 @@ def main():
 
     recipes = pages("/products/recipes/")
     print(f"recipes in library: {len(recipes)}")
-    matched, unmatched = resolve(demand, recipes)
+    prefer_ct = bool(spec.get("preferCT"))
+    if prefer_ct:
+        print("catering: the '- CT' version of a recipe is preferred over the plain one")
+    matched, unmatched = resolve(demand, recipes, prefer_ct)
     print(f"matched {len(matched)} of {len(demand)} dishes "
           f"({sum(1 for m in matched if m['how'] == 'mapped')} from data/dish-map.json, "
-          f"{sum(1 for m in matched if m['how'] == 'exact')} by exact name)\n")
+          f"{sum(1 for m in matched if m['how'].startswith('exact'))} by exact name)\n")
     print("WHAT EACH DISH WAS TIED TO - check this before ordering")
     print("-" * 72)
     for m in matched:
         flag = "" if norm(m["dish"]) == norm(m["matched"]) else "   <- different name"
-        print(f"  {m['dish'][:40]:<40} {m['servings']:>4} -> {str(m['matched'])[:30]:<30}{flag}")
+        print(f"  {m['dish'][:38]:<38} {m['servings']:>4} -> {str(m['matched'])[:34]:<34} "
+              f"{m['how']:<9}{flag}")
     print()
 
     if unmatched:
