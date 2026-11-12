@@ -114,12 +114,28 @@ def pick(line, *keys):
     return None
 
 
-def name_of(v):
-    """The name of a nested object, which may arrive as a dict, a string or an id."""
+ID_IN_URL = re.compile(r"/(\d+)/?$")
+
+
+def name_of(v, names=None):
+    """The name of a nested object.
+
+    A recipe line can carry the thing itself, its name, or - which is what the
+    recipe endpoint actually returns - a link like
+    .../api/v2/products/ingredients/364684572593003/ . For a link, take the id
+    off the end and look the name up.
+    """
     if isinstance(v, dict):
         return str(v.get("name") or v.get("title") or "")
     if isinstance(v, str):
+        m = ID_IN_URL.search(v.strip())
+        if m and (names or {}).get(m.group(1)):
+            return names[m.group(1)]
+        if v.startswith("http"):
+            return f"id {m.group(1)}" if m else v
         return v
+    if isinstance(v, (int, float)):
+        return (names or {}).get(str(v)) or f"id {v}"
     return ""
 
 
@@ -251,7 +267,15 @@ def main():
 
     detail = {}
     if args.recipes or spec.get("recipeDetail"):
-        print("reading each matched recipe from Apicbase…")
+        # recipe lines point at ingredients by link, so names have to be looked up
+        names = {str(r.get("id")): r.get("name") for r in recipes if r.get("id")}
+        try:
+            for ing in pages("/products/ingredients/"):
+                if ing.get("id"):
+                    names[str(ing["id"])] = ing.get("name")
+        except RuntimeError as e:
+            print(f"  could not list ingredients, names may show as ids: {e}")
+        print(f"reading each matched recipe from Apicbase… ({len(names)} names known)")
         for m in matched:
             try:
                 r = api(f"/products/recipes/{m['id']}/")
@@ -268,10 +292,10 @@ def main():
                 sub = pick(ln, "recipe", "sub_recipe")
                 q = ln.get("quantity") or ln.get("amount") or {}
                 rows_.append({
-                    "name": name_of(ing) or name_of(sub) or str(ln.get("name") or "?"),
+                    "name": name_of(ing, names) or name_of(sub, names) or str(ln.get("name") or "?"),
                     "qty": q.get("value") if isinstance(q, dict) else q,
                     "unit": (q.get("unit") if isinstance(q, dict) else ln.get("unit")) or "",
-                    "sub": bool(name_of(sub) and not name_of(ing)),
+                    "sub": bool(sub and not ing),
                 })
             detail[str(m["id"])] = {"name": r.get("name"), "servings": r.get("servings")
                                     or r.get("portions"), "lines": rows_}
