@@ -247,7 +247,8 @@ table.order tbody.item.ordered .name{text-decoration:line-through;color:var(--in
 .beoBox>summary{cursor:pointer;font-weight:600;font-size:14px}
 .beoBox textarea{width:100%;background:var(--bg,#111);border:1px solid var(--line);border-radius:8px;
   color:var(--ink);padding:8px 10px;font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;resize:vertical}
-.beoActions{display:flex;align-items:center;gap:12px;margin-top:8px;flex-wrap:wrap}
+.beoActions{display:flex;align-items:center;gap:12px;margin:8px 0;flex-wrap:wrap}
+.beoGrab{text-decoration:none;cursor:grab}
 .hint.ok{color:var(--basil,#8fbf6a)}
 .hint.bad{color:var(--paprika)}
 </style>
@@ -610,6 +611,15 @@ function renderWeek() {
   $('#weeks').innerHTML = chips.join('');
 }
 
+/* What was actually ordered for a day, per dish, as the hourly DB export leaves it.
+   ponytail: no new pipeline - export_data.py writes it beside the menus it already reads. */
+function soldWeek(w) {
+  let n = 0, q = 0;
+  for (const d of w.days) for (const v of Object.values((DB.sold || {})[d] || {})) { if (+v > 0) { n++; q += +v; } }
+  return { n, q };
+}
+const soldOn = (day, id) => +(((DB.sold || {})[day] || {})[id] || 0);
+
 function renderForecast() {
   const P = PLAN, w = P.week;
   if (!P.dishes.length) {
@@ -622,7 +632,7 @@ function renderForecast() {
     const head = d.type !== group ? `<tr class="group"><td colspan="${w.days.length + 3}">${esc(TYPES[d.type] || d.type || 'Other')}</td></tr>` : '';
     group = d.type;
     const cells = d.perDay.map((v, i) => v === null ? '<td class="nomenu">–</td>'
-      : `<td class="day"><input type="number" min="0" step="1" inputmode="numeric" data-fc="${w.days[i]}|${esc(d.id)}" data-fid="fc|${w.days[i]}|${esc(d.id)}" value="${v > 0 ? v : ''}" placeholder="0" aria-label="${esc(d.name)}, ${day(fromIso(w.days[i]))}"></td>`).join('');
+      : `<td class="day"><input type="number" min="0" step="1" inputmode="numeric" data-fc="${w.days[i]}|${esc(d.id)}" data-fid="fc|${w.days[i]}|${esc(d.id)}" value="${v > 0 ? v : ''}" placeholder="${soldOn(w.days[i], d.id) || 0}" title="${soldOn(w.days[i], d.id) ? soldOn(w.days[i], d.id) + ' ordered so far' : ''}" aria-label="${esc(d.name)}, ${day(fromIso(w.days[i]))}"></td>`).join('');
     return `${head}<tr><td><div class="name">${esc(d.name)}</div>${d.noRecipe ? '<span class="tag est">No recipe in DB</span>' : ''}${d.incomplete ? `<span class="tag est">Recipe incomplete in DB: ${nf(d.lineG, 0)} of ${nf(d.portion, 0)} g</span>` : ''}</td>${cells}
       <td class="day"><input type="number" min="0" step="1" inputmode="numeric" data-fill="${esc(d.id)}" data-fid="fill|${esc(d.id)}" placeholder="all" aria-label="Same number every day, ${esc(d.name)}"></td>
       <td class="num qty">${nf(d.portions, 0)}</td></tr>`;
@@ -634,7 +644,7 @@ function renderForecast() {
       <tbody>${rows}</tbody>
       <tfoot><tr><td>Total</td>${dayTotals}<td></td><td class="num">${nf(P.portionsSum, 0)}</td></tr></tfoot>
     </table></div>
-    <p><button class="btn" id="clearWeek">Clear this week's forecast</button></p>`;
+    <p>${soldWeek(w).n ? `<button class="btn" id="useSold">Fill from orders (${soldWeek(w).n} dishes, ${nf(soldWeek(w).q, 0)} portions)</button> ` : ''}<button class="btn" id="clearWeek">Clear this week's forecast</button></p>`;
 }
 
 function bySupplier(rows) {
@@ -1088,7 +1098,15 @@ function apicParseBeo(text) {
     let m = line.match(new RegExp('^(.+?)\\s+' + BEO_TEMP.source + '\\s+(\\d{1,4})\\b', 'i'));
     if (m && Number.isFinite(+m[2])) { rows.push({ dish: m[1], qty: +m[2] }); continue; }
     m = line.match(/^(.+?)\s{2,}(\d{1,4})$/);       // name, then the number at the end
-    if (m && !/^\d/.test(m[1]) && Number.isFinite(+m[2])) rows.push({ dish: m[1], qty: +m[2] });
+    if (m && !/^\d/.test(m[1]) && Number.isFinite(+m[2])) { rows.push({ dish: m[1], qty: +m[2] }); continue; }
+    // A line with no category and no temperature, as drinks come out: the only
+    // whole number on it is the quantity, and dashes stand in for the rest.
+    const bits = line.split(/\s+/);
+    const nums = bits.map((b, i) => [b, i]).filter(([b]) => /^\d{1,4}$/.test(b));
+    if (nums.length === 1 && nums[0][1] > 0 && bits.length > nums[0][1] ) {
+      const name = bits.slice(0, nums[0][1]).filter(b => !/^[—–-]+$/.test(b)).join(' ').trim();
+      if (name && !/^\d/.test(name)) rows.push({ dish: name, qty: +nums[0][0] });
+    }
   }
   return { event, guests, rows };
 }
@@ -1126,6 +1144,18 @@ function apicMatchDish(name, pool) {
       if (inMenu) return inMenu;
     }
   }
+  // The BEO often writes a drink or a dish short - "Fanta" for "Fanta 0,33L - CT",
+  // "Coca Cola zero" for "Coca Cola Zero Sugar Glass 0.33 - CT". If every word of
+  // the BEO line appears in a recipe name, that recipe is meant; where several
+  // qualify, the one carrying the fewest extra words wins, and a single-word line
+  // only counts when it leaves exactly one candidate.
+  const has = pool.filter(p => { const t = ' ' + bare(p.name) + ' ';
+    return words.every(w => t.includes(' ' + w + ' ')); })
+    .map(p => ({ p, extra: bare(p.name).split(' ').length - words.length }))
+    .sort((a, b) => a.extra - b.extra);
+  if (has.length === 1) return has[0].p;
+  if (has.length > 1 && words.length > 1 && has[0].extra < has[1].extra) return has[0].p;
+
   // Still nothing: the two sides spell the same dish differently, sometimes with a
   // typo - "Moroccan" against "Morrocan", "Tomatoes" against "Toamatoes", "Green
   // Leaves" against "Green Leafs". Compare letter pairs, which survives a slip of
@@ -1207,6 +1237,46 @@ function apicApplyBeo(text) {
                 (guests ? `, ${guests} guests` : '') + '.' };
 }
 
+/* A whole week's pack is one page with an event order per event. Split it on the
+   heading each one starts with and read them one after another, so a week lands
+   in a single paste. */
+/* BEO lives on its own site behind a login, so this page cannot read it: a browser
+   refuses to fetch another site's pages, and BEO has no public endpoint. Until it
+   offers one, the trip is two clicks - open the week there, then the bookmark below
+   copies every sheet in one go. */
+const BEO_BASE = 'https://beo-catering.vercel.app';
+const BEO_GRAB = 'javascript:' + encodeURI([
+  "(function(){var H='beo-catering.vercel.app';",
+  "if(location.host!==H){location.href='https://'+H+'/beo-pack?scope=week';return;}",
+  "if(!location.pathname.startsWith('/beo-pack')){",
+  "var d=new Date();d.setDate(d.getDate()-((d.getDay()+6)%7)+7);",
+  "var i=prompt('Week starting (Monday, YYYY-MM-DD)',d.toISOString().slice(0,10));",
+  "if(!i)return;location.href='https://'+H+'/beo-pack?scope=week&date='+i;return;}",
+  "var t=document.body.innerText;navigator.clipboard.writeText(t).then(function(){",
+  "alert('Copied '+(t.match(/BANQUET\\s+EVENT\\s+ORDER/gi)||[]).length+' event sheets. ",
+  "Paste them into the planner.');},function(){prompt('Copy this:',t);});})()"
+].join(''));
+
+function apicApplyBeoPack(text) {
+  const marks = [];
+  const re = /^.*BANQUET\s+EVENT\s+ORDER.*$/gmi;
+  let m; while ((m = re.exec(text))) marks.push(m.index);
+  const parts = marks.length > 1
+    ? marks.map((at, i) => text.slice(at, marks[i + 1] === undefined ? text.length : marks[i + 1]))
+    : [text];
+  const out = parts.map(apicApplyBeo);
+  if (out.length === 1) return out[0];
+  const ok = out.filter(r => r.ok);
+  return {
+    ok: ok.length > 0,
+    near: ok.flatMap(r => r.near || []),
+    missed: ok.flatMap(r => r.missed || []),
+    msg: `${ok.length} of ${out.length} events filled` +
+         (ok.length ? ': ' + ok.map(r => r.msg.replace(/\.$/, '')).join('; ') + '.' : '.') +
+         (out.length - ok.length ? ' Skipped: ' + out.filter(r => !r.ok).map(r => r.msg).join(' ') : '')
+  };
+}
+
 function renderApic() {
   const host = $('#p-apic');
   const a = document.activeElement;
@@ -1247,9 +1317,14 @@ function renderApic() {
       Portions are saved for the whole team as you type.</p>
     <div id="apicSaveErr"></div>
     <details class="beoBox" id="apicBeoBox"${APIC.beo ? ' open' : ''}>
-      <summary>Paste a BEO sheet</summary>
-      <p class="hint">Open the event in BEO, select the page (or just the <b>Items to Produce</b> table),
-        copy, and paste it here. The real per-dish numbers go straight onto the matching menu.</p>
+      <summary>Bring the numbers in from BEO</summary>
+      <p class="hint"><b>1.</b> Open BEO for this week, pick <b>Remscheid</b> in the Kitchen box.
+        <b>2.</b> Click the <b>Grab BEO</b> bookmark. <b>3.</b> Paste below and read it.
+        One paste carries the whole week, however many events it holds.</p>
+      <div class="beoActions">
+        <button class="btn" id="apicBeoOpen">Open BEO for this week</button>
+        <a class="btn beoGrab" href="${BEO_GRAB}" title="Drag me to your bookmarks bar, once">⬆ Grab BEO (drag to bookmarks)</a>
+      </div>
       <textarea id="apicBeo" rows="6" placeholder="Client name 17.11 (NRW) — Tuesday 17/11/2026&#10;…&#10;Dish name  Finger Food  COLD  25  Buffet  Platter"></textarea>
       <div class="beoActions"><button class="btn primary" id="apicBeoGo">Read the sheet</button>
         <span id="apicBeoMsg" class="hint ${APIC.beo ? (APIC.beo.ok ? 'ok' : 'bad') : ''}">${
@@ -1286,6 +1361,7 @@ function paintApicResults() {
         ev.city ? ', ' + esc(ev.city) : ''}">Notion: ${nf(ev.people, 0)}</span>` : ''}
       <span class="am">${esc(m.from || '?')}${m.to !== m.from ? ' → ' + esc(m.to || '?') : ''}
         · ${(m.recipes || []).length} dishes${typed ? ` · ${typed} with portions` : ''}</span>
+      ${chosen && !typed ? '<span class="tag warn">no portions yet — paste this event\'s BEO sheet</span>' : ''}
       ${chosen ? `<label class="pfld" title="The head count. Typing it puts that number on every dish in this menu.">people
         <input type="number" min="0" step="1" inputmode="numeric"
           data-apicpeople="${esc(m.id)}" value="${apicPeople()[m.id] ?? (ev && ev.people) ?? ''}"></label>` : ''}
@@ -1398,8 +1474,12 @@ function paintApicTotals() {
 document.addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b || !b.closest('#p-apic')) return;
   const d = b.dataset;
+  if (b.id === 'apicBeoOpen') {
+    window.open(`${BEO_BASE}/beo-pack?scope=week&date=${apicWeek()}`, '_blank', 'noopener');
+    return;
+  }
   if (b.id === 'apicBeoGo') {
-    const r = apicApplyBeo($('#apicBeo').value);
+    const r = apicApplyBeoPack($('#apicBeo').value);
     APIC.beo = { ok: r.ok, text: r.msg
       + (r.near && r.near.length ? ' Matched by a near name, worth a look: ' + r.near.join('; ') + '.' : '')
       + (r.missed && r.missed.length ? ' Not on this menu: ' + r.missed.join(', ') : '') };
@@ -2105,6 +2185,16 @@ document.addEventListener('click', e => {
   else if (b.id === 'xlsxBtn') exportExcel();
   else if (b.id === 'seedStockBtn') seedStock();
   else if (b.id === 'printBtn') { ST.view = 'order'; render(); window.print(); }
+  else if (b.id === 'useSold') {
+    const ch = {}; let n = 0;
+    PLAN.dishes.forEach(d => d.perDay.forEach((v, i) => {
+      const dayIso = PLAN.week.days[i], got = v === null ? 0 : soldOn(dayIso, d.id);
+      if (got > 0 && got !== v) { ch[`forecast/${dayIso}/${d.id}`] = got; n++; }
+    }));
+    if (!n) return;
+    if (!confirm(`Put the ordered numbers into ${n} box${n > 1 ? 'es' : ''} for ${PLAN.week.label}? Anything you typed there is replaced, for the whole team.`)) return;
+    put(ch, 'forecast from orders'); rerenderSoon();
+  }
   else if (b.id === 'clearWeek' && confirm(`Clear the forecast for ${PLAN.week.label}? This clears it for the whole team.`)) {
     const ch = {}; for (const d of PLAN.week.days) ch[`forecast/${d}`] = null; put(ch, 'forecast cleared'); rerenderSoon();
   }
