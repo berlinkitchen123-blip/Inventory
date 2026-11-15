@@ -1,0 +1,488 @@
+{
+  "_note": "Ingredient name map — Apicbase canonical name → supplier aliases + article number. Update whenever a new supplier name appears.",
+  "_updated": "2026-11-15",
+  "ingredients": {
+    "Cucumber": {
+      "aliases": [
+        "Gurke",
+        "Gurken",
+        "Gurke ES",
+        "Cucumber Sack",
+        "Salatgurke",
+        "Gurken ES"
+      ],
+      "art": null
+    },
+    "Cherry Tomatoes": {
+      "aliases": [
+        "Cherrytomaten",
+        "Cherry Tomaten",
+        "Cherry Tom.",
+        "Tomaten Cherry",
+        "Tomaten Kirsch",
+        "Cocktailtomaten"
+      ],
+      "art": null
+    },
+    "Regular Tomatoes": {
+      "aliases": [
+        "Tomaten",
+        "Tomaten rund",
+        "Fleischtomaten",
+        "Rispentomaten",
+        "Tomaten frisch"
+      ],
+      "art": null
+    },
+    "Red Bell Pepper": {
+      "aliases": [
+        "Paprika rot",
+        "Paprika Red",
+        "Paprika NL rot",
+        "Rote Paprika",
+        "Paprika NL"
+      ],
+      "art": "17043240"
+    },
+    "Zucchini": {
+      "aliases": [
+        "Zucchini",
+        "Zucchini grün",
+        "Zucchini 1kg"
+      ],
+      "art": "17043239"
+    },
+    "Champignons": {
+      "aliases": [
+        "Champignons",
+        "Champignon",
+        "Champignons frisch",
+        "Champignons Kiste",
+        "Fresh Kiste"
+      ],
+      "art": "10036741"
+    },
+    "Carrots": {
+      "aliases": [
+        "Karotten",
+        "Möhren",
+        "Karotten 1kg",
+        "Karotten gewaschen",
+        "Mohren"
+      ],
+      "art": "17043236"
+    },
+    "Arugula": {
+      "aliases": [
+        "Rucola",
+        "Rukola",
+        "Rauke",
+        "Rucola 1kg"
+      ],
+      "art": null
+    },
+    "Radicchio": {
+      "aliases": [
+        "Radicchio",
+        "Radicchio Rosso"
+      ],
+      "art": null
+    },
+    "Small Potatoes": {
+      "aliases": [
+        "Drillinge",
+        "Kleine Kartoffeln",
+        "Kartoffeln klein",
+        "Kartoffeln Drillinge",
+        "Fingerling"
+      ],
+      "art": "17043238"
+    },
+    "Iceberg Lettuce": {
+      "aliases": [
+        "Eisbergsalat",
+        "Eisberg",
+        "Iceberg",
+        "Salat Eisberg",
+        "Eisbergsalat Stück"
+      ],
+      "art": null
+    },
+    "Green Beans": {
+      "aliases": [
+        "Grüne Bohnen",
+        "Bohnen grün",
+        "Grüne Bohnen TK",
+        "Bohnen TK",
+        "Green Beans"
+      ],
+      "art": null
+    },
+    "Baby Spinach": {
+      "aliases": [
+        "Baby Spinat",
+        "Spinat Baby",
+        "Blattspinat Baby"
+      ],
+      "art": null
+    },
+    "Spinach Leaves": {
+      "aliases": [
+        "Blattspinat",
+        "Spinat",
+        "Spinatblätter",
+        "Blattspinat TK"
+      ],
+      "art": null
+    },
+    "Basil": {
+      "aliases": [
+        "Basilikum",
+        "Basil",
+        "Basilikum frisch",
+        "Basilikum Topf",
+        "Basilikum 1kg"
+      ],
+      "art": null
+    },
+    "Mint - fresh": {
+      "aliases": [
+        "Minze",
+        "Pfefferminze",
+        "Minze frisch",
+        "MC Minze"
+      ],
+      "art": null
+    },
+    "Parsley": {
+      "aliases": [
+        "Petersilie",
+        "Glatte Petersilie",
+        "Petersilie glatt",
+        "Petersilie Bund",
+        "Petersilie 1kg"
+      ],
+      "art": null
+    },
+    "Chicken Breast": {
+      "aliases": [
+        "Hähnchenbrustfilet",
+        "Hähnchenbrust",
+        "Chicken Breast",
+        "Hähnchen Brust TK",
+        "Hähnchenbrustfilet TK",
+        "Chicken Breast TK",
+        "Hähnchen TK"
+      ],
+      "art": "10115898"
+    },
+    "Beef Balls TK": {
+      "aliases": [
+        "Rinderhackbällchen",
+        "Beef Balls",
+        "Hackbällchen Rind",
+        "Fleischbällchen TK"
+      ],
+      "art": null
+    },
+    "Smoked Tofu Firm": {
+      "aliases": [
+        "Tofu geräuchert",
+        "Räuchertofu",
+        "Tofu smoked",
+        "Smoked Tofu"
+      ],
+      "art": null
+    },
+    "Tuna": {
+      "aliases": [
+        "Thunfisch",
+        "Thunfisch in Öl",
+        "Tuna",
+        "Thunfisch Öl"
+      ],
+      "art": "60021235"
+    },
+    "Eggs Large": {
+      "aliases": [
+        "Eier",
+        "Eier L",
+        "Eier frisch",
+        "Hühnereier",
+        "Eier 10er",
+        "Eier 30er"
+      ],
+      "art": "10033651"
+    },
+    "Feta Cheese": {
+      "aliases": [
+        "Feta",
+        "Fetakäse",
+        "Feta Käse",
+        "Schafskäse",
+        "Feta 1kg"
+      ],
+      "art": "10047251"
+    },
+    "Mozzarella Mini": {
+      "aliases": [
+        "Mozzarella Mini",
+        "Mini Mozzarella",
+        "Mozzarella Bällchen",
+        "Mozzarella 2kg"
+      ],
+      "art": "10054262"
+    },
+    "Cheddar Cheese": {
+      "aliases": [
+        "Cheddar",
+        "Cheddar Scheiben",
+        "Cheddar gerieben",
+        "Cheddar 2kg"
+      ],
+      "art": null
+    },
+    "Cooking Cream": {
+      "aliases": [
+        "Sahne",
+        "Kochsahne",
+        "Schlagsahne",
+        "Sahne 32%",
+        "Sahne 33%",
+        "Kochsahne 20%"
+      ],
+      "art": "10054266"
+    },
+    "Fusilli": {
+      "aliases": [
+        "Fusilli",
+        "Spiralnudeln",
+        "Fusilli 5kg",
+        "Nudeln Fusilli"
+      ],
+      "art": "10114685"
+    },
+    "Spatzle": {
+      "aliases": [
+        "Spätzle",
+        "Spatzle",
+        "Schwäbische Spätzle",
+        "Eierspätzle"
+      ],
+      "art": null
+    },
+    "Quinoa": {
+      "aliases": [
+        "Quinoa",
+        "Quinoa weiß",
+        "Quinoa gemischt",
+        "Quinoa 1.8kg"
+      ],
+      "art": "60021057"
+    },
+    "Basmati Rice": {
+      "aliases": [
+        "Basmati",
+        "Basmati Reis",
+        "Reis Basmati",
+        "Basmati 20kg"
+      ],
+      "art": null
+    },
+    "Glass Noodles": {
+      "aliases": [
+        "Glasnudeln",
+        "Reisnudeln",
+        "Glass Noodles",
+        "Glasnudeln TK"
+      ],
+      "art": null
+    },
+    "Tortellini Spinach": {
+      "aliases": [
+        "Tortellini Spinat",
+        "Tortellini mit Spinat",
+        "Tortellini",
+        "Tortellini Spinaci"
+      ],
+      "art": "10114686"
+    },
+    "Potatoes Puree": {
+      "aliases": [
+        "Kartoffelpüree",
+        "Püreepulver",
+        "Instant Kartoffelpüree",
+        "Kartoffelpüree Pulver"
+      ],
+      "art": null
+    },
+    "Pita Bread": {
+      "aliases": [
+        "Pita",
+        "Pitabrot",
+        "Pita Brot",
+        "Fladenbrot",
+        "Pita 288St"
+      ],
+      "art": "60021233"
+    },
+    "Sandwich Bread": {
+      "aliases": [
+        "Sandwichbrot",
+        "Sandwich Brot",
+        "Toastbrot",
+        "Vollkorntoast"
+      ],
+      "art": null
+    },
+    "Chickpeas": {
+      "aliases": [
+        "Kichererbsen",
+        "Kichererbsen gekocht",
+        "Kichererbsen 2650ml",
+        "Kichererbsen 1.5kg",
+        "Kichererbsen Dose"
+      ],
+      "art": "60014638"
+    },
+    "White Beans": {
+      "aliases": [
+        "Weiße Bohnen",
+        "Bohnen weiß",
+        "Cannellini Bohnen",
+        "Weiße Bohnen Dose"
+      ],
+      "art": null
+    },
+    "Mushroom Sauce": {
+      "aliases": [
+        "Champignonsoße",
+        "Pilzsoße",
+        "Mushroom Sauce",
+        "Rahmsauce Champignon",
+        "Champignon Sauce"
+      ],
+      "art": "10040726"
+    },
+    "Sunflower Oil": {
+      "aliases": [
+        "Sonnenblumenöl",
+        "Pflanzenöl",
+        "Sonnenblumenöl 10L",
+        "Sonnenblumenöl 1L"
+      ],
+      "art": "10033640"
+    },
+    "Balsamic Dressing": {
+      "aliases": [
+        "Balsamico Dressing",
+        "Dressing Balsamico",
+        "Balsamico",
+        "Balsamic Dressing"
+      ],
+      "art": null
+    },
+    "White Balsamic": {
+      "aliases": [
+        "Weißer Balsamico",
+        "Condimento Bianco",
+        "Aceto Balsamico weiß",
+        "White Balsamic"
+      ],
+      "art": null
+    },
+    "Sriracha Chilisauce": {
+      "aliases": [
+        "Sriracha",
+        "Sriracha Sauce",
+        "Chili Sauce Sriracha",
+        "Flying Goose Sriracha"
+      ],
+      "art": null
+    },
+    "Sriracha Mayo": {
+      "aliases": [
+        "Sriracha Mayo",
+        "Sriracha Mayonnaise",
+        "Mayo Sriracha",
+        "Flying Goose Mayo"
+      ],
+      "art": null
+    },
+    "Soy Sauce": {
+      "aliases": [
+        "Sojasauce",
+        "Sojasoße",
+        "Soy Sauce",
+        "Lee Kum Kee Soja"
+      ],
+      "art": null
+    },
+    "Sesame Seeds": {
+      "aliases": [
+        "Sesam",
+        "Sesamsamen",
+        "Sesamkörner",
+        "Sesam weiß"
+      ],
+      "art": null
+    },
+    "Peanuts": {
+      "aliases": [
+        "Erdnüsse",
+        "Peanuts",
+        "Erdnüsse geröstet",
+        "Erdnüsse gesalzen"
+      ],
+      "art": null
+    },
+    "Edamame/Mukimame": {
+      "aliases": [
+        "Edamame",
+        "Mukimame",
+        "Sojabohnen grün TK",
+        "Edamame TK"
+      ],
+      "art": null
+    },
+    "Gyoza Dumplings": {
+      "aliases": [
+        "Gyoza",
+        "Dumplings",
+        "Wan Tan",
+        "Gyoza Veg",
+        "Gyoza vegetarisch"
+      ],
+      "art": null
+    },
+    "Heat to Eat Teriyaki": {
+      "aliases": [
+        "Teriyaki",
+        "HtE Teriyaki",
+        "Heat to Eat Teriyaki",
+        "Chicken Teriyaki fertig"
+      ],
+      "art": null
+    },
+    "Heat to Eat Feijoada": {
+      "aliases": [
+        "Feijoada",
+        "HtE Feijoada",
+        "Heat to Eat Feijoada",
+        "Linseneintopf"
+      ],
+      "art": null
+    },
+    "Bacon Raw": {
+      "aliases": [
+        "Bacon",
+        "Bauchspeck",
+        "Frühstücksspeck",
+        "Speck",
+        "Bacon roh",
+        "Bacon raw Pack"
+      ],
+      "art": "17972918"
+    }
+  }
+}
