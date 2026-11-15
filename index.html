@@ -862,7 +862,9 @@ function norm2(x) {
 ---------- */
 let APIC = { state: 'idle', error: '', data: null, q: '', saveErr: '', open: '', breakdown: true, beo: null, dishmap: {} };
 try { APIC.breakdown = localStorage.getItem('nrw-apic-breakdown') !== 'off'; } catch (e) { /* storage blocked */ }
-let CATERPICK = {};                       // catering/ from Firebase: {week: {menus:{}, qty:{}}}
+try { const k=localStorage.getItem('nrw-apic-kitchen'); if(k) APIC_KITCHEN=k; } catch(e) {}
+let CATERPICK = {};                       // cater
+let APIC_KITCHEN = 'NRW';                // kitchen filter: 'NRW' | 'all'ing/ from Firebase: {week: {menus:{}, qty:{}}}
 
 const apicWeek = () => (PLAN && PLAN.week && PLAN.week.key) || iso(WEEK);
 const apicSel = () => ((CATERPICK[apicWeek()] || {}).menus) || {};
@@ -1009,8 +1011,18 @@ function apicWeekMenus() {
     if (from && to && (m.to < from || m.from > to)) continue;    // no overlap with this week
     rows.push({ id, ...m });
   }
-  rows.sort((a, b) => (a.from || '').localeCompare(b.from || '') || a.name.localeCompare(b.name));
-  return rows;
+  // Kitchen filter — skip menus that belong to Berlin, Munich or mini events
+  const filtered = APIC_KITCHEN === 'NRW'
+    ? rows.filter(m => {
+        const n = (m.name || '').toUpperCase();
+        return n.includes('NRW') ||
+               (!n.includes('BERLIN') && !n.includes('BER)') &&
+                !n.includes('MÜNCHEN') && !n.includes('MUNICH') &&
+                !n.includes('MUC)') && !n.includes('MINI'));
+      })
+    : rows;
+  filtered.sort((a, b) => (a.from || '').localeCompare(b.from || '') || a.name.localeCompare(b.name));
+  return filtered;
 }
 
 /* The head count comes from Notion, the portion size from Apicbase, so tying an
@@ -1308,6 +1320,11 @@ function renderApic() {
       <div class="actions">
         <label class="mchk" style="margin-right:10px"><input type="checkbox" id="apicBreak"${APIC.breakdown ? ' checked' : ''}>
           <span class="hint">Break down what the kitchen makes</span></label>
+        <label class="mchk" style="margin-right:10px">Kitchen
+          <select id="apicKitchen" style="margin-left:5px;padding:2px 6px;border-radius:6px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:13px">
+            <option value="NRW"${APIC_KITCHEN==='NRW'?' selected':''}>NRW (Remscheid)</option>
+            <option value="all"${APIC_KITCHEN==='all'?' selected':''}>All kitchens</option>
+          </select></label>
         <button class="btn" id="apicFetch">Refresh</button>
         <button class="btn" id="apicClear">Clear week</button>
         <button class="btn" id="apicPrint">Print order</button>
@@ -1613,6 +1630,12 @@ document.addEventListener('click', e => {
 document.addEventListener('change', e => {
   const el = e.target;
   if (!el.closest || !el.closest('#p-apic')) return;
+  if (el.id === 'apicKitchen') {
+    APIC_KITCHEN = el.value;
+    try { localStorage.setItem('nrw-apic-kitchen', el.value); } catch(e) {}
+    paintApicAll();
+    return;
+  }
   if (el.id === 'apicBreak') {
     APIC.breakdown = el.checked;
     try { localStorage.setItem('nrw-apic-breakdown', el.checked ? 'on' : 'off'); } catch (e) { /* storage blocked */ }
