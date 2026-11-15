@@ -1011,14 +1011,12 @@ function apicWeekMenus() {
     if (from && to && (m.to < from || m.from > to)) continue;    // no overlap with this week
     rows.push({ id, ...m });
   }
-  // Kitchen filter — skip menus that belong to Berlin, Munich or mini events
+  // Kitchen filter — hide only menus that explicitly belong to Berlin, Munich or are mini events
+  const EXCLUDE = ['BERLIN','(BER)','BER ','MÜNCHEN','MUNICH','(MUC)','MUC ','MINI EVENT','MINI-EVENT'];
   const filtered = APIC_KITCHEN === 'NRW'
     ? rows.filter(m => {
         const n = (m.name || '').toUpperCase();
-        return n.includes('NRW') ||
-               (!n.includes('BERLIN') && !n.includes('BER)') &&
-                !n.includes('MÜNCHEN') && !n.includes('MUNICH') &&
-                !n.includes('MUC)') && !n.includes('MINI'));
+        return !EXCLUDE.some(x => n.includes(x));
       })
     : rows;
   filtered.sort((a, b) => (a.from || '').localeCompare(b.from || '') || a.name.localeCompare(b.name));
