@@ -1440,11 +1440,8 @@ function printRecipes() {
       apicExplode(rid, portions ? portions / (+r.persons || 1) : 1, A, per, prep, notes, new Set());
       const PRIORITY = ['chefs culinar','metro','metro chef','chefscul'];
       const ingRows = Object.entries(per).map(([k,v]) => apicLine(k,v))
-                        .sort((a,b) => {
-                          const ap = PRIORITY.some(s => a.supplier.toLowerCase().includes(s)) ? 0 : 1;
-                          const bp = PRIORITY.some(s => b.supplier.toLowerCase().includes(s)) ? 0 : 1;
-                          return ap - bp || a.name.localeCompare(b.name);
-                        });
+                        .filter(l => PRIORITY.some(s => l.supplier.toLowerCase().includes(s)))
+                        .sort((a,b) => a.supplier.localeCompare(b.supplier) || a.name.localeCompare(b.name));
 
       const portionLabel = portions
         ? `<span class="pr-portions">${portions} portion${portions===1?'':'s'}</span>`
@@ -1454,9 +1451,9 @@ function printRecipes() {
         <table class="pr-ing">
           <thead><tr><th>Ingredient</th><th>Amount</th><th>Unit</th><th>Supplier</th><th>Article no.</th></tr></thead>
           <tbody>${ingRows.map(l =>
-            `<tr class="${PRIORITY.some(s=>l.supplier.toLowerCase().includes(s))?'pr-pri':'pr-other'}">
-              <td>${esc(l.name)}</td><td class="num">${nf(l.qty,l.qty<10?2:0)}</td><td>${esc(l.unit)}</td>
-              <td class="pr-sup">${esc(l.supplier||'—')}</td><td class="pr-art">${esc(l.article||'')}</td></tr>`
+            (PRIORITY.some(s=>l.supplier.toLowerCase().includes(s)) ?
+              `<tr><td>${esc(l.name)}</td><td class="num">${nf(l.qty,l.qty<10?2:0)}</td><td>${esc(l.unit)}</td>
+              <td class="pr-sup">${esc(l.supplier||'—')}</td><td class="pr-art">${esc(l.article||'')}</td></tr>` : '')
           ).join('')}${Object.entries(prep).map(([k,v]) => {
             const [q,u] = fromBase(v.v, v.base);
             return `<tr><td>${esc(v.name||k)} <em>(prepare in kitchen)</em></td><td class="num">${nf(q,0)}</td><td>${esc(u)}</td></tr>`;
