@@ -1310,7 +1310,8 @@ function renderApic() {
           <span class="hint">Break down what the kitchen makes</span></label>
         <button class="btn" id="apicFetch">Refresh</button>
         <button class="btn" id="apicClear">Clear week</button>
-        <button class="btn" id="apicPrint">Print</button>
+        <button class="btn" id="apicPrint">Print order</button>
+        <button class="btn" id="apicPrintRecipes">🖨 Print recipes</button>
       </div>
     </div>
     <p class="hint" style="margin:0 0 10px">Use the week strip at the top of the page to move between weeks.
@@ -1419,6 +1420,106 @@ function apicDishTable(rid, portions) {
         <td colspan="2" class="muted">made in the kitchen</td></tr>`; }).join('')}</tbody></table></div>`;
 }
 
+/* ---------- Print recipes for selected event ---------- */
+function printRecipes() {
+  const A = APIC.data;
+  const sel = apicSel(), qty = apicQty();
+  const rows = apicWeekMenus().filter(m => sel[m.id]);
+  if (!rows.length) { alert('Tick at least one menu first.'); return; }
+
+  const sections = [];
+  for (const m of rows) {
+    const mine = qty[m.id] || {};
+    for (const rid of (m.recipes || [])) {
+      const portions = +mine[String(rid)] || 0;
+      const r = A.recipes[String(rid)];
+      if (!r) continue;
+
+      /* ingredient breakdown */
+      const per = {}, prep = {}, notes = [];
+      apicExplode(rid, portions ? portions / (+r.persons || 1) : 1, A, per, prep, notes, new Set());
+      const PRIORITY = ['chefs culinar','metro','metro chef','chefscul'];
+      const ingRows = Object.entries(per).map(([k,v]) => apicLine(k,v))
+                        .sort((a,b) => {
+                          const ap = PRIORITY.some(s => a.supplier.toLowerCase().includes(s)) ? 0 : 1;
+                          const bp = PRIORITY.some(s => b.supplier.toLowerCase().includes(s)) ? 0 : 1;
+                          return ap - bp || a.name.localeCompare(b.name);
+                        });
+
+      const portionLabel = portions
+        ? `<span class="pr-portions">${portions} portion${portions===1?'':'s'}</span>`
+        : `<span class="pr-portions muted">portions not set — showing per-recipe quantities</span>`;
+
+      const ingTable = ingRows.length ? `
+        <table class="pr-ing">
+          <thead><tr><th>Ingredient</th><th>Amount</th><th>Unit</th><th>Supplier</th><th>Article no.</th></tr></thead>
+          <tbody>${ingRows.map(l =>
+            `<tr class="${PRIORITY.some(s=>l.supplier.toLowerCase().includes(s))?'pr-pri':'pr-other'}">
+              <td>${esc(l.name)}</td><td class="num">${nf(l.qty,l.qty<10?2:0)}</td><td>${esc(l.unit)}</td>
+              <td class="pr-sup">${esc(l.supplier||'—')}</td><td class="pr-art">${esc(l.article||'')}</td></tr>`
+          ).join('')}${Object.entries(prep).map(([k,v]) => {
+            const [q,u] = fromBase(v.v, v.base);
+            return `<tr><td>${esc(v.name||k)} <em>(prepare in kitchen)</em></td><td class="num">${nf(q,0)}</td><td>${esc(u)}</td></tr>`;
+          }).join('')}</tbody>
+        </table>` : '<p class="muted">No ingredient data available.</p>';
+
+      sections.push(`
+        <div class="pr-recipe">
+          <div class="pr-header">
+            <h2>${esc(r.name)}</h2>
+            <div class="pr-meta">
+              ${portionLabel}
+              <span>Base recipe: ${r.persons||1} person${(r.persons||1)===1?'':'s'}</span>
+              <span class="pr-menu">${esc(m.name)}</span>
+            </div>
+          </div>
+          ${ingTable}
+          ${notes.length ? `<p class="pr-notes">${notes.map(esc).join(' · ')}</p>` : ''}
+        </div>`);
+    }
+  }
+
+  if (!sections.length) { alert('No dishes found in selected menus.'); return; }
+
+  const eventDate = rows[0] && rows[0].from ? rows[0].from : '';
+  const html = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
+<title>Recipes — ${esc(eventDate)}</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Figtree,system-ui,sans-serif;font-size:11pt;color:#111;padding:14mm 16mm}
+  h1.pr-title{font-size:16pt;font-weight:800;margin-bottom:2mm;color:#1a3c79}
+  .pr-subtitle{font-size:10pt;color:#555;margin-bottom:8mm}
+  .pr-recipe{break-inside:avoid;border:1px solid #ddd;border-radius:6px;padding:5mm 6mm;margin-bottom:6mm}
+  .pr-header{margin-bottom:3mm}
+  h2{font-size:13pt;font-weight:800;color:#1a3c79;margin-bottom:1mm}
+  .pr-meta{display:flex;flex-wrap:wrap;gap:6px;font-size:9pt;color:#555}
+  .pr-portions{font-weight:700;color:#c0392b}
+  .pr-menu{background:#eaf0fb;color:#1a3c79;border-radius:3px;padding:0 5px}
+  table.pr-ing{width:100%;border-collapse:collapse;margin-top:3mm;font-size:10pt}
+  table.pr-ing th{text-align:left;border-bottom:1.5px solid #1a3c79;padding:1mm 2mm;font-size:9pt;color:#1a3c79}
+  tr.pr-pri td{background:#f0f5ff}
+  tr.pr-other td{color:#888}
+  .pr-sup{font-size:8.5pt;color:#555;width:28mm}
+  .pr-art{font-size:8.5pt;color:#1a3c79;width:20mm;font-weight:600}
+  table.pr-ing td{padding:1mm 2mm;border-bottom:1px solid #eee;vertical-align:top}
+  td.num{text-align:right;font-variant-numeric:tabular-nums;width:16mm}
+  .pr-notes{font-size:9pt;color:#888;margin-top:2mm;font-style:italic}
+  .muted{color:#aaa}
+  em{color:#888;font-style:italic;font-size:9pt}
+  @media print{body{padding:10mm 12mm}@page{size:A4;margin:10mm 12mm}}
+</style></head><body>
+<h1 class="pr-title">Recipes${eventDate ? ' — '+eventDate : ''}</h1>
+<p class="pr-subtitle">Bella &amp; Bona NRW · Remscheid kitchen · Printed ${new Date().toLocaleDateString('en-GB')}</p>
+${sections.join('')}
+</body></html>`;
+
+  const w = window.open('', '_blank');
+  w.document.write(html);
+  w.document.close();
+  w.focus();
+  w.onload = () => w.print();
+}
+/* ---------- end printRecipes ---------- */
 /* The article number is the thing worth having, so clicking copies it. The
    small link only opens the supplier's own site - no invented search path. */
 function artCell(l) {
@@ -1489,6 +1590,7 @@ document.addEventListener('click', e => {
   }
   if (b.id === 'apicFetch') apicFetch();
   else if (b.id === 'apicPrint') window.print();
+  else if (b.id === 'apicPrintRecipes') printRecipes();
   else if (b.id === 'apicClear') {
     if (!confirm(`Clear every menu and portion for ${PLAN.week.label}? This clears it for the whole team.`)) return;
     CATERPICK[apicWeek()] = {};
