@@ -1,15 +1,20 @@
 """Refresh data/db-snapshot.json for the NRW Stock Planner from the BB database (read-only).
 
 NRW only: menus of the NRW kitchen or with "NRW" in the name, by date (2 weeks back to 8 weeks ahead), every dish type, with recipes.
-Runs every hour in GitHub Actions (.github/workflows/refresh-data.yml), or locally:
-    DB_HOST=... DB_USER=... DB_PASSWORD=... DB_NAME=... python scripts/export_data.py
-Optional: DB_PORT (3306), DB_SSL=1, NRW_KITCHEN_ID
+Runs once a day in GitHub Actions (.github/workflows/refresh-data.yml), or locally:
+
+  DBDATA='{"host":"...","user":"...","password":"...","db":"...","ssl":true}' python scripts/export_data.py
+
+DBDATA is a single JSON secret with keys: host, user, password, db, and optionally port (default 3306) and ssl (bool).
+Individual vars DB_HOST / DB_USER / DB_PASSWORD / DB_NAME / DB_PORT / DB_SSL are still accepted as a fallback.
+Optional: NRW_KITCHEN_ID
 """
 import datetime as dt
 import json
 import os
 import pathlib
 import ssl
+import sys
 
 import pymysql
 
@@ -19,12 +24,11 @@ UNITS = {"kg": (1000, "g"), "g": (1, "g"), "gr": (1, "g"), "l": (1000, "ml"), "m
          "ea": (1, "pcs"), "piece": (1, "pcs"), "pcs": (1, "pcs")}
 
 # NRW menus that touch the window: linked to the NRW kitchen, or "NRW" in the name
-# (the NRW menus in the admin are not linked to a kitchen yet).
 MENUS_SQL = """
 SELECT DISTINCT m.id, m.name, m.startDate, m.endDate
 FROM menu_v2 m LEFT JOIN menu_v2_kitchens_kitchen mk ON mk.menuV2Id = m.id
 WHERE (mk.kitchenId = %s OR m.name LIKE '%%NRW%%') AND m.isActive = 1 AND m.deletedAt IS NULL
-  AND m.endDate >= %s AND m.startDate <= %s
+AND m.endDate >= %s AND m.startDate <= %s
 ORDER BY m.startDate
 """
 
@@ -35,7 +39,6 @@ WHERE md.menuV2Id = %s
 ORDER BY rv.cat, rv.variantName
 """
 
-# Recipe lines of dishes or sub-recipes. portion of a sub-recipe = its yield in grams.
 LINES_SQL = """
 SELECT x.recipeVariantsId AS owner, ri.name AS line_name, ri.amount, ri.unit, ri.ingredientId, ri.subRecipeId,
        i.name AS ing_name, i.type AS ing_type, i.apicCategory AS ing_cat,
@@ -47,6 +50,34 @@ LEFT JOIN recipe_variants sr ON sr.id = ri.subRecipeId
 WHERE x.recipeVariantsId IN ({ph})
 ORDER BY x.recipeVariantsId, ri.name
 """
+
+
+def _db_params():
+    """Return connection params dict, or None when no secrets are configured."""
+    raw = os.getenv("DBDATA")
+    if raw:
+        try:
+            d = json.loads(raw)
+        except json.JSONDecodeError as e:
+            sys.exit(f"DBDATA is not valid JSON: {e}")
+        return {
+            "host": d["host"],
+            "port": int(d.get("port") or 3306),
+            "user": d["user"],
+            "password": d["password"],
+            "db": d["db"],
+            "ssl": bool(d.get("ssl")),
+        }
+    if not os.getenv("DB_HOST"):
+        return None
+    return {
+        "host": os.environ["DB_HOST"],
+        "port": int(os.getenv("DB_PORT") or 3306),
+        "user": os.environ["DB_USER"],
+        "password": os.environ["DB_PASSWORD"],
+        "db": os.environ["DB_NAME"],
+        "ssl": os.getenv("DB_SSL") == "1",
+    }
 
 
 def num(v):
@@ -64,14 +95,15 @@ def base(amount, unit):
 
 
 def main():
-    if not os.getenv("DB_HOST"):
+    p = _db_params()
+    if p is None:
         print("DB secrets are not set yet. Keeping the current data file.")
         return
     today = dt.date.today()
     conn = pymysql.connect(
-        host=os.environ["DB_HOST"], port=int(os.getenv("DB_PORT") or 3306),
-        user=os.environ["DB_USER"], password=os.environ["DB_PASSWORD"], database=os.environ["DB_NAME"],
-        ssl=ssl.create_default_context() if os.getenv("DB_SSL") == "1" else None,
+        host=p["host"], port=p["port"],
+        user=p["user"], password=p["password"], database=p["db"],
+        ssl=ssl.create_default_context() if p["ssl"] else None,
         cursorclass=pymysql.cursors.DictCursor, read_timeout=120)
     with conn, conn.cursor() as cur:
         cur.execute(MENUS_SQL, (KITCHEN, today - dt.timedelta(days=14), today + dt.timedelta(days=56)))
@@ -88,7 +120,7 @@ def main():
         wanted = set(dishes)
         lines, subs, sub_names, ingredients, warnings = {i: [] for i in wanted}, {}, {}, {}, set()
         frontier, depth = sorted(wanted), 0
-        while frontier and depth < 6:  # depth 0 = dish lines, 1+ = sub-recipe lines
+        while frontier and depth < 6:
             cur.execute(LINES_SQL.format(ph=",".join(["%s"] * len(frontier))), frontier)
             new_subs = []
             for r in cur.fetchall():
@@ -98,8 +130,8 @@ def main():
                     if sid not in sub_names:
                         name = r["sub_name"] or sid
                         sub_names[sid] = name if name not in subs else f"{name} [{sid[:8]}]"
-                        subs[sub_names[sid]] = {"dbYield": num(r["sub_yield"]) or None, "input": 0, "lines": []}
-                        new_subs.append(sid)
+                    subs[sub_names[sid]] = {"dbYield": num(r["sub_yield"]) or None, "input": 0, "lines": []}
+                    new_subs.append(sid)
                     item, kind = sub_names[sid], "S"
                 elif r["ingredientId"] and r["ing_name"]:
                     item, kind = r["ing_name"], "I"
@@ -115,8 +147,8 @@ def main():
                 else:
                     subs[sub_names[r["owner"]]]["lines"].append([item, qty, unit, kind])
             frontier, depth = new_subs, depth + 1
-    for s in subs.values():
-        s["input"] = num(sum(q for _, q, u, _ in s["lines"] if u in ("g", "ml")))
+        for s in subs.values():
+            s["input"] = num(sum(q for _, q, u, _ in s["lines"] if u in ("g", "ml")))
     payload = {"generated": dt.datetime.now(dt.timezone.utc).isoformat(timespec="minutes"),
                "kitchen": "NRW",
                "menus": menus, "dishes": dishes, "lines": lines, "subs": subs,
