@@ -2,7 +2,7 @@ name: Refresh data from BB database
 
 on:
   schedule:
-    - cron: "7 * * * *"   # every hour, so new NRW menus show up the same day
+    - cron: "0 5 * * *"   # once a day at 05:00 UTC (06:00 Germany)
   workflow_dispatch:
 
 permissions:
@@ -21,12 +21,7 @@ jobs:
       - name: Export NRW menus and recipes
         run: python scripts/export_data.py
         env:
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_PORT: ${{ secrets.DB_PORT }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_NAME: ${{ secrets.DB_NAME }}
-          DB_SSL: ${{ secrets.DB_SSL }}
+          DBDATA: ${{ secrets.DBDATA }}
       - name: Save the new data
         run: |
           git config user.name "github-actions[bot]"
