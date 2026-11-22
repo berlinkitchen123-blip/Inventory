@@ -68,9 +68,9 @@ input[type=checkbox]{width:18px;height:18px;accent-color:var(--saffron)}
 .sup h2{margin:0 0 8px;font-size:19px;font-weight:800;display:flex;align-items:baseline;gap:10px}
 .sup h2 .count{font-size:13px;font-weight:600;color:var(--ink-3)}
 .sup h2{font-size:15px;font-weight:800;padding:10px 0 5px;border-bottom:2px solid rgba(240,181,65,.4);margin-bottom:0;display:flex;align-items:center;gap:7px}
-.sup h2::before{content:'ð¦'}
+.sup h2::before{content:'📦'}
 .sup.none h2{color:var(--paprika)}
-.sup.none h2::before{content:'â ï¸'}
+.sup.none h2::before{content:'⚠️'}
 .tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
 table{width:100%;border-collapse:collapse;font-size:14px}
 th,td{padding:8px 10px;text-align:left;vertical-align:top}
@@ -282,9 +282,9 @@ table.order tbody.item.ordered .name{text-decoration:line-through;color:var(--in
   </section>
   <div id="app" hidden>
   <section class="weekbar" aria-label="Choose a week">
-    <button class="nav" data-step="-7" aria-label="Previous week">â¹</button>
+    <button class="nav" data-step="-7" aria-label="Previous week">‹</button>
     <div class="ticket" id="week"></div>
-    <button class="nav" data-step="7" aria-label="Next week">âº</button>
+    <button class="nav" data-step="7" aria-label="Next week">›</button>
   </section>
   <nav class="weeks" id="weeks" aria-label="Weeks"></nav>
   <details class="settings">
@@ -313,7 +313,7 @@ table.order tbody.item.ordered .name{text-decoration:line-through;color:var(--in
           <label class="toggle"><input type="checkbox" id="showDishes" data-fid="showDishes"> Show dishes</label>
           <button class="btn" id="stockEditBtn" aria-pressed="false">Edit stock</button>
           <button class="btn" id="xlsxBtn">Download Excel</button>
-          <button class="btn" id="seedStockBtn" title="Load stock from latest delivery data (stock-patch.json)" style="background:var(--herb);color:#fff">ð¦ Load Delivery Stock</button>
+          <button class="btn" id="seedStockBtn" title="Load stock from latest delivery data (stock-patch.json)" style="background:var(--herb);color:#fff">📦 Load Delivery Stock</button>
           <button class="btn primary" id="printBtn">Print order</button>
         </div>
       </div>
@@ -343,7 +343,7 @@ const SUP_HOME = {
   "Hamberger":     "https://www.hamberger.de/",
   "Surgital":      "https://www.surgital.it/",
 };
-const NRW_UIDS = {"Bacon raw":"17972918","Bulgur":"60021056","Caesar Dressing":"13286385","Carrots":"17043236","Champignons":"14846519","Cherry Tomatoes":"60063961","Coconut Curry Soup":"17114479","Couscous Dry":"60021055","Dr. Oetker Professional Vegetable Gold Seasoning":"14155628","Honey-Mustard dressing":"14897214","Iceberg Lettuce":"14761683","Mint - fresh":"14760884","Mushroom Sauce":"17379243","Phanaeng Curry":"60105126","Red Bell Pepper":"14758041","Red cabbage":"14758799","Sesame Seeds":"14953446","Small Potatoes":"14759918","Sunflower Oil":"17268363","Zucchini":"14758737","Apple":"278281","Baby Spinach":"287190","Balsamic Dressing":"951488","Bandnudeln":"951968","Basil":"A001041","Black Pepper":"962969","Broccoli":"905267","Brown Sugar":"491160","Butter":"931441","Canola Oil (rapsÃ¶l)":"208622","Cheddar Cheese":"805952","Chicken Breast":"339263","Chicken Kebab":"9521","Chickpeas":"912663","Cooking Cream":"928957","Cream Cheese":"64817","Cucumber":"A002139","Edamame":"921813","Feta Cheese":"393263","Fusilli":"901600","Green Asparagus":"905266","Green Beans":"905283","Green Peas":"905429","Guacamole":"21140","Hard cheese - regular (instead of emmental, parmesan, grana padano)":"674516","JalapeÃ±os":"902268","Kale":"10410","Lentils - Green":"973691","Mango - always frozen":"912408","Meatballs":"447797","Milk":"466469","Olive Oil":"905198","Paprika powder":"962968","Parsley":"126792","Pita Bread":"5075","Pomegranite Seeds":"A001070","Potatoes Puree":"393980","Quinoa":"983765","Radish":"297160","Salt":"197051","Sandwich Whole grain bread":"466249","Smoked Salmon":"938613","Spatzle":"33117","Spinach leaves":"905435","Strawberry Jam":"393070","Tofu Firm":"303153","Tomato - Sun Dried":"909132","Vegan Gyros":"361","Vegan Mayo":"526435","Vinegar":"64747","WallNuts":"19986","Water":"551216","Wraps 30\"":"29769","Yogurt Dressing":"109139","Cucumber Pickled":"100156","Erbs Croutons":"175908","Olives Black":"225180","Red pesto":"176329","Rice - White Basmati":"60313","Fried Onions":"22223","Glass Noodles":"7383","Soy Sauce":"8652","Vegetable gyoza":"980","Chocolate Mouse Powder":"00DH1X","Tomato Sauce":"00CAX","Lemon Dressing":"1422059","Orange vinegrette":"1143059","Peanut dressing":"2161059","Goat Cheese":"00013723","Parmigiana":"V111","Beef Goulash":"8810007","White Balsamic":"1641553"};
+const NRW_UIDS = {"Bacon raw":"17972918","Bulgur":"60021056","Caesar Dressing":"13286385","Carrots":"17043236","Champignons":"14846519","Cherry Tomatoes":"60063961","Coconut Curry Soup":"17114479","Couscous Dry":"60021055","Dr. Oetker Professional Vegetable Gold Seasoning":"14155628","Honey-Mustard dressing":"14897214","Iceberg Lettuce":"14761683","Mint - fresh":"14760884","Mushroom Sauce":"17379243","Phanaeng Curry":"60105126","Red Bell Pepper":"14758041","Red cabbage":"14758799","Sesame Seeds":"14953446","Small Potatoes":"14759918","Sunflower Oil":"17268363","Zucchini":"14758737","Apple":"278281","Baby Spinach":"287190","Balsamic Dressing":"951488","Bandnudeln":"951968","Basil":"A001041","Black Pepper":"962969","Broccoli":"905267","Brown Sugar":"491160","Butter":"931441","Canola Oil (rapsöl)":"208622","Cheddar Cheese":"805952","Chicken Breast":"339263","Chicken Kebab":"9521","Chickpeas":"912663","Cooking Cream":"928957","Cream Cheese":"64817","Cucumber":"A002139","Edamame":"921813","Feta Cheese":"393263","Fusilli":"901600","Green Asparagus":"905266","Green Beans":"905283","Green Peas":"905429","Guacamole":"21140","Hard cheese - regular (instead of emmental, parmesan, grana padano)":"674516","Jalapeños":"902268","Kale":"10410","Lentils - Green":"973691","Mango - always frozen":"912408","Meatballs":"447797","Milk":"466469","Olive Oil":"905198","Paprika powder":"962968","Parsley":"126792","Pita Bread":"5075","Pomegranite Seeds":"A001070","Potatoes Puree":"393980","Quinoa":"983765","Radish":"297160","Salt":"197051","Sandwich Whole grain bread":"466249","Smoked Salmon":"938613","Spatzle":"33117","Spinach leaves":"905435","Strawberry Jam":"393070","Tofu Firm":"303153","Tomato - Sun Dried":"909132","Vegan Gyros":"361","Vegan Mayo":"526435","Vinegar":"64747","WallNuts":"19986","Water":"551216","Wraps 30\"":"29769","Yogurt Dressing":"109139","Cucumber Pickled":"100156","Erbs Croutons":"175908","Olives Black":"225180","Red pesto":"176329","Rice - White Basmati":"60313","Fried Onions":"22223","Glass Noodles":"7383","Soy Sauce":"8652","Vegetable gyoza":"980","Chocolate Mouse Powder":"00DH1X","Tomato Sauce":"00CAX","Lemon Dressing":"1422059","Orange vinegrette":"1143059","Peanut dressing":"2161059","Goat Cheese":"00013723","Parmigiana":"V111","Beef Goulash":"8810007","White Balsamic":"1641553"};
 const NO_SUPPLIER = 'No supplier yet';
 const TYPE_ORDER = ['LC', 'SB', 'CI', 'SW', 'HE', 'AD'];
 
@@ -541,8 +541,8 @@ const view = () => VIEWS.includes(ST.view) ? ST.view : 'forecast';
 const showDishes = () => ST.showDishes !== false;
 
 function weekOf(mon) {
-  const days = [0, 1, 2, 3, 4, 5].map(i => iso(addDays(mon, i)))   // Monday to Saturday;
-  return { mon, key: days[0], days, no: weekNo(mon), label: `${dm(mon)} â ${dm(addDays(mon, 5))}` };
+  const days = [0, 1, 2, 3, 4, 5, 6].map(i => iso(addDays(mon, i)))   // Monday to Saturday;
+  return { mon, key: days[0], days, no: weekNo(mon), label: `${dm(mon)} – ${dm(addDays(mon, 6))}` };
 }
 
 // Delivery 1 (Tue 29 Sep) is for the first week that has an NRW menu. After that: the Friday before each week.
@@ -577,7 +577,7 @@ function defaultWeek() { // the next week that has an NRW menu and a delivery st
 
 function menuText(P) {
   if (!P.menus.length) return 'No NRW menu in the database for this week yet';
-  return 'NRW menu: ' + P.menus.map(m => `${m.name} (${dm(fromIso(m.from))} â ${dm(fromIso(m.to))})`).join(', ');
+  return 'NRW menu: ' + P.menus.map(m => `${m.name} (${dm(fromIso(m.from))} – ${dm(fromIso(m.to))})`).join(', ');
 }
 
 function render() {
@@ -631,7 +631,7 @@ function renderForecast() {
   const rows = P.dishes.map(d => {
     const head = d.type !== group ? `<tr class="group"><td colspan="${w.days.length + 3}">${esc(TYPES[d.type] || d.type || 'Other')}</td></tr>` : '';
     group = d.type;
-    const cells = d.perDay.map((v, i) => v === null ? '<td class="nomenu">â</td>'
+    const cells = d.perDay.map((v, i) => v === null ? '<td class="nomenu">–</td>'
       : `<td class="day"><input type="number" min="0" step="1" inputmode="numeric" data-fc="${w.days[i]}|${esc(d.id)}" data-fid="fc|${w.days[i]}|${esc(d.id)}" value="${v > 0 ? v : ''}" placeholder="${soldOn(w.days[i], d.id) || 0}" title="${soldOn(w.days[i], d.id) ? soldOn(w.days[i], d.id) + ' ordered so far' : ''}" aria-label="${esc(d.name)}, ${day(fromIso(w.days[i]))}"></td>`).join('');
     return `${head}<tr><td><div class="name">${esc(d.name)}</div>${d.noRecipe ? '<span class="tag est">No recipe in DB</span>' : ''}${d.incomplete ? `<span class="tag est">Recipe incomplete in DB: ${nf(d.lineG, 0)} of ${nf(d.portion, 0)} g</span>` : ''}</td>${cells}
       <td class="day"><input type="number" min="0" step="1" inputmode="numeric" data-fill="${esc(d.id)}" data-fid="fill|${esc(d.id)}" placeholder="all" aria-label="Same number every day, ${esc(d.name)}"></td>
@@ -671,7 +671,7 @@ function toggleOrdered(name){
   if(!ORDERED[wk])ORDERED[wk]={};
   if(cur)delete ORDERED[wk][enc(name)];else ORDERED[wk][enc(name)]=true;
   const btn=document.querySelector(`[data-order="${CSS.escape(name)}"]`);
-  if(btn){btn.closest('tbody.item')?.classList.toggle('ordered',!cur);btn.classList.toggle('is-ordered',!cur);btn.innerHTML=cur?'â¬&nbsp;Not ordered':'â&nbsp;Ordered';}
+  if(btn){btn.closest('tbody.item')?.classList.toggle('ordered',!cur);btn.classList.toggle('is-ordered',!cur);btn.innerHTML=cur?'⬜&nbsp;Not ordered':'✅&nbsp;Ordered';}
   renderOrderChips();
 }
 function renderOrderChips(){
@@ -682,8 +682,8 @@ function renderOrderChips(){
   const ordC=P.rows.filter(r=>isOrdered(r.name)).length,tot=P.rows.length,pend=tot-ordC;
   $('#chips').innerHTML=[
     `${tot} items`,
-    ordC?`<span style="color:var(--herb)">â ${ordC} ordered</span>`:'',
-    pend?`<span style="color:var(--saffron)">â¬ ${pend} to order</span>`:'',
+    ordC?`<span style="color:var(--herb)">✅ ${ordC} ordered</span>`:'',
+    pend?`<span style="color:var(--saffron)">⬜ ${pend} to order</span>`:'',
     `${nf(P.portionsSum,0)} portions`,`${sups} suppliers`,
     none?`${none} without supplier`:'',est?`${est} yield estimates`:'',noPk?`${noPk} no pack size`:''
   ].filter(Boolean).map(x=>`<span class="chip">${x}</span>`).join('');
@@ -698,17 +698,17 @@ function itemHtml(r) {
         <div class="name">${n}</div>${tags ? `<div class="tags">${tags}</div>` : ''}<div>${NRW_UIDS[r.name] ? `<span class="uid-tag">${NRW_UIDS[r.name]}</span>` : '<span class="uid-tag missing">Art#?</span>'}</div>
         ${r.packInfo ? `<div class="note">Apicbase pack: ${esc(r.packInfo)}</div>` : ''}${r.note ? `<div class="note">${esc(r.note)}</div>` : ''}
         <label class="suppick">Supplier <select data-sup="${n}" data-fid="sup|${n}">${supplierOptions(r)}</select></label>
-        <button type="button" class="btn-order${isOrdered(r.name)?' is-ordered':''}" onclick="toggleOrdered(this.dataset.order)" data-order="${n}">${isOrdered(r.name)?'â&nbsp;Ordered':'â¬&nbsp;Not ordered'}</button>
+        <button type="button" class="btn-order${isOrdered(r.name)?' is-ordered':''}" onclick="toggleOrdered(this.dataset.order)" data-order="${n}">${isOrdered(r.name)?'✅&nbsp;Ordered':'⬜&nbsp;Not ordered'}</button>
       </th>
-      <td>${(() => { const a=NRW_UIDS[r.name]; return a ? `<span class="art-num" style="font-size:14px" onclick="navigator.clipboard?.writeText('${a}');this.textContent='â';setTimeout(()=>this.textContent='${a}',1200)" title="Click to copy">${a}</span>` : '<span style="color:var(--ink-3)">â</span>'; })()}</td>
+      <td>${(() => { const a=NRW_UIDS[r.name]; return a ? `<span class="art-num" style="font-size:14px" onclick="navigator.clipboard?.writeText('${a}');this.textContent='✓';setTimeout(()=>this.textContent='${a}',1200)" title="Click to copy">${a}</span>` : '<span style="color:var(--ink-3)">—</span>'; })()}</td>
       <td>${r.dishes.length} ${r.dishes.length === 1 ? 'dish' : 'dishes'}</td>
       <td class="num">${nf(r.portions, 0)}</td>
       <td class="num qty">${qty(r.need, r.unit)}${u}</td>
       <td class="num">${STOCK_EDIT ? `<input type="number" min="0" step="any" inputmode="decimal" data-stock="${n}" data-fid="stock|${n}" value="${r.stock > 0 ? r.stock : ''}" placeholder="0" aria-label="Stock on hand in ${esc(r.unit)}, ${n}">`
-        : `<span class="locked">${r.stock > 0 ? `${qty(r.stock, r.unit)}${u}` : 'â'}</span>`}</td>
+        : `<span class="locked">${r.stock > 0 ? `${qty(r.stock, r.unit)}${u}` : '–'}</span>`}</td>
       <td class="num qty">${qty(r.toOrder, r.unit)}${u}</td>
-      <td class="num"><input type="number" min="0" step="any" inputmode="decimal" data-pack="${n}" data-fid="pack|${n}" value="${r.pack > 0 ? r.pack : ''}" placeholder="â" aria-label="Pack size in ${esc(r.unit)}, ${n}"></td>
-      <td class="num qty">${r.packs == null ? 'â' : r.packs}</td>
+      <td class="num"><input type="number" min="0" step="any" inputmode="decimal" data-pack="${n}" data-fid="pack|${n}" value="${r.pack > 0 ? r.pack : ''}" placeholder="–" aria-label="Pack size in ${esc(r.unit)}, ${n}"></td>
+      <td class="num qty">${r.packs == null ? '–' : r.packs}</td>
     </tr>${dishRows}
   </tbody>`;
 }
@@ -727,7 +727,7 @@ function renderOrder() {
   if (!P.dishes.length) { $('#orderList').innerHTML = `<p class="empty">No NRW menu in the database for ${w.label} yet.</p>`; return; }
   if (!P.rows.length) { $('#orderList').innerHTML = '<p class="empty">No forecast for this week yet. Type the portions in <em>Menu &amp; forecast</em> and the order list fills in.</p>'; return; }
   const rows = q ? P.rows.filter(r => r.name.toLowerCase().includes(q) || r.dishes.some(d => d.name.toLowerCase().includes(q))) : P.rows;
-  if (!rows.length) { $('#orderList').innerHTML = `<p class="empty">Nothing matches â${esc(SEARCH)}â.</p>`; return; }
+  if (!rows.length) { $('#orderList').innerHTML = `<p class="empty">Nothing matches “${esc(SEARCH)}”.</p>`; return; }
   $('#orderList').innerHTML = bySupplier(rows).map(([s, items]) => `
     <section class="sup${s === NO_SUPPLIER ? ' none' : ''}"><h2>${esc(s)} <span class="count">${items.length} ${items.length === 1 ? 'item' : 'items'}</span></h2>
       <div class="tablewrap"><table class="order">
@@ -760,11 +760,11 @@ function renderCatering() {
   const host = $('#p-catering');
   loadCatering();
   if (CATER.state === 'loading' || CATER.state === 'idle') {
-    host.innerHTML = '<p class="cempty">Loading the catering orderâ¦</p>'; return;
+    host.innerHTML = '<p class="cempty">Loading the catering order…</p>'; return;
   }
   if (CATER.state === 'error') {
     host.innerHTML = `<div class="miss"><h3>No catering order to show</h3><p>${esc(CATER.error)}.</p>
-      <p class="hint">Run <b>Actions â Catering order (BOM)</b> in GitHub, then reload this page.
+      <p class="hint">Run <b>Actions → Catering order (BOM)</b> in GitHub, then reload this page.
       If it says permission denied, the <code>apicbase</code> rule is not published in Firebase yet.</p></div>`;
     return;
   }
@@ -786,9 +786,9 @@ function renderCatering() {
       </div>
       <div class="actions"><button class="btn" id="printBtn">Print</button></div>
     </div>
-    ${un.length ? `<div class="miss"><h3>Not in this order â ${un.length} dish(es), ${nf(un.reduce((a, u) => a + (u.servings || 0), 0), 0)} portions</h3>
-      <ul>${un.map(u => `<li><b>${esc(u.dish)}</b> Â· ${u.servings} portions Â· ${esc(u.why || '')}${
-        (u.candidates || []).length ? ` â closest: ${esc((u.candidates || []).join(', '))}` : ''}</li>`).join('')}</ul>
+    ${un.length ? `<div class="miss"><h3>Not in this order — ${un.length} dish(es), ${nf(un.reduce((a, u) => a + (u.servings || 0), 0), 0)} portions</h3>
+      <ul>${un.map(u => `<li><b>${esc(u.dish)}</b> · ${u.servings} portions · ${esc(u.why || '')}${
+        (u.candidates || []).length ? ` — closest: ${esc((u.candidates || []).join(', '))}` : ''}</li>`).join('')}</ul>
       <p class="hint">Fix the dish name in the BEO, or add the recipe in Apicbase, then run the order again.</p></div>` : ''}
     ${sups.map(s => `<section class="sup${s.startsWith('-') ? ' none' : ''}">
       <h2>${esc(s)} <span class="count">${bySup[s].length} item${bySup[s].length === 1 ? '' : 's'}</span></h2>
@@ -832,10 +832,10 @@ function dishChainHtml(d) {
       const [cls, label] = HOW[m.how] || ['warn', m.how || ''];
       const diff = norm2(m.dish) !== norm2(used);
       return `<details class="chain"${lines.length ? '' : ' open'}>
-        <summary><b>${esc(m.dish)}</b> Â· ${nf(m.servings || 0, 0)} portions
+        <summary><b>${esc(m.dish)}</b> · ${nf(m.servings || 0, 0)} portions
           <span class="tag ${cls}">${esc(label)}</span>
           <span class="sub2">${diff ? 'Apicbase: ' : ''}${esc(used)}${
-            det.servings ? ` Â· recipe makes ${nf(+det.servings, 0)}` : ''}</span></summary>
+            det.servings ? ` · recipe makes ${nf(+det.servings, 0)}` : ''}</span></summary>
         ${lines.length ? `<div class="tablewrap"><table><thead><tr>
             <th>Ingredient</th><th class="num">Qty</th><th>Unit</th><th>Type</th></tr></thead>
           <tbody>${lines.map(l => `<tr><td>${esc(l.name)}</td>
@@ -872,7 +872,7 @@ const apicQty = () => ((CATERPICK[apicWeek()] || {}).qty) || {};
 const apicPeople = () => ((CATERPICK[apicWeek()] || {}).people) || {};
 
 function apicPut(changes, what) {
-  if (!STORE || !USER) { APIC.saveErr = 'Sign in first â nothing was saved.'; return; }
+  if (!STORE || !USER) { APIC.saveErr = 'Sign in first — nothing was saved.'; return; }
   const wk = apicWeek();
   const ch = {};
   for (const [k, v] of Object.entries(changes)) ch[`catering/${wk}/${k}`] = v;
@@ -1011,8 +1011,8 @@ function apicWeekMenus() {
     if (from && to && (m.to < from || m.from > to)) continue;    // no overlap with this week
     rows.push({ id, ...m });
   }
-  // Kitchen filter â hide only menus that explicitly belong to Berlin, Munich or are mini events
-  const EXCLUDE = ['BERLIN','(BER)','BER ','MÃNCHEN','MUNICH','(MUC)','MUC ','MINI EVENT','MINI-EVENT'];
+  // Kitchen filter — hide only menus that explicitly belong to Berlin, Munich or are mini events
+  const EXCLUDE = ['BERLIN','(BER)','BER ','MÜNCHEN','MUNICH','(MUC)','MUC ','MINI EVENT','MINI-EVENT'];
   const filtered = APIC_KITCHEN === 'NRW'
     ? rows.filter(m => {
         const n = (m.name || '').toUpperCase();
@@ -1083,11 +1083,11 @@ function apicParseBeo(text) {
   const rows = [];
   let event = '', guests = null, header = false;
   for (const raw of lines) {
-    const line = raw.replace(/Â /g, ' ').trim();
+    const line = raw.replace(/ /g, ' ').trim();
     if (!line) continue;
 
-    if (!event) {                                   // "Client 17.11 (NRW) â Tuesday 17/11/2026"
-      const m = line.match(/^(.+?)\s+[ââ-]\s+\w+day\s+\d{1,2}[./]\d{1,2}/);
+    if (!event) {                                   // "Client 17.11 (NRW) — Tuesday 17/11/2026"
+      const m = line.match(/^(.+?)\s+[—–-]\s+\w+day\s+\d{1,2}[./]\d{1,2}/);
       if (m) { event = m[1].trim(); continue; }
     }
     if (guests === null) {
@@ -1114,7 +1114,7 @@ function apicParseBeo(text) {
     const bits = line.split(/\s+/);
     const nums = bits.map((b, i) => [b, i]).filter(([b]) => /^\d{1,4}$/.test(b));
     if (nums.length === 1 && nums[0][1] > 0 && bits.length > nums[0][1] ) {
-      const name = bits.slice(0, nums[0][1]).filter(b => !/^[ââ-]+$/.test(b)).join(' ').trim();
+      const name = bits.slice(0, nums[0][1]).filter(b => !/^[—–-]+$/.test(b)).join(' ').trim();
       if (name && !/^\d/.test(name)) rows.push({ dish: name, qty: +nums[0][0] });
     }
   }
@@ -1238,7 +1238,7 @@ function apicApplyBeo(text) {
     if (hit && Number.isFinite(r.qty)) {
       ch[`qty/${menu.id}/${hit.id}`] = r.qty;
       done.push(`${hit.name} ${r.qty}`);
-      if (hit.near) near.push(`${r.dish.trim()} â ${hit.name}`);
+      if (hit.near) near.push(`${r.dish.trim()} → ${hit.name}`);
     } else missed.push(`${r.dish} (${r.qty})`);
   }
   apicPut(ch, `catering portions from the ${menu.name} BEO`);
@@ -1300,7 +1300,7 @@ function renderApic() {
     paintApicTotals();        // somebody is typing: never rebuild the list under their cursor
     return;
   }
-  if (APIC.state === 'loading') { host.innerHTML = '<p class="cempty">Reading the Apicbase copyâ¦</p>'; return; }
+  if (APIC.state === 'loading') { host.innerHTML = '<p class="cempty">Reading the Apicbase copy…</p>'; return; }
   if (APIC.state === 'idle' || APIC.state === 'error') {
     host.innerHTML = `<div class="apicIntro">
       <h3>Build a catering order from Apicbase</h3>
@@ -1332,7 +1332,7 @@ function renderApic() {
         <button class="btn" id="apicFetch">Refresh</button>
         <button class="btn" id="apicClear">Clear week</button>
         <button class="btn" id="apicPrint">Print order</button>
-        <button class="btn" id="apicPrintRecipes">ð¨ Print recipes</button>
+        <button class="btn" id="apicPrintRecipes">🖨 Print recipes</button>
       </div>
     </div>
     <p class="hint" style="margin:0 0 10px">Use the week strip at the top of the page to move between weeks.
@@ -1345,9 +1345,9 @@ function renderApic() {
         One paste carries the whole week, however many events it holds.</p>
       <div class="beoActions">
         <button class="btn" id="apicBeoOpen">Open BEO for this week</button>
-        <a class="btn beoGrab" href="${BEO_GRAB}" title="Drag me to your bookmarks bar, once">â¬ Grab BEO (drag to bookmarks)</a>
+        <a class="btn beoGrab" href="${BEO_GRAB}" title="Drag me to your bookmarks bar, once">⬆ Grab BEO (drag to bookmarks)</a>
       </div>
-      <textarea id="apicBeo" rows="6" placeholder="Client name 17.11 (NRW) â Tuesday 17/11/2026&#10;â¦&#10;Dish name  Finger Food  COLD  25  Buffet  Platter"></textarea>
+      <textarea id="apicBeo" rows="6" placeholder="Client name 17.11 (NRW) — Tuesday 17/11/2026&#10;…&#10;Dish name  Finger Food  COLD  25  Buffet  Platter"></textarea>
       <div class="beoActions"><button class="btn primary" id="apicBeoGo">Read the sheet</button>
         <span id="apicBeoMsg" class="hint ${APIC.beo ? (APIC.beo.ok ? 'ok' : 'bad') : ''}">${
           APIC.beo ? esc(APIC.beo.text) : ''}</span></div>
@@ -1355,7 +1355,7 @@ function renderApic() {
     <div id="apicResults"></div>
     <label class="fld grow" style="display:block;max-width:420px;margin:18px 0 8px">
       <span class="hint">Add a dish that is not on a menu</span>
-      <input type="search" id="apicQ" value="${esc(APIC.q)}" placeholder="falafel, couscous, goulashâ¦"></label>
+      <input type="search" id="apicQ" value="${esc(APIC.q)}" placeholder="falafel, couscous, goulash…"></label>
     <div id="apicExtra"></div>
     <div id="apicTotals"></div>`;
   paintApicAll();
@@ -1381,9 +1381,9 @@ function paintApicResults() {
         <span class="an">${esc(m.name)}</span></label>
       ${ev && ev.people ? `<span class="tag people" title="Notion: ${esc(ev.client)}${
         ev.city ? ', ' + esc(ev.city) : ''}">Notion: ${nf(ev.people, 0)}</span>` : ''}
-      <span class="am">${esc(m.from || '?')}${m.to !== m.from ? ' â ' + esc(m.to || '?') : ''}
-        Â· ${(m.recipes || []).length} dishes${typed ? ` Â· ${typed} with portions` : ''}</span>
-      ${chosen && !typed ? '<span class="tag warn">no portions yet â paste this event\'s BEO sheet</span>' : ''}
+      <span class="am">${esc(m.from || '?')}${m.to !== m.from ? ' → ' + esc(m.to || '?') : ''}
+        · ${(m.recipes || []).length} dishes${typed ? ` · ${typed} with portions` : ''}</span>
+      ${chosen && !typed ? '<span class="tag warn">no portions yet — paste this event\'s BEO sheet</span>' : ''}
       ${chosen ? `<label class="pfld" title="The head count. Typing it puts that number on every dish in this menu.">people
         <input type="number" min="0" step="1" inputmode="numeric"
           data-apicpeople="${esc(m.id)}" value="${apicPeople()[m.id] ?? (ev && ev.people) ?? ''}"></label>` : ''}
@@ -1410,13 +1410,13 @@ function paintApicExtra() {
   el.innerHTML = `
     ${found.length ? `<div class="apicList">${found.map(h => `<div class="arow">
         <span class="an">${esc(h.name)}</span>
-        <span class="am">recipe makes ${h.persons || 1} Â· ${h.lines} lines</span>
+        <span class="am">recipe makes ${h.persons || 1} · ${h.lines} lines</span>
         <button class="btn tiny" data-apicadd="${esc(h.id)}">Add</button></div>`).join('')}</div>` : ''}
     ${Object.keys(extra).length ? `<div class="apicList">${Object.entries(extra).map(([rid, v]) => {
       const r = APIC.data.recipes[rid] || { name: rid, persons: 1 };
       return `<div class="arow">
         <span class="an">${esc(r.name)}</span>
-        <span class="am">added by hand Â· recipe makes ${r.persons || 1}</span>
+        <span class="am">added by hand · recipe makes ${r.persons || 1}</span>
         <label class="pfld">portions
           <input type="number" min="0" step="1" inputmode="numeric"
             data-amenu="extra" data-arecipe="${esc(rid)}" value="${v ?? ''}"></label>
@@ -1466,7 +1466,7 @@ function printRecipes() {
 
       const portionLabel = portions
         ? `<span class="pr-portions">${portions} portion${portions===1?'':'s'}</span>`
-        : `<span class="pr-portions muted">portions not set â showing per-recipe quantities</span>`;
+        : `<span class="pr-portions muted">portions not set — showing per-recipe quantities</span>`;
 
       const ingTable = ingRows.length ? `
         <table class="pr-ing">
@@ -1474,7 +1474,7 @@ function printRecipes() {
           <tbody>${ingRows.map(l =>
             (PRIORITY.some(s=>l.supplier.toLowerCase().includes(s)) ?
               `<tr><td>${esc(l.name)}</td><td class="num">${nf(l.qty,l.qty<10?2:0)}</td><td>${esc(l.unit)}</td>
-              <td class="pr-sup">${esc(l.supplier||'â')}</td><td class="pr-art">${esc(l.article||'')}</td></tr>` : '')
+              <td class="pr-sup">${esc(l.supplier||'—')}</td><td class="pr-art">${esc(l.article||'')}</td></tr>` : '')
           ).join('')}${Object.entries(prep).map(([k,v]) => {
             const [q,u] = fromBase(v.v, v.base);
             return `<tr><td>${esc(v.name||k)} <em>(prepare in kitchen)</em></td><td class="num">${nf(q,0)}</td><td>${esc(u)}</td></tr>`;
@@ -1492,7 +1492,7 @@ function printRecipes() {
             </div>
           </div>
           ${ingTable}
-          ${notes.length ? `<p class="pr-notes">${notes.map(esc).join(' Â· ')}</p>` : ''}
+          ${notes.length ? `<p class="pr-notes">${notes.map(esc).join(' · ')}</p>` : ''}
         </div>`);
     }
   }
@@ -1501,7 +1501,7 @@ function printRecipes() {
 
   const eventDate = rows[0] && rows[0].from ? rows[0].from : '';
   const html = `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
-<title>Recipes â ${esc(eventDate)}</title>
+<title>Recipes — ${esc(eventDate)}</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:Figtree,system-ui,sans-serif;font-size:11pt;color:#111;padding:14mm 16mm}
@@ -1526,8 +1526,8 @@ function printRecipes() {
   em{color:#888;font-style:italic;font-size:9pt}
   @media print{body{padding:10mm 12mm}@page{size:A4;margin:10mm 12mm}}
 </style></head><body>
-<h1 class="pr-title">Recipes${eventDate ? ' â '+eventDate : ''}</h1>
-<p class="pr-subtitle">Bella &amp; Bona NRW Â· Remscheid kitchen Â· Printed ${new Date().toLocaleDateString('en-GB')}</p>
+<h1 class="pr-title">Recipes${eventDate ? ' — '+eventDate : ''}</h1>
+<p class="pr-subtitle">Bella &amp; Bona NRW · Remscheid kitchen · Printed ${new Date().toLocaleDateString('en-GB')}</p>
 ${sections.join('')}
 </body></html>`;
 
@@ -1541,11 +1541,11 @@ ${sections.join('')}
 /* The article number is the thing worth having, so clicking copies it. The
    small link only opens the supplier's own site - no invented search path. */
 function artCell(l) {
-  if (!l.article) return '<td class="art"><span class="muted">â</span></td>';
+  if (!l.article) return '<td class="art"><span class="muted">—</span></td>';
   const home = SUP_HOME[l.supplier];
   return `<td class="art"><button class="artbtn" data-copy="${esc(l.article)}"
       title="Copy the article number">${esc(l.article)}</button>${
-    home ? ` <a href="${esc(home)}" target="_blank" rel="noopener" title="Open ${esc(l.supplier)}">â</a>` : ''}</td>`;
+    home ? ` <a href="${esc(home)}" target="_blank" rel="noopener" title="Open ${esc(l.supplier)}">↗</a>` : ''}</td>`;
 }
 
 function paintApicTotals() {
@@ -1562,8 +1562,8 @@ function paintApicTotals() {
   const portions = T.dishes.reduce((a, d) => a + d.portions, 0);
   el.innerHTML = `
     <h2 class="apicH">Everything to order
-      <span class="count">${T.dishes.length} dishes Â· ${nf(portions, 0)} portions Â·
-        ${lines.length} ingredients Â· ${Object.keys(bySup).length} suppliers</span></h2>
+      <span class="count">${T.dishes.length} dishes · ${nf(portions, 0)} portions ·
+        ${lines.length} ingredients · ${Object.keys(bySup).length} suppliers</span></h2>
     ${Object.keys(bySup).sort().map(s => `<section class="sup${s.startsWith('-') ? ' none' : ''}">
       <h2>${esc(s)} <span class="count">${bySup[s].length}</span></h2>
       <div class="tablewrap"><table>
@@ -1573,7 +1573,7 @@ function paintApicTotals() {
             ${l.stockItem ? `<span class="sub2">${esc(l.stockItem)}</span>` : ''}</td>
           <td class="num qty">${nf(l.qty, l.qty < 10 ? 2 : 0)}</td>
           <td>${esc(l.unit)}</td>${artCell(l)}
-          <td class="num qty">${l.packs === null ? '<span class="muted">â</span>' : nf(l.packs, 0)}</td>
+          <td class="num qty">${l.packs === null ? '<span class="muted">—</span>' : nf(l.packs, 0)}</td>
           <td>${esc(l.packText)}</td></tr>`).join('')}</tbody>
       </table></div></section>`).join('')}
     ${Object.keys(T.prep).length ? `<section class="sup"><h2>Prepare in the kitchen
@@ -1586,7 +1586,7 @@ function paintApicTotals() {
       <ul>${T.notes.map(n => `<li>${esc(n)}</li>`).join('')}</ul></div>` : ''}
     <p class="hint" style="margin-top:18px">Worked out here from the synced Apicbase recipes: portions
       divided by each recipe's own portion count, waste included, stock not subtracted. The
-      <b>Catering order</b> tab is Apicbase's own calculation â check against it before a large order.</p>`;
+      <b>Catering order</b> tab is Apicbase's own calculation — check against it before a large order.</p>`;
 }
 
 /* ----- events ----- */
@@ -1691,7 +1691,7 @@ function renderYields() {
       <td><div class="name">${n}</div><div class="note">${s.usedIn.length ? `In ${s.usedIn.length} ${s.usedIn.length === 1 ? 'dish' : 'dishes'}` : 'Inside another sub-recipe'}</div></td>
       <td class="num">${nf(s.cooked / 1000, 1)} kg</td>
       <td class="num">${s.dbYield > 0 ? nf(s.dbYield, 0) : 'missing'}</td>
-      <td class="num">${s.input > 0 ? nf(s.input, 0) : 'â'}</td>
+      <td class="num">${s.input > 0 ? nf(s.input, 0) : '–'}</td>
       <td class="num"><input type="number" min="1" step="any" inputmode="decimal" data-yield="${n}" data-fid="yield|${n}" value="${Math.round(s.yield * 10) / 10}" aria-label="Yield in grams, ${n}"></td>
       <td class="num">${nf(s.batches, 2)}</td>
       <td><span class="tag ${cls}">${label}</span>${s.why ? `<div class="note">${esc(s.why)}</div>` : ''}${rank[s.source] < 2 ? `<button class="btn tiny" data-confirm="${n}">Confirm ${nf(s.yield, 0)} g</button>` : ''}</td>
@@ -1728,7 +1728,7 @@ async function seedStock() {
   // Reads data/stock-patch.json and writes all stock entries to Firebase
   // Call once after delivery arrives to load stock into the system
   if (!STORE || !CONNECTED) { showError('Not connected to Firebase'); return; }
-  showError('â³ Loading stock from delivery data...');
+  showError('⏳ Loading stock from delivery data...');
   try {
     const r = await fetch('data/stock-patch.json?t=' + Date.now(), {cache:'no-store'});
     const data = await r.json();
@@ -1751,10 +1751,10 @@ async function seedStock() {
     };
 
     await put(ch, 'stock seed from delivery');
-    showError('â Stock loaded: ' + Object.keys(data.nrw_stock.items).length + ' NRW items + ' + Object.keys(data.catering.items).length + ' catering items');
+    showError('✅ Stock loaded: ' + Object.keys(data.nrw_stock.items).length + ' NRW items + ' + Object.keys(data.catering.items).length + ' catering items');
     setTimeout(() => showError(''), 4000);
   } catch(e) {
-    showError('â Stock load failed: ' + e.message);
+    showError('❌ Stock load failed: ' + e.message);
   }
 }
 
@@ -1768,14 +1768,14 @@ async function seedIngredientMaster() {
     ch[`ingredients/${enc(name)}/sup`] = sup;
   }
   put(ch, 'ingredient master seed');
-  showError('â ' + Object.keys(ch).length + ' ingredient records seeded to Firebase');
+  showError('✅ ' + Object.keys(ch).length + ' ingredient records seeded to Firebase');
   setTimeout(() => showError(''), 3000);
 }
 async function refreshDB() {
   const btn = $('#refreshBtn');
   if (!btn) return;
   btn.setAttribute('aria-busy', 'true');
-  btn.innerHTML = '<span class="spin">&#x21BB;</span> Fetchingâ¦';
+  btn.innerHTML = '<span class="spin">&#x21BB;</span> Fetching…';
   try {
     const res = await fetch('data/db-snapshot.json?t=' + Date.now(), { cache: 'no-store' });
     if (!res.ok) throw new Error('HTTP ' + res.status);
@@ -1873,7 +1873,7 @@ function paintCalcPicker() {
   }
   const picked = $('#calcPicked');
   const note = CATALOG === 'loading' ? '<div class="cempty">Loading the full dish list&hellip;</div>'
-    : CATALOG === 'none' ? '<div class="cempty">Only this weekâs NRW dishes are searchable. Run <b>scripts/export_dishes.py</b> once to get every dish.</div>' : '';
+    : CATALOG === 'none' ? '<div class="cempty">Only this week’s NRW dishes are searchable. Run <b>scripts/export_dishes.py</b> once to get every dish.</div>' : '';
   picked.innerHTML = CALC.picks.length ? CALC.picks.map(p => {
     const d = DB.dishes[p.id] || { name: p.id };
     const n = (DB.lines[p.id] || []).length;
@@ -2012,11 +2012,11 @@ async function exportExcel() {
     return {v: v==null?'':v, t: typeof v==='number'?'n':'s', s};
   }
   function numCell(v, opt={}) {
-    if (v==null||v==='') return cell('â', opt);
+    if (v==null||v==='') return cell('—', opt);
     return {v:Number(v)||0, t:'n', s:{font:{bold:opt.bold||false, color:{rgb:opt.fg||'FF000000'}}, alignment:{horizontal:'right'}, fill: opt.bg?{fgColor:{rgb:opt.bg}}:undefined}};
   }
 
-  // ââ SHEET 1: Order Summary â one row per item âââââââââââââââââââââââââ
+  // ── SHEET 1: Order Summary — one row per item ─────────────────────────
   const s1rows = [
     hdr(['#','Supplier Art#','Item Name','Supplier','Unit','Need (portions)','Stock on hand','To Order','Pack Size','Packs','Ordered?']),
   ];
@@ -2024,12 +2024,12 @@ async function exportExcel() {
   const grouped = bySupplier(P.rows);
   for (const [sup, items] of grouped) {
     // Supplier header row
-    s1rows.push([{v:`ð¦  ${sup.toUpperCase()}   â   ${items.length} items`, t:'s', s:{font:{bold:true,color:{rgb:'FF1C1504'}},fill:{fgColor:{rgb:SAFF}},alignment:{horizontal:'left'}}},...Array(10).fill({v:'',t:'s'})]);
+    s1rows.push([{v:`📦  ${sup.toUpperCase()}   —   ${items.length} items`, t:'s', s:{font:{bold:true,color:{rgb:'FF1C1504'}},fill:{fgColor:{rgb:SAFF}},alignment:{horizontal:'left'}}},...Array(10).fill({v:'',t:'s'})]);
     for (const r of items) {
-      const art = NRW_UIDS[r.name] || 'â';
-      const hasArt = art !== 'â';
+      const art = NRW_UIDS[r.name] || '—';
+      const hasArt = art !== '—';
       const bg = hasArt ? GREEN : AMBER;
-      const ord = isOrdered(r.name) ? 'â Ordered' : 'â¬ Pending';
+      const ord = isOrdered(r.name) ? '✅ Ordered' : '⬜ Pending';
       s1rows.push([
         cell(seq++,    {al:'center'}),
         cell(art,      {bold:hasArt, fg:hasArt?'FF1B6B3A':'FFC0392B', bg, al:'center'}),
@@ -2039,8 +2039,8 @@ async function exportExcel() {
         numCell(Math.round(r.portions), {bg}),
         numCell(r.stock||0,             {bg}),
         numCell(Number(q2(r.toOrder,r.unit))||0, {bold:true, bg}),
-        cell(r.pack>0?r.pack:'â',      {al:'center', bg}),
-        cell(r.packs==null?'â':r.packs,{al:'center', bg}),
+        cell(r.pack>0?r.pack:'—',      {al:'center', bg}),
+        cell(r.packs==null?'—':r.packs,{al:'center', bg}),
         cell(ord,                       {fg:isOrdered(r.name)?'FF1B6B3A':'FFCC7A00', bg}),
       ]);
     }
@@ -2052,16 +2052,16 @@ async function exportExcel() {
   ws1['!freeze'] = {xSplit:0, ySplit:1};
   X.utils.book_append_sheet(wb, ws1, 'Order Summary');
 
-  // ââ SHEET 2: Dish Breakdown â item + each dish + total ââââââââââââââââ
+  // ── SHEET 2: Dish Breakdown — item + each dish + total ────────────────
   const allDishes = [...new Set(P.rows.flatMap(r => r.dishes.map(d=>d.name)))].sort();
   const s2rows = [
     hdr(['Supplier Art#','Item Name','Supplier','Unit',...allDishes,'TOTAL']),
   ];
   for (const [sup, items] of grouped) {
-    s2rows.push([{v:`ð¦  ${sup.toUpperCase()}`,t:'s',s:{font:{bold:true,color:{rgb:'FF1C1504'}},fill:{fgColor:{rgb:SAFF}},alignment:{horizontal:'left'}}},...Array(3+allDishes.length+1).fill({v:'',t:'s'})]);
+    s2rows.push([{v:`📦  ${sup.toUpperCase()}`,t:'s',s:{font:{bold:true,color:{rgb:'FF1C1504'}},fill:{fgColor:{rgb:SAFF}},alignment:{horizontal:'left'}}},...Array(3+allDishes.length+1).fill({v:'',t:'s'})]);
     for (const r of items) {
-      const art = NRW_UIDS[r.name] || 'â';
-      const hasArt = art !== 'â';
+      const art = NRW_UIDS[r.name] || '—';
+      const hasArt = art !== '—';
       const bg = hasArt ? GREEN : AMBER;
       const dishQtys = allDishes.map(dname => {
         const d = r.dishes.find(x=>x.name===dname);
@@ -2083,7 +2083,7 @@ async function exportExcel() {
   ws2['!cols'] = [{wch:14},{wch:44},{wch:22},{wch:6},...dishCols,{wch:12}];
   X.utils.book_append_sheet(wb, ws2, 'Dish Breakdown');
 
-  // ââ SHEET 3: Per Supplier sheets (one sheet each) âââââââââââââââââââââ
+  // ── SHEET 3: Per Supplier sheets (one sheet each) ─────────────────────
   for (const [sup, items] of grouped) {
     if (sup === 'No supplier yet') continue;
     const sname = sup.slice(0,28); // Excel sheet name limit 31 chars
@@ -2092,8 +2092,8 @@ async function exportExcel() {
     ];
     let totalCost = 0;
     for (const r of items) {
-      const art = NRW_UIDS[r.name] || 'â';
-      const hasArt = art !== 'â';
+      const art = NRW_UIDS[r.name] || '—';
+      const hasArt = art !== '—';
       const bg = hasArt ? GREEN : AMBER;
       srows.push([
         cell(art,    {bold:hasArt, fg:hasArt?'FF1B6B3A':'FFC0392B', bg, al:'center'}),
@@ -2102,14 +2102,14 @@ async function exportExcel() {
         numCell(Math.round(r.portions),            {bg}),
         numCell(r.stock||0,                        {bg}),
         numCell(Number(q2(r.toOrder,r.unit))||0,   {bold:true, bg}),
-        cell(r.pack>0?r.pack:'â',                  {al:'center', bg}),
-        cell(r.packs==null?'â':r.packs,            {al:'center', bg}),
-        cell(isOrdered(r.name)?'â':'â¬',           {al:'center', fg:isOrdered(r.name)?'FF1B6B3A':'FFCC7A00', bg}),
+        cell(r.pack>0?r.pack:'—',                  {al:'center', bg}),
+        cell(r.packs==null?'—':r.packs,            {al:'center', bg}),
+        cell(isOrdered(r.name)?'✅':'⬜',           {al:'center', fg:isOrdered(r.name)?'FF1B6B3A':'FFCC7A00', bg}),
       ]);
     }
     // Total row
     srows.push([
-      {v:`TOTAL â ${items.length} items`,t:'s',s:{font:{bold:true,color:{rgb:'FFFFFFFF'}},fill:{fgColor:{rgb:DARK}},alignment:{horizontal:'left'}}}
+      {v:`TOTAL — ${items.length} items`,t:'s',s:{font:{bold:true,color:{rgb:'FFFFFFFF'}},fill:{fgColor:{rgb:DARK}},alignment:{horizontal:'left'}}}
       ,...Array(8).fill({v:'',t:'s'})
     ]);
     const ws = X.utils.aoa_to_sheet(srows);
@@ -2117,30 +2117,30 @@ async function exportExcel() {
     X.utils.book_append_sheet(wb, ws, sname);
   }
 
-  // ââ SHEET 4: WhatsApp Messages ââââââââââââââââââââââââââââââââââââââââ
+  // ── SHEET 4: WhatsApp Messages ────────────────────────────────────────
   const s4rows = [hdr(['Supplier','Message (copy and paste to WhatsApp)'])];
   for (const [sup, items] of grouped) {
     if (sup === 'No supplier yet') continue;
     const missing = items.filter(r => !NRW_UIDS[r.name]);
     const known   = items.filter(r =>  NRW_UIDS[r.name]);
-    let msg = `Hallo ${sup} Team,\n\nWir bestellen fÃ¼r NRW Remscheid â Woche ${wk} ð\n\n`;
+    let msg = `Hallo ${sup} Team,\n\nWir bestellen für NRW Remscheid — Woche ${wk} 🎉\n\n`;
     if (missing.length) {
-      msg += `â Artikelnummer fehlt â bitte mitteilen:\n`;
-      missing.forEach(r => { msg += `  â¢ ${r.name}  |  Bedarf: ${q2(r.toOrder,r.unit)} ${r.unit}\n`; });
+      msg += `❓ Artikelnummer fehlt — bitte mitteilen:\n`;
+      missing.forEach(r => { msg += `  • ${r.name}  |  Bedarf: ${q2(r.toOrder,r.unit)} ${r.unit}\n`; });
       msg += '\n';
     }
     if (known.length) {
-      msg += `â Bestellung (Art# bestÃ¤tigt):\n`;
-      known.forEach(r => { msg += `  â¢ Art# ${NRW_UIDS[r.name]}  â  ${r.name}  |  ${q2(r.toOrder,r.unit)} ${r.unit}\n`; });
+      msg += `✅ Bestellung (Art# bestätigt):\n`;
+      known.forEach(r => { msg += `  • Art# ${NRW_UIDS[r.name]}  —  ${r.name}  |  ${q2(r.toOrder,r.unit)} ${r.unit}\n`; });
     }
-    msg += `\nVielen Dank!\nHarsh Patel â Bella & Bona GmbH NRW`;
+    msg += `\nVielen Dank!\nHarsh Patel — Bella & Bona GmbH NRW`;
     s4rows.push([cell(sup,{bold:true}), cell(msg,{wrap:true})]);
   }
   const ws4 = X.utils.aoa_to_sheet(s4rows);
   ws4['!cols'] = [{wch:24},{wch:110}];
   X.utils.book_append_sheet(wb, ws4, 'WhatsApp Messages');
 
-  // ââ Download âââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+  // ── Download ─────────────────────────────────────────────────────────
   const week = P.week ? `W${P.week.no}-${P.week.key}` : 'export';
   const iso_date = new Date().toISOString().slice(0,10);
   X.writeFile(wb, `NRW-Order-${week}-${iso_date}.xlsx`);
@@ -2223,7 +2223,7 @@ function renderStatus() {
   $('#userEmail').textContent = USER ? USER.email : '';
   $('#signOut').hidden = !USER;
   $('#status').textContent = !USER ? '' : CONNECTED === false ? 'Offline: changes are saved when you are back online.'
-    : CONNECTED ? `Saved online${LAST && LAST.by ? `. Last change: ${LAST.by.split('@')[0]}, ${when(LAST.at)}.` : '.'}` : 'Connectingâ¦';
+    : CONNECTED ? `Saved online${LAST && LAST.by ? `. Last change: ${LAST.by.split('@')[0]}, ${when(LAST.at)}.` : '.'}` : 'Connecting…';
 }
 function showAuth(mode) {
   $('#app').hidden = true; $('#auth').hidden = false;
@@ -2334,7 +2334,7 @@ document.addEventListener('click', e => {
   else if (b.id === 'aSignup') {
     const c = creds(); if (!c) return;
     if (c.pass.length < 6) { authMsg('Use at least 6 characters for the password.', true); return; }
-    authMsg('Creating the accountâ¦');
+    authMsg('Creating the account…');
     STORE.signUp(c.email, c.pass).then(() => authMsg('')).catch(err => authMsg(friendly(err), true));
   }
   else if (b.id === 'aReset') {
@@ -2354,7 +2354,7 @@ function creds() {
 $('#authForm').addEventListener('submit', e => {
   e.preventDefault();
   const c = creds(); if (!c) return;
-  authMsg('Signing inâ¦');
+  authMsg('Signing in…');
   STORE.signIn(c.email, c.pass).then(() => authMsg('')).catch(err => authMsg(friendly(err), true));
 });
 $('#search').addEventListener('input', e => { SEARCH = e.target.value; renderOrder(); });
@@ -2394,7 +2394,7 @@ async function loadJSON(path, seedId) {
     FIRST_WEEK = firstServiceWeek();
     WEEK = defaultWeek();
     cacheLoad(); // last copy of the team data, so the page shows numbers at once
-    $('#status').textContent = 'Connectingâ¦';
+    $('#status').textContent = 'Connecting…';
     STORE = window.__STORE__ || await firebaseStore(SET.firebase);
     STORE.connected(on => { CONNECTED = on; renderStatus(); });
     STORE.onAuth(onAuth);
