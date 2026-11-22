@@ -541,8 +541,8 @@ const view = () => VIEWS.includes(ST.view) ? ST.view : 'forecast';
 const showDishes = () => ST.showDishes !== false;
 
 function weekOf(mon) {
-  const days = [0, 1, 2, 3, 4].map(i => iso(addDays(mon, i)));
-  return { mon, key: days[0], days, no: weekNo(mon), label: `${dm(mon)} â ${dm(addDays(mon, 4))}` };
+  const days = [0, 1, 2, 3, 4, 5].map(i => iso(addDays(mon, i)))   // Monday to Saturday;
+  return { mon, key: days[0], days, no: weekNo(mon), label: `${dm(mon)} â ${dm(addDays(mon, 5))}` };
 }
 
 // Delivery 1 (Tue 29 Sep) is for the first week that has an NRW menu. After that: the Friday before each week.
