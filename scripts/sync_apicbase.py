@@ -199,8 +199,22 @@ def recipe_row(r, detail):
     }
 
 
+# Suppliers to prefer, in priority order. If Chefs Culinar or Metro offer an
+# ingredient, they win over a cheaper alternative; between the two, Chefs
+# Culinar is first. The match is case-insensitive on the supplier name so
+# "metro", "Metro", "METRO Cash & Carry" etc. all count as Metro.
+PREFERRED_SUPPLIERS = ["chefs culinar", "metro"]
+
+def _sup_priority(name: str) -> int:
+    """Lower is better. 0 = Chefs Culinar, 1 = Metro, 2 = everything else."""
+    n = (name or "").lower()
+    for i, pref in enumerate(PREFERRED_SUPPLIERS):
+        if pref in n:
+            return i
+    return len(PREFERRED_SUPPLIERS)
+
 def build_packs(ingredients, stock_items, packages):
-    """ingredient id -> the cheapest orderable package, with supplier and pack size."""
+    """ingredient id -> preferred (Chefs Culinar > Metro > cheapest) orderable package."""
     by_stock = {}
     for p in packages:
         sid = str((p.get("stock_item") or {}).get("id") or "")
@@ -215,17 +229,26 @@ def build_packs(ingredients, stock_items, packages):
         for p in by_stock.get(str(si.get("id")), []):
             if not p.get("orderable") or not p.get("active", True):
                 continue
+            sup_name = (p.get("supplier") or {}).get("name") or ""
             price = num(p.get("average_price_per_package"))
             cur = out.get(str(ing))
-            if cur and cur.get("price") is not None and (price is None or price >= cur["price"]):
-                continue
+            if cur:
+                cur_pri = _sup_priority(cur["supplier"])
+                new_pri = _sup_priority(sup_name)
+                # Keep current if it has strictly better priority, or same
+                # priority and is cheaper (or new price is unknown).
+                if cur_pri < new_pri:
+                    continue
+                if cur_pri == new_pri:
+                    if cur.get("price") is not None and (price is None or price >= cur["price"]):
+                        continue
             out[str(ing)] = {
                 "stockItem": si.get("name") or "",
                 "content": si.get("content") or "",
                 "packQty": num(pd.get("quantity")),
                 "packUnit": pd.get("unit") or pd.get("base_unit") or "",
                 "price": price,
-                "supplier": (p.get("supplier") or {}).get("name") or "",
+                "supplier": sup_name,
                 "article": p.get("supplier_article_number") or "",
                 "returnable": bool(si.get("returnable")),
             }
