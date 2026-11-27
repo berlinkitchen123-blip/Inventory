@@ -861,7 +861,8 @@
       "Chefs Culinar order — Tom.Driessen@chefsculinar.de — delivery 02.10.2026",
       "Metro invoice 29.09.2026/011/0/0/0194/006539 — food items only (equipment excluded)"
     ],
-    "metro_equipment_note": "Metro invoice also contained €2,367.39 kitchen equipment (GN containers, HACCP boards, knives, pots, pans) — NOT in stock system, these are fixed assets"
+    "metro_equipment_note": "Metro invoice also contained €2,367.39 kitchen equipment (GN containers, HACCP boards, knives, pots, pans) — NOT in stock system, these are fixed assets",
+    "version": "2026-11-27"
   },
   "catering": {
     "event": "Autumn Salon",
