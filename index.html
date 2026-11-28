@@ -920,8 +920,29 @@ function toBase(qty, unit) {
 }
 /* Bought per piece but used in grams in the recipes, and Apicbase has no piece weight for these.
    Eggs Large: one egg is 55 g (the recipes use 55 g or "1 piece" for one egg).
-   Ananas and Honeydew Melon: one fruit per 10 fruit salads (10 x 50 g plus Apicbase's waste). */
-const PIECE_G = { '664425685941005': 55, '664425484711006': 503, '864425647521006': 503 };
+   Ananas and Honeydew Melon: one fruit per 10 fruit salads, weighed from Apicbase's own Fruit
+   salad recipe (its juice sub-recipe included), so it follows any change to that recipe. */
+const PIECE_FIXED = { '664425685941005': 55 };
+const PIECE_PER_10_FRUIT_SALADS = ['664425484711006', '864425647521006'];
+const FRUIT_SALAD = '449724921840006';
+let PIECE_MEMO = null;
+function pieceG(id) {
+  id = String(id);
+  if (PIECE_FIXED[id]) return PIECE_FIXED[id];
+  if (!PIECE_PER_10_FRUIT_SALADS.includes(id)) return 0;
+  const A = APIC.data;
+  if (!A) return 0;
+  if (!PIECE_MEMO || PIECE_MEMO.data !== A) {
+    PIECE_MEMO = { data: A, g: {} };
+    const r = A.recipes[FRUIT_SALAD];
+    if (r) {
+      const out = {};
+      apicExplode(FRUIT_SALAD, 10 / (+r.persons || 1), A, out, {}, [], new Set());
+      for (const k of PIECE_PER_10_FRUIT_SALADS) if (out[k] && out[k].base === 'g') PIECE_MEMO.g[k] = out[k].v;
+    }
+  }
+  return PIECE_MEMO.g[id] || 0;
+}
 
 function fromBase(v, base) {
   if (base === 'g' && v >= 1000) return [v / 1000, 'kg'];
@@ -973,7 +994,8 @@ function apicExplode(id, mult, A, out, prep, notes, seen) {
 
 function apicAdd(bag, key, qty, unit, name) {
   let b = toBase(qty, unit);
-  if (b.base === 'pc' && PIECE_G[key]) b = { v: b.v * PIECE_G[key], base: 'g' };   // "1 piece" and grams add up
+  const pg = b.base === 'pc' ? pieceG(key) : 0;
+  if (pg) b = { v: b.v * pg, base: 'g' };            // "1 piece" and grams add up
   const row = bag[key] || (bag[key] = { name: name || '', base: b.base, v: 0 });
   if (row.base !== b.base) { row.mixed = true; return; }   // never add litres to kilos
   row.v += b.v;
@@ -1037,7 +1059,7 @@ function apicLine(ingId, row) {
   const pack = A.packs[ingId] || {};
   const [v, u] = fromBase(row.v, row.base);
   const packed = toBase(pack.packQty, pack.packUnit);
-  const pg = PIECE_G[ingId];
+  const pg = pieceG(ingId);
   const size = apicPackSize(pack, row.base, ing.conv, pg);
   const packs = size > 0 ? Math.ceil(row.v / size - 1e-9) : null;
   return {
@@ -1665,7 +1687,7 @@ function paintApicTotals() {
           <td class="num qty">${nf(l.qty, l.qty < 10 ? 2 : 0)}</td>
           <td>${esc(l.unit)}${l.pieces ? ` <span class="muted">= ${nf(l.pieces, 0)} pcs</span>` : ''}</td>${artCell(l)}
           <td class="num qty">${l.packs === null ? '<span class="muted">—</span>' : nf(l.packs, 0)}</td>
-          <td>${esc(l.packText)}</td></tr>${apicUseRows(uses[l.id], 6, PIECE_G[l.id])}`).join('')}</tbody>
+          <td>${esc(l.packText)}</td></tr>${apicUseRows(uses[l.id], 6, pieceG(l.id))}`).join('')}</tbody>
       </table></div></section>`).join('')}
     ${T.notes.length ? `<div class="miss"><h3>Worth knowing</h3>
       <ul>${T.notes.map(n => `<li>${esc(n)}</li>`).join('')}</ul></div>` : ''}
