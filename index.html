@@ -251,6 +251,12 @@ table.order tbody.item.ordered .name{text-decoration:line-through;color:var(--in
 .beoGrab{text-decoration:none;cursor:grab}
 .hint.ok{color:var(--basil,#8fbf6a)}
 .hint.bad{color:var(--paprika)}
+#apicTotals tr.use td{padding:1px 8px 1px 22px;font-size:12px;color:var(--ink-3);border-top:0;background:transparent}
+#apicTotals tr.use td .um{color:var(--ink-2);font-weight:600}
+#apicTotals tr.use td .uq{font-variant-numeric:tabular-nums;color:var(--ink-2);white-space:nowrap}
+#apicTotals tr.use td .ud{display:block;padding-left:14px}
+#apicTotals tr.use + tr:not(.use) td{border-top:1px solid var(--line)}
+@media print{#apicTotals tr.use td,#apicTotals tr.use td .um,#apicTotals tr.use td .uq{color:#333!important}}
 </style>
 </head>
 <body>
@@ -1567,9 +1573,33 @@ function artCell(l) {
     home ? ` <a href="${esc(home)}" target="_blank" rel="noopener" title="Open ${esc(l.supplier)}">↗</a>` : ''}</td>`;
 }
 
+/* Which caterings and which of their dishes need a line, shown right under it in the order. */
+function apicUses(dishes, field) {
+  const map = {};
+  for (const d of dishes) {
+    for (const [k, v] of Object.entries(d[field] || {})) {
+      const byMenu = map[k] = map[k] || {};
+      const m = byMenu[d.menuId] = byMenu[d.menuId] || { name: d.menu, base: v.base, v: 0, mixed: false, dishes: [] };
+      if (m.base === v.base) m.v += v.v; else m.mixed = true;
+      m.dishes.push({ name: d.name, portions: d.portions, base: v.base, v: v.v });
+    }
+  }
+  return map;
+}
+function apicUseRows(byMenu, cols) {
+  if (!byMenu) return '';
+  const q = (v, base) => { const [x, u] = fromBase(v, base); return `${nf(x, x < 10 ? 2 : 0)} ${esc(u)}`; };
+  return Object.values(byMenu).sort((a, b) => String(a.name).localeCompare(String(b.name))).map(m =>
+    `<tr class="use"><td colspan="${cols}"><span class="um">${esc(m.name)}</span> —
+      <span class="uq">${m.mixed ? 'mixed units' : q(m.v, m.base)}</span>${
+      m.dishes.sort((a, b) => b.v - a.v).map(d => `<span class="ud">${esc(d.name)} · ${nf(d.portions, 0)} portions —
+        <span class="uq">${q(d.v, d.base)}</span></span>`).join('')}</td></tr>`).join('');
+}
+
 function paintApicTotals() {
   const el = $('#apicTotals'); if (!el) return;
   const T = apicTotals();
+  const uses = apicUses(T.dishes, 'per'), puses = apicUses(T.dishes, 'prep');
   if (!T.dishes.length) { el.innerHTML = '<p class="cempty">Tick a menu and type portions to build the order.</p>'; return; }
   const lines = Object.entries(T.out).map(([k, v]) => apicLine(k, v))
     .sort((a, b) => a.supplier.localeCompare(b.supplier) || a.name.localeCompare(b.name));
@@ -1593,13 +1623,13 @@ function paintApicTotals() {
           <td class="num qty">${nf(l.qty, l.qty < 10 ? 2 : 0)}</td>
           <td>${esc(l.unit)}</td>${artCell(l)}
           <td class="num qty">${l.packs === null ? '<span class="muted">—</span>' : nf(l.packs, 0)}</td>
-          <td>${esc(l.packText)}</td></tr>`).join('')}</tbody>
+          <td>${esc(l.packText)}</td></tr>${apicUseRows(uses[l.id], 6)}`).join('')}</tbody>
       </table></div></section>`).join('')}
     ${Object.keys(T.prep).length ? `<section class="sup"><h2>Prepare in the kitchen
         <span class="count">${Object.keys(T.prep).length}</span></h2>
       <div class="tablewrap"><table><thead><tr><th>Sub-recipe</th><th class="num">Needed</th><th>Unit</th></tr></thead>
         <tbody>${Object.entries(T.prep).map(([k, v]) => { const [q, u] = fromBase(v.v, v.base);
-          return `<tr><td><b>${esc(v.name || k)}</b></td><td class="num qty">${nf(q, 0)}</td><td>${esc(u)}</td></tr>`;
+          return `<tr><td><b>${esc(v.name || k)}</b></td><td class="num qty">${nf(q, 0)}</td><td>${esc(u)}</td></tr>${apicUseRows(puses[k], 3)}`;
         }).join('')}</tbody></table></div></section>` : ''}
     ${T.notes.length ? `<div class="miss"><h3>Worth knowing</h3>
       <ul>${T.notes.map(n => `<li>${esc(n)}</li>`).join('')}</ul></div>` : ''}
