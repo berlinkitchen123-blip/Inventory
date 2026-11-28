@@ -333,7 +333,10 @@ def main():
 
     ing_rows = {str(i["id"]): {"name": i.get("name") or "",
                                "category": i.get("category") or "",
-                               "inUse": bool(i.get("in_use", True))} for i in ingredients}
+                               "inUse": bool(i.get("in_use", True)),
+                               # kilos in one litre, as set in Apicbase; the planner turns
+                               # recipe grams into litre packs with it
+                               "conv": num(i.get("conversion_ratio")) or 1} for i in ingredients}
     menu_rows = {str(m["id"]): {
         "name": m.get("name") or "", "from": (m.get("starting_date") or "")[:10],
         "to": (m.get("ending_date") or "")[:10],
