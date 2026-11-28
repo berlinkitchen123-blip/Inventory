@@ -924,6 +924,21 @@ function fromBase(v, base) {
   return [v, base || ''];
 }
 
+/* Weight of one batch of a sub-recipe in the unit the dish asks for: the net weight set in
+   Apicbase, or else the sum of its own lines (grams and millilitres counted alike), which is
+   how Apicbase weighs a recipe that has no net weight set. */
+function apicBatch(sub, base) {
+  const nw = toBase(sub.netWeight, sub.netWeightUnit);
+  if (nw.v > 0 && nw.base === base) return nw.v;
+  if (base !== 'g' && base !== 'ml') return 0;
+  let sum = 0;
+  for (const ln of sub.lines || []) {
+    const b = toBase(ln.qty, ln.unit);
+    if (b.base === 'g' || b.base === 'ml') sum += b.v;
+  }
+  return sum;
+}
+
 /* ----- one dish into ingredients -----
    mult scales a recipe's own line quantities: portions / persons for a dish,
    grams wanted / batch weight for a sub-recipe. */
@@ -938,20 +953,16 @@ function apicExplode(id, mult, A, out, prep, notes, seen) {
     if (ln.ing) { apicAdd(out, String(ln.ing), qty, ln.unit, ln.name); continue; }
     const sub = A.recipes[String(ln.sub)];
     if (!sub) { apicAdd(out, 'x' + ln.sub, qty, ln.unit, ln.name || 'unknown sub-recipe'); continue; }
-    // A sub-recipe Apicbase calls stockable is something the kitchen makes. It is
-    // always listed to prepare; with the breakdown on it is also taken apart, so
-    // the raw ingredients land in the order instead of a line nobody can buy.
-    if (sub.stockable) {
-      apicAdd(prep, String(ln.sub), qty, ln.unit, sub.name);
-      if (!APIC.breakdown) continue;
-    }
-    const want = toBase(qty, ln.unit), batch = toBase(sub.netWeight, sub.netWeightUnit);
-    if (!(batch.v > 0) || want.base !== batch.base) {
-      if (!sub.stockable) apicAdd(prep, String(ln.sub), qty, ln.unit, sub.name);
-      notes.push(`${sub.name} has no usable batch weight, so it is listed to prepare, not broken down`);
+    // Every sub-recipe is taken apart, so the raw ingredients (vegetables and all)
+    // land in the order. What the kitchen makes is still noted on the dish itself.
+    if (sub.stockable) apicAdd(prep, String(ln.sub), qty, ln.unit, sub.name);
+    const want = toBase(qty, ln.unit), batch = apicBatch(sub, want.base);
+    if (!(batch > 0)) {                  // nothing to weigh it by: order it as it is, never hide it
+      apicAdd(out, 'x' + ln.sub, qty, ln.unit, sub.name);
+      notes.push(`${sub.name} could not be broken into ingredients (no weight in Apicbase), so it is one line in the order`);
       continue;
     }
-    apicExplode(ln.sub, want.v / batch.v, A, out, prep, notes, next);
+    apicExplode(ln.sub, want.v / batch, A, out, prep, notes, next);
   }
 }
 
@@ -1339,8 +1350,6 @@ function renderApic() {
         <span class="chip">synced ${esc(gen)} UTC</span>
       </div>
       <div class="actions">
-        <label class="mchk" style="margin-right:10px"><input type="checkbox" id="apicBreak"${APIC.breakdown ? ' checked' : ''}>
-          <span class="hint">Break down what the kitchen makes</span></label>
         <label class="mchk" style="margin-right:10px">Kitchen
           <select id="apicKitchen" style="margin-left:5px;padding:2px 6px;border-radius:6px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:13px">
             <option value="NRW"${APIC_KITCHEN==='NRW'?' selected':''}>NRW (Remscheid)</option>
@@ -1599,7 +1608,7 @@ function apicUseRows(byMenu, cols) {
 function paintApicTotals() {
   const el = $('#apicTotals'); if (!el) return;
   const T = apicTotals();
-  const uses = apicUses(T.dishes, 'per'), puses = apicUses(T.dishes, 'prep');
+  const uses = apicUses(T.dishes, 'per');
   if (!T.dishes.length) { el.innerHTML = '<p class="cempty">Tick a menu and type portions to build the order.</p>'; return; }
   const lines = Object.entries(T.out).map(([k, v]) => apicLine(k, v))
     .sort((a, b) => a.supplier.localeCompare(b.supplier) || a.name.localeCompare(b.name));
@@ -1625,12 +1634,6 @@ function paintApicTotals() {
           <td class="num qty">${l.packs === null ? '<span class="muted">—</span>' : nf(l.packs, 0)}</td>
           <td>${esc(l.packText)}</td></tr>${apicUseRows(uses[l.id], 6)}`).join('')}</tbody>
       </table></div></section>`).join('')}
-    ${Object.keys(T.prep).length ? `<section class="sup"><h2>Prepare in the kitchen
-        <span class="count">${Object.keys(T.prep).length}</span></h2>
-      <div class="tablewrap"><table><thead><tr><th>Sub-recipe</th><th class="num">Needed</th><th>Unit</th></tr></thead>
-        <tbody>${Object.entries(T.prep).map(([k, v]) => { const [q, u] = fromBase(v.v, v.base);
-          return `<tr><td><b>${esc(v.name || k)}</b></td><td class="num qty">${nf(q, 0)}</td><td>${esc(u)}</td></tr>${apicUseRows(puses[k], 3)}`;
-        }).join('')}</tbody></table></div></section>` : ''}
     ${T.notes.length ? `<div class="miss"><h3>Worth knowing</h3>
       <ul>${T.notes.map(n => `<li>${esc(n)}</li>`).join('')}</ul></div>` : ''}
     <p class="hint" style="margin-top:18px">Worked out here from the synced Apicbase recipes: portions
