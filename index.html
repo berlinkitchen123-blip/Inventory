@@ -1002,13 +1002,36 @@ function apicMerge(bag, key, row) {
   cur.v += row.v;
 }
 
+/* One pack in the recipe's unit, counted the way Apicbase counts it: a litre weighs the
+   ingredient's conversion ratio in kilos (1 unless set otherwise in Apicbase), and a pack of
+   packs ("8 x 1 l", "5 Pack (1 kg)") is multiplied out. 0 when Apicbase gives no way to convert,
+   e.g. a pack of pieces for a recipe in grams with no piece weight. */
+function apicPackSize(pack, base, conv) {
+  const unit = String(pack.packUnit || '').trim();
+  let p = toBase(pack.packQty, unit);
+  if (!BASE_UNIT[unit.toLowerCase()]) {
+    const m = unit.match(/([\d.,]+)\s*(kg|mg|g|ml|cl|l|pcs|pc|piece|stk)\b/i);
+    if (m) {
+      const inner = toBase(parseFloat(m[1].replace(',', '.')), m[2]);
+      p = { v: (+pack.packQty || 0) * inner.v, base: inner.base };
+    }
+  }
+  if (!(p.v > 0)) return 0;
+  if (p.base === base) return p.v;
+  const r = +conv > 0 ? +conv : 1;
+  if (p.base === 'ml' && base === 'g') return p.v * r;
+  if (p.base === 'g' && base === 'ml') return p.v / r;
+  return 0;
+}
+
 function apicLine(ingId, row) {
   const A = APIC.data;
   const ing = A.ingredients[ingId] || {};
   const pack = A.packs[ingId] || {};
   const [v, u] = fromBase(row.v, row.base);
   const packed = toBase(pack.packQty, pack.packUnit);
-  const packs = packed.v > 0 && packed.base === row.base ? Math.ceil(row.v / packed.v) : null;
+  const size = apicPackSize(pack, row.base, ing.conv);
+  const packs = size > 0 ? Math.ceil(row.v / size) : null;
   return {
     id: ingId, name: ing.name || row.name || ingId, cat: ing.category || '',
     qty: v, unit: u, mixed: !!row.mixed,
@@ -1615,7 +1638,7 @@ function paintApicTotals() {
   const bySup = {};
   for (const l of lines) (bySup[l.supplier] = bySup[l.supplier] || []).push(l);
   const odd = lines.filter(l => l.packs === null && l.packText).map(l => l.name);
-  if (odd.length) T.notes.push('Pack size and recipe unit do not match, so no pack count is shown for: '
+  if (odd.length) T.notes.push('No pack count, because Apicbase has no weight for one piece (recipe in grams, pack in pieces): '
     + odd.slice(0, 8).join(', ') + (odd.length > 8 ? ` and ${odd.length - 8} more` : ''));
   const portions = T.dishes.reduce((a, d) => a + d.portions, 0);
   el.innerHTML = `
