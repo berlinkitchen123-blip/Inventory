@@ -918,6 +918,11 @@ function toBase(qty, unit) {
   const u = BASE_UNIT[String(unit || '').trim().toLowerCase()];
   return u ? { v: (+qty || 0) * u[1], base: u[0] } : { v: +qty || 0, base: String(unit || '').trim().toLowerCase() };
 }
+/* Bought per piece but used in grams in the recipes, and Apicbase has no piece weight for these.
+   Eggs Large: one egg is 55 g (the recipes use 55 g or "1 piece" for one egg).
+   Ananas and Honeydew Melon: one fruit per 10 fruit salads (10 x 50 g plus Apicbase's waste). */
+const PIECE_G = { '664425685941005': 55, '664425484711006': 503, '864425647521006': 503 };
+
 function fromBase(v, base) {
   if (base === 'g' && v >= 1000) return [v / 1000, 'kg'];
   if (base === 'ml' && v >= 1000) return [v / 1000, 'l'];
@@ -967,7 +972,8 @@ function apicExplode(id, mult, A, out, prep, notes, seen) {
 }
 
 function apicAdd(bag, key, qty, unit, name) {
-  const b = toBase(qty, unit);
+  let b = toBase(qty, unit);
+  if (b.base === 'pc' && PIECE_G[key]) b = { v: b.v * PIECE_G[key], base: 'g' };   // "1 piece" and grams add up
   const row = bag[key] || (bag[key] = { name: name || '', base: b.base, v: 0 });
   if (row.base !== b.base) { row.mixed = true; return; }   // never add litres to kilos
   row.v += b.v;
@@ -1006,7 +1012,7 @@ function apicMerge(bag, key, row) {
    ingredient's conversion ratio in kilos (1 unless set otherwise in Apicbase), and a pack of
    packs ("8 x 1 l", "5 Pack (1 kg)") is multiplied out. 0 when Apicbase gives no way to convert,
    e.g. a pack of pieces for a recipe in grams with no piece weight. */
-function apicPackSize(pack, base, conv) {
+function apicPackSize(pack, base, conv, pieceG) {
   const unit = String(pack.packUnit || '').trim();
   let p = toBase(pack.packQty, unit);
   if (!BASE_UNIT[unit.toLowerCase()]) {
@@ -1018,6 +1024,7 @@ function apicPackSize(pack, base, conv) {
   }
   if (!(p.v > 0)) return 0;
   if (p.base === base) return p.v;
+  if (p.base === 'pc' && base === 'g' && pieceG > 0) return p.v * pieceG;
   const r = +conv > 0 ? +conv : 1;
   if (p.base === 'ml' && base === 'g') return p.v * r;
   if (p.base === 'g' && base === 'ml') return p.v / r;
@@ -1030,11 +1037,13 @@ function apicLine(ingId, row) {
   const pack = A.packs[ingId] || {};
   const [v, u] = fromBase(row.v, row.base);
   const packed = toBase(pack.packQty, pack.packUnit);
-  const size = apicPackSize(pack, row.base, ing.conv);
-  const packs = size > 0 ? Math.ceil(row.v / size) : null;
+  const pg = PIECE_G[ingId];
+  const size = apicPackSize(pack, row.base, ing.conv, pg);
+  const packs = size > 0 ? Math.ceil(row.v / size - 1e-9) : null;
   return {
     id: ingId, name: ing.name || row.name || ingId, cat: ing.category || '',
     qty: v, unit: u, mixed: !!row.mixed,
+    pieces: pg && row.base === 'g' ? Math.ceil(row.v / pg - 1e-9) : null,
     supplier: pack.supplier || '- no supplier -', article: pack.article || '',
     stockItem: pack.stockItem || '', packs,
     packText: packed.v > 0 ? `${nf(pack.packQty, 2)} ${pack.packUnit}` : '',
@@ -1618,9 +1627,10 @@ function apicUses(dishes, field) {
   }
   return map;
 }
-function apicUseRows(byMenu, cols) {
+function apicUseRows(byMenu, cols, pg) {
   if (!byMenu) return '';
-  const q = (v, base) => { const [x, u] = fromBase(v, base); return `${nf(x, x < 10 ? 2 : 0)} ${esc(u)}`; };
+  const q = (v, base) => { const [x, u] = fromBase(v, base);
+    return `${nf(x, x < 10 ? 2 : 0)} ${esc(u)}` + (pg > 0 && base === 'g' ? ` \u00b7 ${nf(v / pg, 1)} pcs` : ''); };
   return Object.values(byMenu).sort((a, b) => String(a.name).localeCompare(String(b.name))).map(m =>
     `<tr class="use"><td colspan="${cols}"><span class="um">${esc(m.name)}</span> —
       <span class="uq">${m.mixed ? 'mixed units' : q(m.v, m.base)}</span>${
@@ -1653,9 +1663,9 @@ function paintApicTotals() {
           <td><b>${esc(l.name)}</b>${l.mixed ? '<span class="tag warn">mixed units</span>' : ''}
             ${l.stockItem ? `<span class="sub2">${esc(l.stockItem)}</span>` : ''}</td>
           <td class="num qty">${nf(l.qty, l.qty < 10 ? 2 : 0)}</td>
-          <td>${esc(l.unit)}</td>${artCell(l)}
+          <td>${esc(l.unit)}${l.pieces ? ` <span class="muted">= ${nf(l.pieces, 0)} pcs</span>` : ''}</td>${artCell(l)}
           <td class="num qty">${l.packs === null ? '<span class="muted">—</span>' : nf(l.packs, 0)}</td>
-          <td>${esc(l.packText)}</td></tr>${apicUseRows(uses[l.id], 6)}`).join('')}</tbody>
+          <td>${esc(l.packText)}</td></tr>${apicUseRows(uses[l.id], 6, PIECE_G[l.id])}`).join('')}</tbody>
       </table></div></section>`).join('')}
     ${T.notes.length ? `<div class="miss"><h3>Worth knowing</h3>
       <ul>${T.notes.map(n => `<li>${esc(n)}</li>`).join('')}</ul></div>` : ''}
